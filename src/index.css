@@ -25,8 +25,16 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;
+  align-items: flex-start;
   min-width: 320px;
+  min-height: 100vh;
+  background-color: #e5e5e5;
+}
+
+#root {
+  width: 100%;
+  max-width: 390px;
   min-height: 100vh;
 }
 
