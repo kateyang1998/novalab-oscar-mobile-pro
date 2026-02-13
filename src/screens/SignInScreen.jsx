@@ -2,25 +2,33 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoBlue from "../assets/logoBlue.png";
 
+/**
+ * Sign In Screen Component
+ * Allows users to authenticate with User ID and Password
+ * Contains "Remember Me" checkbox and "Forgot Password" link
+ */
 const SignInScreen = () => {
   const navigate = useNavigate();
+
+  // Form state
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
+  // Handle sign-in form submission
   const handleSignIn = (e) => {
     e.preventDefault();
-    // TODO: Implement actual authentication
-    // Need to apply validation rules as well
+    // TODO: Implement actual authentication logic
+    // TODO: Apply validation rules (required fields, format validation)
     navigate("/home");
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.content}>
-        <img src={logoBlue} alt="OSCAR Mobile Logo" style={styles.logo} />
+        <img src={logoBlue} alt="OSCAR Mobile Pro Logo" style={styles.logo} />
 
-        <h1 style={styles.title}>OSCAR Mobile</h1>
+        <h1 style={styles.title}>OSCAR Mobile Pro</h1>
         <p style={styles.subtitle}>Electronic Medical Records</p>
 
         <form onSubmit={handleSignIn} style={styles.form}>

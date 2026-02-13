@@ -1,10 +1,17 @@
 import { useNavigate, useLocation } from "react-router-dom";
 
+/**
+ * Bottom Tab Navigation Component
+ * Displays a fixed bottom navigation bar with 4 tabs: Home, Patients, Schedule, Chat
+ * Active tab is highlighted in blue, inactive tabs are gray
+ */
 const BottomTab = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Tab configuration with icons and routes
   const tabs = [
+    // Home tab
     {
       name: "Home",
       path: "/home",
@@ -34,6 +41,7 @@ const BottomTab = () => {
         </svg>
       ),
     },
+    // Patients tab
     {
       name: "Patients",
       path: "/patients",
@@ -76,6 +84,7 @@ const BottomTab = () => {
         </svg>
       ),
     },
+    // Schedule tab
     {
       name: "Schedule",
       path: "/schedule",
@@ -123,6 +132,7 @@ const BottomTab = () => {
         </svg>
       ),
     },
+    // Chat tab
     {
       name: "Chat",
       path: "/chat",
@@ -146,6 +156,7 @@ const BottomTab = () => {
     },
   ];
 
+  // Navigate to selected tab
   const handleTabPress = (path) => {
     navigate(path);
   };
@@ -153,6 +164,7 @@ const BottomTab = () => {
   return (
     <div style={styles.container}>
       {tabs.map((tab) => {
+        // Check if current route matches tab path
         const isActive = location.pathname === tab.path;
         return (
           <button

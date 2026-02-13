@@ -14,14 +14,19 @@ import PatientRecordVitalsScreen from "./screens/PatientRecordVitalsScreen";
 import ClinicalNoteScreen from "./screens/ClinicalNoteScreen";
 import BottomTab from "./components/BottomTab";
 
+/**
+ * Main App Component
+ * Handles routing and conditional rendering of bottom tab navigation
+ * Navigation flow: / -> /splash (3s) -> /signin -> /home
+ */
 function App() {
   const location = useLocation();
 
-  // Routes that should NOT show the bottom tab
+  // No bottom tab navigation screens
   const routesWithoutBottomTab = ["/splash", "/signin"];
   const shouldShowBottomTab = !routesWithoutBottomTab.includes(location.pathname);
 
-  // Routes that should have no scroll
+  // No vertical scrolling screens
   const noScrollRoutes = ["/splash", "/signin"];
   const shouldDisableScroll = noScrollRoutes.includes(location.pathname);
 
