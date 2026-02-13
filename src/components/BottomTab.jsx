@@ -7,7 +7,7 @@ const BottomTab = () => {
   const tabs = [
     {
       name: "Home",
-      path: "/",
+      path: "/home",
       icon: (isActive) => (
         <svg
           width="24"

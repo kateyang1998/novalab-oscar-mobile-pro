@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import PatientsScreen from "./screens/PatientsScreen";
 import ScheduleScreen from "./screens/ScheduleScreen";
@@ -21,15 +21,23 @@ function App() {
   const routesWithoutBottomTab = ["/splash", "/signin"];
   const shouldShowBottomTab = !routesWithoutBottomTab.includes(location.pathname);
 
+  // Routes that should have no scroll
+  const noScrollRoutes = ["/splash", "/signin"];
+  const shouldDisableScroll = noScrollRoutes.includes(location.pathname);
+
   return (
     <div style={{
       ...styles.appContainer,
       paddingBottom: shouldShowBottomTab ? "80px" : "0",
+      overflow: shouldDisableScroll ? "hidden" : "auto",
+      height: shouldDisableScroll ? "100vh" : "auto",
+      minHeight: shouldDisableScroll ? "unset" : "100vh",
     }}>
       <Routes>
+        <Route path="/" element={<Navigate to="/splash" replace />} />
         <Route path="/splash" element={<SplashScreen />} />
         <Route path="/signin" element={<SignInScreen />} />
-        <Route path="/" element={<HomeScreen />} />
+        <Route path="/home" element={<HomeScreen />} />
         <Route path="/patients" element={<PatientsScreen />} />
         <Route path="/schedule" element={<ScheduleScreen />} />
         <Route path="/chat" element={<ChatScreen />} />
