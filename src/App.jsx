@@ -13,6 +13,7 @@ import PatientRecordHistoryScreen from "./screens/PatientRecordHistoryScreen";
 import PatientRecordVitalsScreen from "./screens/PatientRecordVitalsScreen";
 import ClinicalNoteScreen from "./screens/ClinicalNoteScreen";
 import BottomTab from "./components/BottomTab";
+import ScrollToTop from "./components/ScrollToTop";
 
 /**
  * Main App Component
@@ -38,6 +39,7 @@ function App() {
       height: shouldDisableScroll ? "100vh" : "auto",
       minHeight: shouldDisableScroll ? "unset" : "100vh",
     }}>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Navigate to="/splash" replace />} />
         <Route path="/splash" element={<SplashScreen />} />
