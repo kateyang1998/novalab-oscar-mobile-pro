@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Patients Screen Component
@@ -6,9 +7,15 @@ import { useState, useEffect } from "react";
  * Shows patient cards in a 2-column grid layout
  */
 const PatientsScreen = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Handle patient card click
+  const handlePatientClick = (patientId) => {
+    navigate(`/patient/${patientId}/summary`);
+  };
 
   // Fetch patients data when component mounts
   useEffect(() => {
@@ -123,10 +130,12 @@ const PatientsScreen = () => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.content}>
-        {/* Header */}
+      {/* Header */}
+      <div style={styles.header}>
         <h1 style={styles.title}>Patient List</h1>
+      </div>
 
+      <div style={styles.content}>
         {/* Search Bar */}
         <div style={styles.searchContainer}>
           <svg
@@ -174,7 +183,11 @@ const PatientsScreen = () => {
         {!loading && filteredPatients.length > 0 && (
           <div style={styles.patientsGrid}>
             {filteredPatients.map((patient) => (
-              <div key={patient.id} style={styles.patientCard}>
+              <div
+                key={patient.id}
+                style={styles.patientCard}
+                onClick={() => handlePatientClick(patient.id)}
+              >
                 <h3 style={styles.patientName}>{patient.name}</h3>
                 <p style={styles.patientId}>ID: {patient.id}</p>
                 <p style={styles.patientInfo}>
@@ -195,19 +208,23 @@ const styles = {
   container: {
     backgroundColor: "#E8E8E8",
     minHeight: "calc(100vh - 80px)",
-    padding: "20px",
-    overflowY: "auto",
+  },
+  header: {
+    backgroundColor: "#FFFFFF",
+    padding: "16px 20px",
+    borderBottom: "1px solid #E0E0E0",
   },
   content: {
     maxWidth: "800px",
     margin: "0 auto",
+    padding: "20px",
   },
   title: {
-    fontSize: "24px",
-    fontWeight: "700",
+    fontSize: "18px",
+    fontWeight: "600",
     color: "#000000",
     textAlign: "center",
-    margin: "0 0 20px 0",
+    margin: "0",
   },
   searchContainer: {
     position: "relative",
@@ -241,6 +258,8 @@ const styles = {
     borderRadius: "8px",
     padding: "16px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    cursor: "pointer",
+    transition: "transform 0.2s, box-shadow 0.2s",
   },
   patientName: {
     fontSize: "18px",
