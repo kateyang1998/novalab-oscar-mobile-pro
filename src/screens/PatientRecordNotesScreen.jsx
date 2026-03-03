@@ -99,13 +99,13 @@ const PatientRecordNotesScreen = () => {
   };
 
   const handleAddNote = () => {
-    // TODO: Navigate to add note screen or open modal
-    navigate("/clinical-note");
+    // Navigate to clinical note screen in "add" mode
+    navigate(`/clinical-note?patientId=${id}`);
   };
 
   const handleNoteClick = (noteId) => {
-    // TODO: Navigate to note detail screen
-    console.log("Clicked note:", noteId);
+    // Navigate to clinical note screen in "edit" mode
+    navigate(`/clinical-note?patientId=${id}&noteId=${noteId}`);
   };
 
   if (loading) {

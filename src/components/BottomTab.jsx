@@ -165,7 +165,10 @@ const BottomTab = () => {
     <div style={styles.container}>
       {tabs.map((tab) => {
         // Check if current route matches tab path
-        const isActive = location.pathname === tab.path;
+        // Special case for Patients: also highlight when on patient record screens
+        const isActive =
+          location.pathname === tab.path ||
+          (tab.path === "/patients" && location.pathname.startsWith("/patient/"));
         return (
           <button
             key={tab.name}
