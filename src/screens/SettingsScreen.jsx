@@ -65,191 +65,203 @@ const SettingsScreen = () => {
       <div style={styles.content}>
         {/* Security Section */}
         <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>Security</h3>
-
-          <div style={styles.settingItem}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Biometric Login</span>
-              <span style={styles.settingDescription}>Lock app after inactivity</span>
+          <div style={styles.sectionContainer}>
+            <div style={styles.sectionTitleContainer}>
+              <h3 style={styles.sectionTitle}>Security</h3>
             </div>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: biometricLogin ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setBiometricLogin(!biometricLogin)}
-            >
+            <div style={styles.settingItemFirst}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Biometric Login</span>
+                <span style={styles.settingDescription}>Lock app after inactivity</span>
+              </div>
               <div
                 style={{
-                  ...styles.toggleKnob,
-                  transform: biometricLogin ? "translateX(20px)" : "translateX(2px)"
+                  ...styles.toggleSwitch,
+                  backgroundColor: biometricLogin ? "#007AFF" : "#E5E5E7"
                 }}
-              ></div>
+                onClick={() => setBiometricLogin(!biometricLogin)}
+              >
+                <div
+                  style={{
+                    ...styles.toggleKnob,
+                    transform: biometricLogin ? "translateX(20px)" : "translateX(2px)"
+                  }}
+                ></div>
+              </div>
             </div>
-          </div>
 
-          <div style={styles.settingItem}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Auto-Lock</span>
-              <span style={styles.settingDescription}>Lock app after inactivity</span>
-            </div>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: autoLock ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setAutoLock(!autoLock)}
-            >
+            <div style={styles.settingItemLast}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Auto-Lock</span>
+                <span style={styles.settingDescription}>Lock app after inactivity</span>
+              </div>
               <div
                 style={{
-                  ...styles.toggleKnob,
-                  transform: autoLock ? "translateX(20px)" : "translateX(2px)"
+                  ...styles.toggleSwitch,
+                  backgroundColor: autoLock ? "#007AFF" : "#E5E5E7"
                 }}
-              ></div>
+                onClick={() => setAutoLock(!autoLock)}
+              >
+                <div
+                  style={{
+                    ...styles.toggleKnob,
+                    transform: autoLock ? "translateX(20px)" : "translateX(2px)"
+                  }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Notifications Section */}
         <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>Notifications</h3>
-
-          <div style={styles.settingItem}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Push Notifications</span>
-              <span style={styles.settingDescription}>Receive app notifications</span>
+          <div style={styles.sectionContainer}>
+            <div style={styles.sectionTitleContainer}>
+              <h3 style={styles.sectionTitle}>Notifications</h3>
             </div>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: pushNotifications ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setPushNotifications(!pushNotifications)}
-            >
+            <div style={styles.settingItemFirst}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Push Notifications</span>
+                <span style={styles.settingDescription}>Receive app notifications</span>
+              </div>
               <div
                 style={{
-                  ...styles.toggleKnob,
-                  transform: pushNotifications ? "translateX(20px)" : "translateX(2px)"
+                  ...styles.toggleSwitch,
+                  backgroundColor: pushNotifications ? "#007AFF" : "#E5E5E7"
                 }}
-              ></div>
+                onClick={() => setPushNotifications(!pushNotifications)}
+              >
+                <div
+                  style={{
+                    ...styles.toggleKnob,
+                    transform: pushNotifications ? "translateX(20px)" : "translateX(2px)"
+                  }}
+                ></div>
+              </div>
             </div>
-          </div>
 
-          <div style={styles.settingItem}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Appointment Reminders</span>
-              <span style={styles.settingDescription}>Get notified about upcoming appointments</span>
-            </div>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: appointmentReminders ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setAppointmentReminders(!appointmentReminders)}
-            >
+            <div style={styles.settingItemLast}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Appointment Reminders</span>
+                <span style={styles.settingDescription}>Get notified about upcoming appointments</span>
+              </div>
               <div
                 style={{
-                  ...styles.toggleKnob,
-                  transform: appointmentReminders ? "translateX(20px)" : "translateX(2px)"
+                  ...styles.toggleSwitch,
+                  backgroundColor: appointmentReminders ? "#007AFF" : "#E5E5E7"
                 }}
-              ></div>
+                onClick={() => setAppointmentReminders(!appointmentReminders)}
+              >
+                <div
+                  style={{
+                    ...styles.toggleKnob,
+                    transform: appointmentReminders ? "translateX(20px)" : "translateX(2px)"
+                  }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Data & Sync Section */}
         <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>Data & Sync</h3>
-
-          <div style={styles.settingItem}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Auto-sync</span>
-              <span style={styles.settingDescription}>Automatically sync when connected</span>
+          <div style={styles.sectionContainer}>
+            <div style={styles.sectionTitleContainer}>
+              <h3 style={styles.sectionTitle}>Data & Sync</h3>
             </div>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: autoSync ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setAutoSync(!autoSync)}
-            >
+            <div style={styles.settingItemFirst}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Auto-sync</span>
+                <span style={styles.settingDescription}>Automatically sync when connected</span>
+              </div>
               <div
                 style={{
-                  ...styles.toggleKnob,
-                  transform: autoSync ? "translateX(20px)" : "translateX(2px)"
+                  ...styles.toggleSwitch,
+                  backgroundColor: autoSync ? "#007AFF" : "#E5E5E7"
                 }}
-              ></div>
+                onClick={() => setAutoSync(!autoSync)}
+              >
+                <div
+                  style={{
+                    ...styles.toggleKnob,
+                    transform: autoSync ? "translateX(20px)" : "translateX(2px)"
+                  }}
+                ></div>
+              </div>
             </div>
-          </div>
 
-          <div style={styles.settingItem}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Offline Mode</span>
-              <span style={styles.settingDescription}>Allow offline data access</span>
-            </div>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: offlineMode ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setOfflineMode(!offlineMode)}
-            >
+            <div style={styles.settingItemLast}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Offline Mode</span>
+                <span style={styles.settingDescription}>Allow offline data access</span>
+              </div>
               <div
                 style={{
-                  ...styles.toggleKnob,
-                  transform: offlineMode ? "translateX(20px)" : "translateX(2px)"
+                  ...styles.toggleSwitch,
+                  backgroundColor: offlineMode ? "#007AFF" : "#E5E5E7"
                 }}
-              ></div>
+                onClick={() => setOfflineMode(!offlineMode)}
+              >
+                <div
+                  style={{
+                    ...styles.toggleKnob,
+                    transform: offlineMode ? "translateX(20px)" : "translateX(2px)"
+                  }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* System Section */}
         <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>System</h3>
-
-          <div style={styles.menuItem} onClick={handleHelpSupport}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Help & Support</span>
-              <span style={styles.settingDescription}>Get help and contact support</span>
+          <div style={styles.sectionContainer}>
+            <div style={styles.sectionTitleContainer}>
+              <h3 style={styles.sectionTitle}>System</h3>
             </div>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#8E8E93"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-
-          <div style={styles.menuItemNoBorder} onClick={handlePrivacyPolicy}>
-            <div style={styles.settingInfo}>
-              <span style={styles.settingLabel}>Privacy Policy</span>
-              <span style={styles.settingDescription}>View our privacy policy</span>
+            <div style={styles.menuItemFirst} onClick={handleHelpSupport}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Help & Support</span>
+                <span style={styles.settingDescription}>Get help and contact support</span>
+              </div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.5 15L12.5 10L7.5 5"
+                  stroke="#8E8E93"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#8E8E93"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+
+            <div style={styles.menuItemLast} onClick={handlePrivacyPolicy}>
+              <div style={styles.settingInfo}>
+                <span style={styles.settingLabel}>Privacy Policy</span>
+                <span style={styles.settingDescription}>View our privacy policy</span>
+              </div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.5 15L12.5 10L7.5 5"
+                  stroke="#8E8E93"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -309,7 +321,48 @@ const styles = {
     fontSize: "18px",
     fontWeight: "600",
     color: "#000000",
-    margin: "0 0 16px 0",
+    margin: "0",
+  },
+  sectionTitleContainer: {
+    backgroundColor: "#FFFFFF",
+    padding: "16px 20px 12px 20px",
+  },
+  sectionContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: "12px",
+    overflow: "hidden",
+  },
+  settingItemFirst: {
+    backgroundColor: "#FFFFFF",
+    padding: "16px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottom: "1px solid #F0F0F0",
+  },
+  settingItemLast: {
+    backgroundColor: "#FFFFFF",
+    padding: "16px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  menuItemFirst: {
+    backgroundColor: "#FFFFFF",
+    padding: "16px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottom: "1px solid #F0F0F0",
+    cursor: "pointer",
+  },
+  menuItemLast: {
+    backgroundColor: "#FFFFFF",
+    padding: "16px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    cursor: "pointer",
   },
   settingItem: {
     backgroundColor: "#FFFFFF",
