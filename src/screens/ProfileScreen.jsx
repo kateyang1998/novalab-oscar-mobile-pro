@@ -2,6 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import BottomTab from "../components/BottomTab";
 
+/**
+ * Profile Screen Component
+ * User profile management interface displaying:
+ * - Doctor profile information (name, specialty, email, ID)
+ * - Security settings (change password, biometric login toggle, reset password)
+ * - System settings (general settings, sync status, app version)
+ * - Logout functionality with confirmation modal
+ * - Navigation back to previous screen
+ */
 const ProfileScreen = () => {
   const navigate = useNavigate();
   const [biometricEnabled, setBiometricEnabled] = useState(true);

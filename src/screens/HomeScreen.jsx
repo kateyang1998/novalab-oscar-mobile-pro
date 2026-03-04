@@ -1,5 +1,16 @@
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Home Screen Component
+ * Main dashboard for healthcare providers displaying:
+ * - Welcome message with doctor's name
+ * - Patient search functionality
+ * - Today's schedule overview with appointment types and statuses
+ * - Recent patients with quick access to patient records
+ * - Navigation to profile, schedule, and patient summary screens
+ * - Appointment type color coding (Follow-up: #0056B3, New Patient: #816300, Physical: #5F0088, etc.)
+ * - Status indicators (Finished: green checkmark, Scheduled: gray dot)
+ */
 const HomeScreen = () => {
   const navigate = useNavigate();
 
