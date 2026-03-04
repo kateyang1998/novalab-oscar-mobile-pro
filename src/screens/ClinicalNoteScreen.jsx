@@ -167,7 +167,10 @@ const ClinicalNoteScreen = () => {
           </svg>
         </button>
         <h1 style={styles.headerTitle}>Clinical Note</h1>
-        <span style={styles.draftBadge}>Draft</span>
+        <span style={styles.draftBadge}>
+          Draft
+          {/* This draftBadge is temporary and will be updated with the syncing feature. Leave as-is for now. */}
+        </span>
       </div>
 
       <div style={styles.content}>
