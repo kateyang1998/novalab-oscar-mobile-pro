@@ -121,7 +121,10 @@ const HomeScreen = () => {
       {/* Today's Schedule */}
       <section style={styles.section}>
         <div style={styles.sectionHeader}>
-          <h2 style={styles.sectionTitle}>Today's Schedule</h2>
+          <div style={styles.titleWithDate}>
+            <h2 style={styles.sectionTitle}>Today's Schedule</h2>
+            <span style={styles.dateText}>Mar 4, 2026</span>
+          </div>
           <span style={styles.viewAll} onClick={() => navigate("/schedule")}>View All</span>
         </div>
         <div style={styles.scheduleList}>
@@ -158,7 +161,7 @@ const HomeScreen = () => {
               <span style={styles.statusScheduled}>Scheduled</span>
             </div>
           </div>
-          <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
+          <div style={{...styles.scheduleItem, borderBottom: "none"}} onClick={() => navigate("/schedule")}>
             <span style={styles.time}>02:10 PM</span>
             <div style={styles.scheduleDetails}>
               <p style={getPatientNameStyle("Cancelled")}>Jane Doe</p>
@@ -275,6 +278,18 @@ const styles = {
     fontSize: "18px",
     fontWeight: "bold",
     color: "#000000",
+    margin: "0",
+    display: "inline",
+  },
+  titleWithDate: {
+    display: "flex",
+    alignItems: "baseline",
+    gap: "8px",
+  },
+  dateText: {
+    fontSize: "14px",
+    color: "#8E8E93",
+    fontWeight: "normal",
   },
   viewAll: {
     fontSize: "14px",
@@ -284,18 +299,19 @@ const styles = {
   scheduleList: {
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
+    backgroundColor: "#F9F9F9",
+    borderRadius: "8px",
+    overflow: "hidden",
   },
   scheduleItem: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "12px 16px",
-    border: "1px solid #E0E0E0",
-    borderRadius: "8px",
     backgroundColor: "#F9F9F9",
     cursor: "pointer",
     minHeight: "60px",
+    borderBottom: "1px solid #E0E0E0",
   },
   time: {
     fontSize: "14px",
