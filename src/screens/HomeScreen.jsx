@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 const HomeScreen = () => {
   const navigate = useNavigate();
 
-  // Placeholder for recent patients data
+  // Placeholder for recent patients data - using mockup data from patients screen
   const recentPatients = [
-    { id: "P-9921", name: "Jane Doe", time: "2h ago" },
-    { id: "P-9922", name: "John Smith", time: "yesterday" },
-    { id: "P-9923", name: "Alice Johnson", time: "yesterday" },
+    { id: "P-0021", name: "Sarah Johnson", time: "2h ago" },
+    { id: "P-0022", name: "Michael Chen", time: "yesterday" },
+    { id: "P-0023", name: "Emily Rodriguez", time: "yesterday" },
   ];
 
   // Appointment type color mapping
@@ -27,9 +27,9 @@ const HomeScreen = () => {
     };
   };
 
-  // Placeholder for linking to patient summary pages
+  // Function to navigate to patient summary page
   const handlePatientClick = (patientId) => {
-    console.log(`Redirect to patient summary page for patient ID: ${patientId}`);
+    navigate(`/patient/${patientId}/summary`);
   };
 
   return (
