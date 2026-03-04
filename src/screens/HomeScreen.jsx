@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
  * - Recent patients with quick access to patient records
  * - Navigation to profile, schedule, and patient summary screens
  * - Appointment type color coding (Follow-up: #0056B3, New Patient: #816300, Physical: #5F0088, etc.)
- * - Status indicators (Finished: green checkmark, Scheduled: gray dot)
+ * - Status indicators (Finished: green checkmark, Scheduled: gray dot, Cancelled: red cross)
  */
 const HomeScreen = () => {
   const navigate = useNavigate();
@@ -31,11 +31,42 @@ const HomeScreen = () => {
   };
 
   // Function to get appointment type style
-  const getAppointmentTypeStyle = (type) => {
-    return {
+  const getAppointmentTypeStyle = (type, status) => {
+    const baseStyle = {
       fontSize: "12px",
       color: appointmentTypeColors[type] || "#007AFF",
     };
+
+    // Add strikethrough and transparency for cancelled appointments
+    if (status === "Cancelled") {
+      return {
+        ...baseStyle,
+        textDecoration: "line-through",
+        opacity: 0.6,
+      };
+    }
+
+    return baseStyle;
+  };
+
+  // Function to get patient name style for cancelled appointments
+  const getPatientNameStyle = (status) => {
+    const baseStyle = {
+      fontSize: "14px",
+      fontWeight: "bold",
+      color: "#000000",
+      margin: "0 0 4px 0",
+    };
+
+    if (status === "Cancelled") {
+      return {
+        ...baseStyle,
+        textDecoration: "line-through",
+        opacity: 0.6,
+      };
+    }
+
+    return baseStyle;
   };
 
   // Function to navigate to patient summary page
@@ -94,8 +125,8 @@ const HomeScreen = () => {
           <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
             <span style={styles.time}>09:00 AM</span>
             <div style={styles.scheduleDetails}>
-              <p style={styles.patientName}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("Follow-up")}>Follow-up</p>
+              <p style={getPatientNameStyle("Finished")}>Jane Doe</p>
+              <p style={getAppointmentTypeStyle("Follow-up", "Finished")}>Follow-up</p>
             </div>
             <div style={styles.statusContainer}>
               <span style={styles.checkIcon}>✓</span>
@@ -105,8 +136,8 @@ const HomeScreen = () => {
           <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
             <span style={styles.time}>11:00 AM</span>
             <div style={styles.scheduleDetails}>
-              <p style={styles.patientName}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("New Patient")}>New Patient</p>
+              <p style={getPatientNameStyle("Scheduled")}>Jane Doe</p>
+              <p style={getAppointmentTypeStyle("New Patient", "Scheduled")}>New Patient</p>
             </div>
             <div style={styles.statusContainer}>
               <span style={styles.dot}>•</span>
@@ -116,12 +147,23 @@ const HomeScreen = () => {
           <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
             <span style={styles.time}>01:00 PM</span>
             <div style={styles.scheduleDetails}>
-              <p style={styles.patientName}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("Physical")}>Physical</p>
+              <p style={getPatientNameStyle("Scheduled")}>Jane Doe</p>
+              <p style={getAppointmentTypeStyle("Physical", "Scheduled")}>Physical</p>
             </div>
             <div style={styles.statusContainer}>
               <span style={styles.dot}>•</span>
               <span style={styles.statusScheduled}>Scheduled</span>
+            </div>
+          </div>
+          <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
+            <span style={styles.time}>02:10 PM</span>
+            <div style={styles.scheduleDetails}>
+              <p style={getPatientNameStyle("Cancelled")}>Jane Doe</p>
+              <p style={getAppointmentTypeStyle("Follow-up", "Cancelled")}>Follow-up</p>
+            </div>
+            <div style={styles.statusContainer}>
+              <span style={styles.cancelIcon}>✕</span>
+              <span style={styles.statusCancelled}>Cancelled</span>
             </div>
           </div>
         </div>
@@ -261,6 +303,10 @@ const styles = {
     fontSize: "12px",
     color: "#6C757D",
   },
+  statusCancelled: {
+    fontSize: "12px",
+    color: "#DC3545",
+  },
   checkIcon: {
     fontSize: "14px",
     color: "#28A745",
@@ -268,6 +314,10 @@ const styles = {
   dot: {
     fontSize: "16px",
     color: "#6C757D",
+  },
+  cancelIcon: {
+    fontSize: "14px",
+    color: "#DC3545",
   },
   patientList: {
     display: "flex",
