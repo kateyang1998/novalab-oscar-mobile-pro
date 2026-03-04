@@ -16,7 +16,6 @@ const ProfileScreen = () => {
   };
 
   const confirmLogout = () => {
-    // TODO: Implement logout functionality
     console.log("Logout confirmed");
     setShowLogoutConfirmation(false);
     // For now, just navigate to sign in or home
