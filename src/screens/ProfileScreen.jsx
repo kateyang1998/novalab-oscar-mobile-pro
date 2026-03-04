@@ -5,16 +5,26 @@ import BottomTab from "../components/BottomTab";
 const ProfileScreen = () => {
   const navigate = useNavigate();
   const [biometricEnabled, setBiometricEnabled] = useState(true);
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   const handleBackClick = () => {
     navigate(-1);
   };
 
   const handleLogout = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const confirmLogout = () => {
     // TODO: Implement logout functionality
-    console.log("Logout clicked");
+    console.log("Logout confirmed");
+    setShowLogoutConfirmation(false);
     // For now, just navigate to sign in or home
     navigate("/signin");
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutConfirmation(false);
   };
 
   return (
@@ -185,6 +195,28 @@ const ProfileScreen = () => {
 
       {/* Bottom Navigation */}
       <BottomTab />
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirmation && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContainer}>
+            <div style={styles.modalContent}>
+              <h3 style={styles.modalTitle}>Are you sure you want to logout?</h3>
+              <p style={styles.modalMessage}>
+                You will need to sign in again to access the app.
+              </p>
+              <div style={styles.modalButtons}>
+                <button style={styles.confirmButton} onClick={confirmLogout}>
+                  Yes
+                </button>
+                <button style={styles.cancelButton} onClick={cancelLogout}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -335,6 +367,71 @@ const styles = {
     fontWeight: "600",
     cursor: "pointer",
     marginBottom: "20px",
+  },
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000,
+    padding: "20px",
+  },
+  modalContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: "12px",
+    padding: "24px",
+    width: "100%",
+    maxWidth: "320px",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+  },
+  modalContent: {
+    textAlign: "center",
+  },
+  modalTitle: {
+    fontSize: "16px",
+    fontWeight: "600",
+    color: "#000000",
+    margin: "0 0 16px 0",
+    lineHeight: "1.4",
+  },
+  modalMessage: {
+    fontSize: "14px",
+    color: "#666666",
+    margin: "0 0 24px 0",
+    lineHeight: "1.5",
+  },
+  modalButtons: {
+    display: "flex",
+    flexDirection: "row",
+    gap: "12px",
+    width: "100%",
+  },
+  cancelButton: {
+    padding: "14px 16px",
+    backgroundColor: "#F8F9FA",
+    color: "#666666",
+    border: "1px solid #E5E5E7",
+    borderRadius: "8px",
+    fontSize: "16px",
+    fontWeight: "500",
+    cursor: "pointer",
+    flex: 1,
+  },
+  confirmButton: {
+    padding: "14px 16px",
+    backgroundColor: "#DC3545",
+    color: "#FFFFFF",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "16px",
+    fontWeight: "500",
+    cursor: "pointer",
+    flex: 1,
   },
 };
 
