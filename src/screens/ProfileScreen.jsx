@@ -15,6 +15,14 @@ const ProfileScreen = () => {
   const navigate = useNavigate();
   const [biometricEnabled, setBiometricEnabled] = useState(true);
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [showSyncStatusModal, setShowSyncStatusModal] = useState(false);
+
+  // Change password form state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
 
   const handleBackClick = () => {
     navigate(-1);
@@ -38,6 +46,50 @@ const ProfileScreen = () => {
   const handleSettingsClick = () => {
     navigate("/settings");
   };
+
+  const handleChangePasswordClick = () => {
+    setShowChangePasswordModal(true);
+  };
+
+  const handleSyncStatusClick = () => {
+    setShowSyncStatusModal(true);
+  };
+
+  const closeSyncStatusModal = () => {
+    setShowSyncStatusModal(false);
+  };
+
+  const handleChangePasswordSubmit = () => {
+    // TODO: Implement change password API call
+    if (newPassword !== confirmNewPassword) {
+      alert("New passwords don't match!");
+      return;
+    }
+    if (newPassword.length < 8) {
+      alert("Password must be at least 8 characters long!");
+      return;
+    }
+
+    console.log("Change password:", {
+      currentPassword,
+      newPassword
+    });
+
+    // Clear form and close modal
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setShowChangePasswordModal(false);
+    alert("Password changed successfully!");
+  };
+
+  const cancelChangePassword = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setShowChangePasswordModal(false);
+  };
+
 
   return (
     <div style={styles.container}>
@@ -94,7 +146,7 @@ const ProfileScreen = () => {
         <div style={styles.section}>
           <h3 style={styles.sectionTitle}>Security</h3>
 
-          <div style={styles.menuItem}>
+          <div style={styles.menuItem} onClick={handleChangePasswordClick}>
             <span style={styles.menuItemText}>Change Password</span>
             <svg
               width="20"
@@ -130,25 +182,6 @@ const ProfileScreen = () => {
               ></div>
             </div>
           </div>
-
-          <div style={styles.menuItem}>
-            <span style={styles.menuItemText}>Reset Password</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#8E8E93"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
         </div>
 
         {/* System Section */}
@@ -174,7 +207,7 @@ const ProfileScreen = () => {
             </svg>
           </div>
 
-          <div style={styles.menuItem}>
+          <div style={styles.menuItem} onClick={handleSyncStatusClick}>
             <span style={styles.menuItemText}>Sync Status</span>
             <svg
               width="20"
@@ -222,6 +255,102 @@ const ProfileScreen = () => {
                   Yes
                 </button>
                 <button style={styles.cancelButton} onClick={cancelLogout}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Password Modal */}
+      {showChangePasswordModal && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContainer}>
+            <div style={styles.modalContent}>
+              <h3 style={styles.modalTitle}>Change Password</h3>
+              <div style={styles.formContainer}>
+                <div style={styles.inputGroup}>
+                  <label style={styles.inputLabel}>Current Password</label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    style={styles.inputField}
+                    placeholder="Enter current password"
+                  />
+                </div>
+                <div style={styles.inputGroup}>
+                  <label style={styles.inputLabel}>New Password</label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    style={styles.inputField}
+                    placeholder="Enter new password"
+                  />
+                </div>
+                <div style={styles.inputGroup}>
+                  <label style={styles.inputLabel}>Confirm New Password</label>
+                  <input
+                    type="password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    style={styles.inputField}
+                    placeholder="Confirm new password"
+                  />
+                </div>
+              </div>
+              <div style={styles.modalButtons}>
+                <button style={styles.confirmButton} onClick={handleChangePasswordSubmit}>
+                  Change
+                </button>
+                <button style={styles.cancelButton} onClick={cancelChangePassword}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sync Status Modal */}
+      {showSyncStatusModal && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContainer}>
+            <div style={styles.modalContent}>
+              <h3 style={styles.modalTitle}>Sync Status</h3>
+              <div style={styles.syncStatusContainer}>
+                <div style={styles.syncItem}>
+                  <span style={styles.syncLabel}>Last Sync:</span>
+                  <span style={styles.syncValue}>Mar 4, 2026 2:30 PM</span>
+                </div>
+                <div style={styles.syncItem}>
+                  <span style={styles.syncLabel}>Status:</span>
+                  <span style={{...styles.syncValue, color: "#28A745"}}>✓ Up to date</span>
+                </div>
+                <div style={styles.syncItem}>
+                  <span style={styles.syncLabel}>Patient Records:</span>
+                  <span style={styles.syncValue}>1,247 synced</span>
+                </div>
+                <div style={styles.syncItem}>
+                  <span style={styles.syncLabel}>Clinical Notes:</span>
+                  <span style={styles.syncValue}>863 synced</span>
+                </div>
+                <div style={styles.syncItem}>
+                  <span style={styles.syncLabel}>Appointments:</span>
+                  <span style={styles.syncValue}>425 synced</span>
+                </div>
+                <div style={styles.syncItem}>
+                  <span style={styles.syncLabel}>Network:</span>
+                  <span style={styles.syncValue}>Connected</span>
+                </div>
+              </div>
+              <div style={styles.syncButtonContainer}>
+                <button style={styles.syncNowButton}>
+                  Sync Now
+                </button>
+                <button style={styles.cancelButton} onClick={closeSyncStatusModal}>
                   Cancel
                 </button>
               </div>
@@ -437,6 +566,67 @@ const styles = {
   confirmButton: {
     padding: "14px 16px",
     backgroundColor: "#DC3545",
+    color: "#FFFFFF",
+    border: "none",
+    borderRadius: "8px",
+    fontSize: "16px",
+    fontWeight: "500",
+    cursor: "pointer",
+    flex: 1,
+  },
+  formContainer: {
+    marginBottom: "20px",
+  },
+  inputGroup: {
+    marginBottom: "16px",
+  },
+  inputLabel: {
+    display: "block",
+    fontSize: "14px",
+    fontWeight: "500",
+    color: "#333333",
+    marginBottom: "6px",
+  },
+  inputField: {
+    width: "100%",
+    padding: "12px 16px",
+    fontSize: "14px",
+    border: "1px solid #D1D1D6",
+    borderRadius: "8px",
+    backgroundColor: "#FFFFFF",
+    boxSizing: "border-box",
+    outline: "none",
+    fontFamily: "inherit",
+  },
+  syncStatusContainer: {
+    textAlign: "left",
+    marginBottom: "20px",
+  },
+  syncItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "12px 0",
+    borderBottom: "1px solid #F0F0F0",
+  },
+  syncLabel: {
+    fontSize: "14px",
+    color: "#666666",
+    fontWeight: "500",
+  },
+  syncValue: {
+    fontSize: "14px",
+    color: "#333333",
+    fontWeight: "400",
+  },
+  syncButtonContainer: {
+    display: "flex",
+    gap: "12px",
+    width: "100%",
+  },
+  syncNowButton: {
+    padding: "14px 16px",
+    backgroundColor: "#007AFF",
     color: "#FFFFFF",
     border: "none",
     borderRadius: "8px",
