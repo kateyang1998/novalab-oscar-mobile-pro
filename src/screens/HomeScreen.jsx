@@ -35,6 +35,8 @@ const HomeScreen = () => {
     const baseStyle = {
       fontSize: "12px",
       color: appointmentTypeColors[type] || "#007AFF",
+      margin: "0",
+      lineHeight: "1.2",
     };
 
     // Add strikethrough and transparency for cancelled appointments
@@ -55,7 +57,8 @@ const HomeScreen = () => {
       fontSize: "14px",
       fontWeight: "bold",
       color: "#000000",
-      margin: "0 0 4px 0",
+      margin: "0 0 2px 0",
+      lineHeight: "1.2",
     };
 
     if (status === "Cancelled") {
@@ -179,10 +182,28 @@ const HomeScreen = () => {
               style={styles.patientItem}
               onClick={() => handlePatientClick(patient.id)}
             >
-              <p style={styles.patientName}>{patient.name}</p>
-              <p style={styles.patientDetails}>
-                ID: {patient.id} • {patient.time}
-              </p>
+              <div style={styles.patientInfo}>
+                <p style={styles.patientName}>{patient.name}</p>
+                <p style={styles.patientDetails}>
+                  ID: {patient.id} • {patient.time}
+                </p>
+              </div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={styles.arrowIcon}
+              >
+                <path
+                  d="M7.5 15L12.5 10L7.5 5"
+                  stroke="#8E8E93"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
           ))}
         </div>
@@ -269,31 +290,42 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px",
+    padding: "12px 16px",
     border: "1px solid #E0E0E0",
     borderRadius: "8px",
     backgroundColor: "#F9F9F9",
     cursor: "pointer",
+    minHeight: "60px",
   },
   time: {
     fontSize: "14px",
     fontWeight: "bold",
     color: "#000000",
+    minWidth: "70px",
+    textAlign: "left",
   },
   scheduleDetails: {
     flex: 1,
-    marginLeft: "10px",
+    marginLeft: "12px",
+    marginRight: "12px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    minHeight: "40px",
   },
   patientName: {
     fontSize: "14px",
     fontWeight: "bold",
     color: "#000000",
-    margin: "0 0 4px 0",
+    margin: "0 0 2px 0",
+    lineHeight: "1.3",
   },
   statusContainer: {
     display: "flex",
     alignItems: "center",
-    gap: "4px",
+    gap: "6px",
+    minWidth: "80px",
+    justifyContent: "flex-end",
   },
   statusFinished: {
     fontSize: "12px",
@@ -325,15 +357,31 @@ const styles = {
     gap: "10px",
   },
   patientItem: {
-    padding: "10px",
+    padding: "12px 16px",
     border: "1px solid #E0E0E0",
     borderRadius: "8px",
     backgroundColor: "#F9F9F9",
     cursor: "pointer",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    minHeight: "44px",
+  },
+  patientInfo: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  arrowIcon: {
+    flexShrink: 0,
   },
   patientDetails: {
     fontSize: "12px",
     color: "#666666",
+    margin: "0",
+    lineHeight: "1.3",
   },
 };
 
