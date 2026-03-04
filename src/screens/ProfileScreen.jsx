@@ -35,6 +35,10 @@ const ProfileScreen = () => {
     setShowLogoutConfirmation(false);
   };
 
+  const handleSettingsClick = () => {
+    navigate("/settings");
+  };
+
   return (
     <div style={styles.container}>
       {/* Header */}
@@ -151,7 +155,7 @@ const ProfileScreen = () => {
         <div style={styles.section}>
           <h3 style={styles.sectionTitle}>System</h3>
 
-          <div style={styles.menuItem}>
+          <div style={styles.menuItem} onClick={handleSettingsClick}>
             <span style={styles.menuItemText}>Settings</span>
             <svg
               width="20"
