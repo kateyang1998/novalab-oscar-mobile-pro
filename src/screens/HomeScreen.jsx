@@ -38,7 +38,7 @@ const HomeScreen = () => {
       margin: "0",
       lineHeight: "1.2",
     };
-
+    
     // Add strikethrough and transparency for cancelled appointments
     if (status === "Cancelled") {
       return {
@@ -47,7 +47,7 @@ const HomeScreen = () => {
         opacity: 0.6,
       };
     }
-
+    
     return baseStyle;
   };
 
@@ -60,7 +60,7 @@ const HomeScreen = () => {
       margin: "0 0 2px 0",
       lineHeight: "1.2",
     };
-
+    
     if (status === "Cancelled") {
       return {
         ...baseStyle,
@@ -68,7 +68,7 @@ const HomeScreen = () => {
         opacity: 0.6,
       };
     }
-
+    
     return baseStyle;
   };
 
@@ -311,7 +311,6 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    minHeight: "40px",
   },
   patientName: {
     fontSize: "14px",
@@ -366,7 +365,7 @@ const styles = {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    minHeight: "44px",
+    minHeight: "60px",
   },
   patientInfo: {
     flex: 1,
@@ -374,14 +373,14 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
   },
-  arrowIcon: {
-    flexShrink: 0,
-  },
   patientDetails: {
     fontSize: "12px",
     color: "#666666",
     margin: "0",
     lineHeight: "1.3",
+  },
+  arrowIcon: {
+    flexShrink: 0,
   },
 };
 

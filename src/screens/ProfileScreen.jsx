@@ -51,14 +51,6 @@ const ProfileScreen = () => {
     setShowChangePasswordModal(true);
   };
 
-  const handleSyncStatusClick = () => {
-    setShowSyncStatusModal(true);
-  };
-
-  const closeSyncStatusModal = () => {
-    setShowSyncStatusModal(false);
-  };
-
   const handleChangePasswordSubmit = () => {
     // TODO: Implement change password API call
     if (newPassword !== confirmNewPassword) {
@@ -88,6 +80,21 @@ const ProfileScreen = () => {
     setNewPassword("");
     setConfirmNewPassword("");
     setShowChangePasswordModal(false);
+  };
+
+  const handleSyncStatusClick = () => {
+    setShowSyncStatusModal(true);
+  };
+
+  const closeSyncStatusModal = () => {
+    setShowSyncStatusModal(false);
+  };
+
+  const handleSyncNow = () => {
+    // TODO: Implement sync functionality
+    console.log("Sync now clicked");
+    alert("Sync completed successfully!");
+    setShowSyncStatusModal(false);
   };
 
 
@@ -303,7 +310,7 @@ const ProfileScreen = () => {
               </div>
               <div style={styles.modalButtons}>
                 <button style={styles.confirmButton} onClick={handleChangePasswordSubmit}>
-                  Change
+                  Change Password
                 </button>
                 <button style={styles.cancelButton} onClick={cancelChangePassword}>
                   Cancel
@@ -347,11 +354,11 @@ const ProfileScreen = () => {
                 </div>
               </div>
               <div style={styles.syncButtonContainer}>
-                <button style={styles.syncNowButton}>
+                <button style={styles.syncNowButton} onClick={handleSyncNow}>
                   Sync Now
                 </button>
                 <button style={styles.cancelButton} onClick={closeSyncStatusModal}>
-                  Cancel
+                  Close
                 </button>
               </div>
             </div>
