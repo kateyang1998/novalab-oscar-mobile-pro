@@ -28,14 +28,14 @@ function App() {
   const routesWithoutBottomTab = ["/splash", "/signin"];
   const shouldShowBottomTab = !routesWithoutBottomTab.includes(location.pathname);
 
-  // No vertical scrolling screens
-  const noScrollRoutes = ["/splash", "/signin"];
+  // No vertical scrolling screens (schedule manages its own internal scroll)
+  const noScrollRoutes = ["/splash", "/signin", "/schedule"];
   const shouldDisableScroll = noScrollRoutes.includes(location.pathname);
 
   return (
     <div style={{
       ...styles.appContainer,
-      paddingBottom: shouldShowBottomTab ? "80px" : "0",
+      paddingBottom: shouldShowBottomTab && !shouldDisableScroll ? "80px" : "0",
       overflow: shouldDisableScroll ? "hidden" : "auto",
       height: shouldDisableScroll ? "100vh" : "auto",
       minHeight: shouldDisableScroll ? "unset" : "100vh",
