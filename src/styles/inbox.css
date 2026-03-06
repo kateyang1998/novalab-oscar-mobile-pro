@@ -1,0 +1,51 @@
+:root{
+  --bg:#eaedf0;
+  --card:#ffffff;
+  --muted:#9aa0a6;
+  --accent:#0963c6;
+  --surface-radius:28px;
+  --card-radius:10px;
+  --shadow: 0 8px 20px rgba(12,14,20,0.06);
+  --muted-2:#b7bcc0;
+}
+.inbox-app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+.top-rail{
+  background:linear-gradient(#fbfcfd,#f7f8f9);
+  padding:22px 20px;
+  border-bottom-left-radius:var(--surface-radius);
+  border-bottom-right-radius:var(--surface-radius);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.title{font-size:20px;font-weight:700}
+.mark-read{background:none;border:0;color:var(--muted-2);font-size:16px;cursor:pointer}
+
+.list-wrap{padding:18px;padding-top:22px;flex:1;overflow:auto}
+
+.message-card{
+  display:flex;background:var(--card);border-radius:var(--card-radius);padding:14px;gap:12px;align-items:flex-start;margin-bottom:14px;box-shadow:var(--shadow);position:relative;transition:transform .12s, box-shadow .12s;
+}
+.message-card.read{background:transparent;box-shadow:none;color:var(--muted-2);opacity:0.9}
+.message-card.unread::before{
+  content:"";
+  position:absolute;left:0;top:6px;bottom:6px;width:8px;border-top-left-radius:8px;border-bottom-left-radius:8px;background:var(--accent);
+}
+.message-card.selected{transform:translateY(-2px);box-shadow: 0 16px 30px rgba(12,14,20,0.09)}
+
+.message-main{flex:1;padding-left:8px;min-width:0}
+.row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sender{font-weight:700;font-size:18px;margin:0}
+.subject{margin:2px 0 8px 0;color:#333;font-size:15px}
+.preview{color:var(--muted);font-size:14px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+.time{color:var(--muted-2);font-size:13px;flex-shrink:0;margin-left:6px}
+
+.bottom-nav{background:#fff;padding:10px 18px;border-top-left-radius:28px;border-top-right-radius:28px;display:flex;justify-content:space-around;align-items:center;gap:8px;box-shadow: 0 -6px 18px rgba(12,14,20,0.03)}
+.nav-item{font-size:12px;color:#60656a;display:flex;flex-direction:column;align-items:center;gap:6px}
+.icon{width:28px;height:28px;border-radius:6px;border:2px solid transparent;display:block}

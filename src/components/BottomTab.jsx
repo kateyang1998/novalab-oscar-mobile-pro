@@ -134,8 +134,8 @@ const BottomTab = () => {
     },
     // Chat tab
     {
-      name: "Chat",
-      path: "/chat",
+      name: "Inbox",
+      path: "/inbox",
       icon: (isActive) => (
         <svg
           width="24"
