@@ -2,7 +2,7 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import PatientsScreen from "./screens/PatientsScreen";
 import ScheduleScreen from "./screens/ScheduleScreen";
-import ChatScreen from "./screens/ChatScreen";
+import InboxScreen from "./screens/InboxScreen";
 import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
 import NotificationsScreen from "./screens/NotificationsScreen";
@@ -48,7 +48,7 @@ function App() {
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/patients" element={<PatientsScreen />} />
         <Route path="/schedule" element={<ScheduleScreen />} />
-        <Route path="/chat" element={<ChatScreen />} />
+        <Route path="/inbox" element={<InboxScreen />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />

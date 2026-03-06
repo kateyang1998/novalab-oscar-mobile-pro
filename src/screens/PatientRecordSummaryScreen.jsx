@@ -261,7 +261,8 @@ const PatientRecordSummaryScreen = () => {
 const styles = {
   container: {
     backgroundColor: "#E8E8E8",
-    minHeight: "calc(100vh - 80px)",
+    minHeight: "100vh",
+    paddingBottom: "80px",
   },
   header: {
     backgroundColor: "#FFFFFF",
