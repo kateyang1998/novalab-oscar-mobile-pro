@@ -1,26 +1,12 @@
 // ─── src/screens/ScheduleScreen.jsx ──────────────────────────────────────────
-/**
- * Orchestrates all schedule components.
- * Replace SAMPLE_APPOINTMENTS with your OSCAR API fetch when ready.
- *
- * Appointment shape:
- *   {
- *     id          {string|number}
- *     patientName {string}    e.g. "Robert Brown"
- *     type        {string}    e.g. "New Patient" | "Follow Up" | "Physical" | ...
- *     date        {string}    "YYYY-MM-DD"
- *     startTime   {string}    "HH:MM" 24-hour
- *     endTime     {string}    "HH:MM" 24-hour
- *     status      {string}    "Scheduled" | "Finished" | "Cancelled"
- *   }
- */
 
 import { useState, useMemo } from "react";
-import ViewSwitcher from "../components/schedule/Viewswitcher";
-import CalendarHeader from "../components/schedule/Calendarheader";
-import MonthGrid from "../components/schedule/Monthgrid";
-import WeekGrid from "../components/schedule/Weekgrid";
-import DayTimeline from "../components/schedule/Daytimeline";
+import { useNavigate } from "react-router-dom";
+import ViewSwitcher from "../components/schedule/ViewSwitcher";
+import CalendarHeader from "../components/schedule/CalendarHeader";
+import MonthGrid from "../components/schedule/MonthGrid";
+import WeekGrid from "../components/schedule/WeekGrid";
+import DayTimeline from "../components/schedule/DayTimeline";
 import {
   MONTHS,
   DAYS_FULL,
@@ -32,14 +18,14 @@ import {
 // ─── Replace with API fetch when OSCAR backend is ready ──────────────────────
 const SAMPLE_APPOINTMENTS = [
   { id: 1, patientName: "Robert Brown", type: "New Patient", date: "2026-04-15", startTime: "10:00", endTime: "11:00", status: "Finished" },
-  { id: 2, patientName: "Rohit Talwar", type: "Follow Up", date: "2026-04-15", startTime: "11:00", endTime: "12:30", status: "Scheduled" },
+  { id: 2, patientName: "Jane Doe", type: "Follow Up", date: "2026-04-15", startTime: "11:00", endTime: "12:30", status: "Scheduled" },
   { id: 3, patientName: "Robert Brown", type: "Physical", date: "2026-04-15", startTime: "13:30", endTime: "14:00", status: "Finished" },
   { id: 4, patientName: "Robert Brown", type: "New Patient", date: "2026-04-15", startTime: "14:00", endTime: "14:30", status: "Cancelled" },
   { id: 5, patientName: "Robert Brown", type: "Consultation", date: "2026-04-15", startTime: "15:00", endTime: "15:30", status: "Scheduled" },
   { id: 6, patientName: "Robert Brown", type: "Urgent Care", date: "2026-04-15", startTime: "15:30", endTime: "16:00", status: "Scheduled" },
   { id: 7, patientName: "Robert Brown", type: "New Patient", date: "2026-04-13", startTime: "10:00", endTime: "11:30", status: "Finished" },
   { id: 8, patientName: "Robert Brown", type: "Physical", date: "2026-04-13", startTime: "13:30", endTime: "14:30", status: "Scheduled" },
-  { id: 9, patientName: "Chris Konstas", type: "Follow Up", date: "2026-04-14", startTime: "11:00", endTime: "12:30", status: "Scheduled" },
+  { id: 9, patientName: "Jane Doe", type: "Follow Up", date: "2026-04-14", startTime: "11:00", endTime: "12:30", status: "Scheduled" },
   { id: 10, patientName: "Robert Brown", type: "Consultation", date: "2026-04-16", startTime: "14:00", endTime: "15:00", status: "Scheduled" },
   { id: 11, patientName: "Robert Brown", type: "New Patient", date: "2026-04-06", startTime: "09:00", endTime: "10:00", status: "Finished" },
   { id: 12, patientName: "Robert Brown", type: "Follow Up", date: "2026-04-06", startTime: "10:00", endTime: "11:00", status: "Scheduled" },
@@ -52,12 +38,13 @@ const SAMPLE_APPOINTMENTS = [
 ];
 
 export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
+  const navigate = useNavigate();
   const todayStr = getTodayString();
 
   const [view, setView] = useState("month");
   const [selectedDate, setSelectedDate] = useState("2026-04-15");
   const [calYear, setCalYear] = useState(2026);
-  const [calMonth, setCalMonth] = useState(3); // 0-indexed: 3 = April
+  const [calMonth, setCalMonth] = useState(3);
 
   const appointmentsByDate = useMemo(
     () => groupAppointmentsByDate(appointments),
@@ -96,8 +83,6 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
     setCalMonth(d.getMonth());
   }
 
-  // ── Select date → drill into Day view ──────────────────────────────────────
-
   function handleSelectDate(dateStr) {
     setSelectedDate(dateStr);
     const d = new Date(dateStr + "T00:00:00");
@@ -106,7 +91,13 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
     setView("day");
   }
 
-  // ── Header title per view ───────────────────────────────────────────────────
+  // ── Tapping an appointment → go to Edit screen ─────────────────────────────
+
+  function handleAppointmentPress(appointment) {
+    navigate("/appointment/edit", { state: { appointment } });
+  }
+
+  // ── Header title ────────────────────────────────────────────────────────────
 
   function getHeaderTitle() {
     if (view === "month") return `${MONTHS[calMonth]} ${calYear}`;
@@ -123,13 +114,6 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
     return `${DAYS_FULL[d.getDay()]} - ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
-  // ── Appointment tap → TODO: navigate to detail screen ──────────────────────
-
-  function handleAppointmentPress(appointment) {
-    console.log("Appointment pressed:", appointment);
-    // e.g. navigate(`/appointment/${appointment.id}`)
-  }
-
   const weekDates = getWeekDates(selectedDate);
   const dayAppointments = appointmentsByDate[selectedDate] ?? [];
 
@@ -141,7 +125,7 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
         title={getHeaderTitle()}
         onPrev={handlePrev}
         onNext={handleNext}
-        onTitlePress={() => {/* TODO: open date picker */ }}
+        onTitlePress={() => { }}
       />
 
       <div style={styles.content}>
@@ -184,7 +168,7 @@ const styles = {
   screen: {
     display: "flex",
     flexDirection: "column",
-    height: "calc(100vh - 80px)", // 80px = BottomTab height
+    height: "calc(100vh - 80px)",
     background: "#FFFFFF",
     fontFamily: "-apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif",
     overflow: "hidden",

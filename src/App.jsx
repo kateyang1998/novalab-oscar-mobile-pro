@@ -2,34 +2,26 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import PatientsScreen from "./screens/PatientsScreen";
 import ScheduleScreen from "./screens/ScheduleScreen";
-import InboxScreen from "./screens/InboxScreen";
+import EditAppointmentScreen from "./screens/EditAppointmentScreen";
+import ChatScreen from "./screens/ChatScreen";
 import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
 import NotificationsScreen from "./screens/NotificationsScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import SettingsScreen from "./screens/SettingsScreen";
 import PatientRecordSummaryScreen from "./screens/PatientRecordSummaryScreen";
 import PatientRecordNotesScreen from "./screens/PatientRecordNotesScreen";
 import PatientRecordHistoryScreen from "./screens/PatientRecordHistoryScreen";
 import PatientRecordVitalsScreen from "./screens/PatientRecordVitalsScreen";
 import ClinicalNoteScreen from "./screens/ClinicalNoteScreen";
 import BottomTab from "./components/BottomTab";
-import ScrollToTop from "./components/ScrollToTop";
 
-/**
- * Main App Component
- * Handles routing and conditional rendering of bottom tab navigation
- * Navigation flow: / -> /splash (3s) -> /signin -> /home
- */
 function App() {
   const location = useLocation();
 
-  // No bottom tab navigation screens
-  const routesWithoutBottomTab = ["/splash", "/signin"];
+  const routesWithoutBottomTab = ["/splash", "/signin", "/appointment/edit"];
   const shouldShowBottomTab = !routesWithoutBottomTab.includes(location.pathname);
 
-  // No vertical scrolling screens (schedule manages its own internal scroll)
-  const noScrollRoutes = ["/splash", "/signin", "/schedule"];
+  const noScrollRoutes = ["/splash", "/signin", "/schedule", "/appointment/edit"];
   const shouldDisableScroll = noScrollRoutes.includes(location.pathname);
 
   return (
@@ -40,7 +32,6 @@ function App() {
       height: shouldDisableScroll ? "100vh" : "auto",
       minHeight: shouldDisableScroll ? "unset" : "100vh",
     }}>
-      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Navigate to="/splash" replace />} />
         <Route path="/splash" element={<SplashScreen />} />
@@ -48,10 +39,10 @@ function App() {
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/patients" element={<PatientsScreen />} />
         <Route path="/schedule" element={<ScheduleScreen />} />
-        <Route path="/inbox" element={<InboxScreen />} />
+        <Route path="/appointment/edit" element={<EditAppointmentScreen />} />
+        <Route path="/chat" element={<ChatScreen />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
-        <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/patient/:id/summary" element={<PatientRecordSummaryScreen />} />
         <Route path="/patient/:id/notes" element={<PatientRecordNotesScreen />} />
         <Route path="/patient/:id/history" element={<PatientRecordHistoryScreen />} />
