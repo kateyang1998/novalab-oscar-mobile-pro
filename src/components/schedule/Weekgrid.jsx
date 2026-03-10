@@ -1,0 +1,146 @@
+// ─── src/components/schedule/WeekGrid.jsx ────────────────────────────────────
+/**
+ * 7-column scrollable week timeline.
+ *
+ * Props:
+ *   weekDates          {string[]}  7 "YYYY-MM-DD" strings Sun–Sat
+ *   selectedDate       {string}    "YYYY-MM-DD"
+ *   todayStr           {string}    "YYYY-MM-DD"
+ *   appointmentsByDate {object}    { "YYYY-MM-DD": [appointment, ...] }
+ *   onSelectDate       {function}  (dateStr) => void
+ *   onAppointmentPress {function}  (appointment) => void
+ */
+
+import AppointmentBlock from "./Appointmentblock";
+import TimeColumn from "./Timecolumn";
+import {
+  DAYS_SHORT,
+  TIMELINE_HOURS,
+  HOUR_HEIGHT,
+  START_HOUR,
+  getTimelinePosition,
+} from "./Scheduleutils";
+
+export default function WeekGrid({
+  weekDates, selectedDate, todayStr,
+  appointmentsByDate, onSelectDate, onAppointmentPress,
+}) {
+  return (
+    <div style={styles.wrapper}>
+      {/* Column headers */}
+      <div style={styles.headerRow}>
+        <div style={{ width: 44, flexShrink: 0 }} />
+        {weekDates.map((d, i) => {
+          const dayNum = new Date(d + "T00:00:00").getDate();
+          const isToday = d === todayStr;
+          const isSelected = d === selectedDate;
+          return (
+            <div
+              key={d}
+              onClick={() => onSelectDate(d)}
+              style={{
+                ...styles.dayHeader,
+                borderBottom: isSelected ? "2px solid #007AFF" : "2px solid transparent",
+              }}
+            >
+              <span style={styles.dayLabel}>{DAYS_SHORT[i]}</span>
+              <div style={{
+                ...styles.dayNum,
+                background: isToday ? "#007AFF" : "transparent",
+                color: isToday ? "#fff" : "#1C1C1E",
+                fontWeight: isToday ? 700 : 400,
+              }}>
+                {dayNum}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Scrollable time grid */}
+      <div style={styles.scrollArea}>
+        <div style={styles.gridBody}>
+          <TimeColumn hours={TIMELINE_HOURS} hourHeight={HOUR_HEIGHT} />
+
+          {weekDates.map((d) => {
+            const appts = (appointmentsByDate[d] ?? []).filter(
+              (a) => parseInt(a.startTime.split(":")[0]) >= START_HOUR
+            );
+            return (
+              <div key={d} style={styles.dayColumn}>
+                {TIMELINE_HOURS.map((h) => (
+                  <div key={h} style={{ height: HOUR_HEIGHT, borderBottom: "1px solid #F2F2F7" }} />
+                ))}
+                {appts.map((appt) => {
+                  const { top, height } = getTimelinePosition(appt.startTime, appt.endTime);
+                  return (
+                    <AppointmentBlock
+                      key={appt.id}
+                      appointment={appt}
+                      top={top}
+                      height={height}
+                      compact={true}
+                      onClick={onAppointmentPress}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  wrapper: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    overflow: "hidden",
+  },
+  headerRow: {
+    display: "flex",
+    borderBottom: "1px solid #E5E5EA",
+    flexShrink: 0,
+  },
+  dayHeader: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "6px 0 4px",
+    cursor: "pointer",
+    gap: 2,
+  },
+  dayLabel: {
+    fontSize: 10,
+    color: "#8E8E93",
+    fontWeight: 600,
+    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+  },
+  dayNum: {
+    width: 24,
+    height: 24,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 12,
+    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+  },
+  scrollArea: {
+    flex: 1,
+    overflowY: "auto",
+  },
+  gridBody: {
+    display: "flex",
+    position: "relative",
+  },
+  dayColumn: {
+    flex: 1,
+    position: "relative",
+    borderLeft: "1px solid #F2F2F7",
+  },
+};
