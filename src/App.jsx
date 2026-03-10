@@ -3,11 +3,11 @@ import HomeScreen from "./screens/HomeScreen";
 import PatientsScreen from "./screens/PatientsScreen";
 import ScheduleScreen from "./screens/ScheduleScreen";
 import EditAppointmentScreen from "./screens/EditAppointmentScreen";
-import ChatScreen from "./screens/ChatScreen";
+import InboxScreen from "./screens/InboxScreen";
 import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
-import NotificationsScreen from "./screens/NotificationsScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 import PatientRecordSummaryScreen from "./screens/PatientRecordSummaryScreen";
 import PatientRecordNotesScreen from "./screens/PatientRecordNotesScreen";
 import PatientRecordHistoryScreen from "./screens/PatientRecordHistoryScreen";
@@ -40,9 +40,9 @@ function App() {
         <Route path="/patients" element={<PatientsScreen />} />
         <Route path="/schedule" element={<ScheduleScreen />} />
         <Route path="/appointment/edit" element={<EditAppointmentScreen />} />
-        <Route path="/chat" element={<ChatScreen />} />
-        <Route path="/notifications" element={<NotificationsScreen />} />
+        <Route path="/inbox" element={<InboxScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/patient/:id/summary" element={<PatientRecordSummaryScreen />} />
         <Route path="/patient/:id/notes" element={<PatientRecordNotesScreen />} />
         <Route path="/patient/:id/history" element={<PatientRecordHistoryScreen />} />
