@@ -3,23 +3,26 @@ import React from 'react';
 const TopHeader = ({ title, onBack, showBack = true, right = null }) => {
   return (
     <div style={styles.header} className="top-bar">
-      <div style={styles.left}>
-        {showBack ? (
-          <button aria-label="Back" onClick={onBack} style={styles.backButton}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 18l-6-6 6-6" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        ) : (
-          <div style={{ width: 40 }} />
-        )}
-      </div>
+      {/* inner container aligns header content with page content width */}
+      <div className="container" style={styles.innerContainer}>
+        <div style={styles.left}>
+          {showBack ? (
+            <button aria-label="Back" onClick={onBack} style={styles.backButton}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18l-6-6 6-6" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          ) : (
+            <div style={{ width: 40 }} />
+          )}
+        </div>
 
-      <div style={styles.center}>
-        <h1 style={styles.title}>{title}</h1>
-      </div>
+        <div style={styles.center}>
+          <h1 style={styles.title}>{title}</h1>
+        </div>
 
-      <div style={styles.right}>{right ? right : <div style={{ width: 40 }} />}</div>
+        <div style={styles.right}>{right ? right : <div style={{ width: 40 }} />}</div>
+      </div>
     </div>
   );
 };
@@ -33,6 +36,13 @@ const styles = {
     background: 'var(--oscar-white)',
     borderBottom: '1px solid var(--color-neutral-2)',
     flexShrink: 0,
+  },
+  innerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: '0',
   },
   left: { display: 'flex', alignItems: 'center', width: 56 },
   center: { flex: 1, display: 'flex', justifyContent: 'center' },

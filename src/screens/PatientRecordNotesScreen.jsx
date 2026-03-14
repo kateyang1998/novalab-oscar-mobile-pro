@@ -132,7 +132,7 @@ const PatientRecordNotesScreen = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <TopHeader title="Patient Record" onBack={handleBackClick} right={<button style={styles.addNoteBtn} onClick={handleAddNote}>Add Note</button>} />
+      <TopHeader title="Patient Record" onBack={handleBackClick} />
 
       <div style={styles.content}>
         {/* Patient Info Card */}
