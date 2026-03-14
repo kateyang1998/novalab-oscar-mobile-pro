@@ -1,0 +1,46 @@
+/* Minimal global styles and CSS variables for the app */
+:root {
+  /* Colors */
+  --color-primary: #007AFF;
+  --color-primary-dark: #0051A8;
+  --color-accent: #FFC107;
+  --color-success: #34C759;
+  --color-warning: #FFCC00;
+  --color-danger: #FF3B30;
+  --color-neutral-0: #FFFFFF;
+  --color-neutral-1: #F7F7F8;
+  --color-neutral-2: #E5E5EA;
+  --color-neutral-7: #8E8E93;
+  --color-neutral-9: #1C1C1E;
+
+  /* Typography */
+  --font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-xs: 12px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* Box sizing and reset (do not override layout/visuals from index.css) */
+*, *::before, *::after { box-sizing: border-box; }
+/* Note: intentionally avoid setting body background/font here — index.css defines app layout and theme. */
+
+/* Utility classes */
+.u-hidden { display: none !important; }
+.u-mt-sm { margin-top: var(--space-sm); }
+.u-mt-md { margin-top: var(--space-md); }
+.container { max-width: 990px; margin: 0 auto; padding: 0 var(--space-md); }
+
+/* Make app-level anchor and button resets consistent */
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
