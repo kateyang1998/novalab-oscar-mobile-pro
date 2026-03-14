@@ -71,7 +71,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'var(--color-neutral-0)',
+    backgroundColor: 'var(--oscar-white, #F8F9FA)',
     borderTop: '1px solid var(--color-neutral-2)',
     paddingTop: '8px',
     paddingBottom: '20px',

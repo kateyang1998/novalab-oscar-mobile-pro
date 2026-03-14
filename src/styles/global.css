@@ -27,6 +27,13 @@
   --color-text: var(--shark);
   --color-danger: var(--oscar-red);
 
+  /* Back-compat neutral tokens (used by existing components) */
+  --color-neutral-0: var(--oscar-white);
+  --color-neutral-1: var(--oscar-gray);
+  --color-neutral-2: #E5E5EA; /* border / subtle surface */
+  --color-neutral-7: #8E8E93; /* muted text / icons */
+  --color-neutral-9: var(--shark);
+
   /* Typography */
   --font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   --font-size-base: 16px;
