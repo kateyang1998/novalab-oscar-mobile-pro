@@ -76,11 +76,7 @@ export default function EditAppointmentScreen() {
   return (
     <div style={styles.screen}>
       {/* ── Header ── */}
-      <div style={styles.header}>
-        <button onClick={() => navigate(-1)} style={styles.backBtn}>←</button>
-        <span style={styles.headerTitle}>Edit Appointment</span>
-        <div style={{ width: 32 }} />
-      </div>
+      <TopHeader title="Edit Appointment" onBack={() => navigate(-1)} />
 
       {/* ── Scrollable body ── */}
       <div style={styles.body}>
