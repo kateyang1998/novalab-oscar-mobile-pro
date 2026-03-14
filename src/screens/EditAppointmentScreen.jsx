@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppointmentForm from "../components/schedule/AppointmentForm";
 import CancelConfirmModal from "../components/schedule/CancelConfirmModal";
+import TopHeader from "../components/layout/TopHeader";
 
 // ─── Sample previous notes — replace with API data later ─────────────────────
 const SAMPLE_NOTES = [

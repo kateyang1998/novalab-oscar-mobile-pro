@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import TopHeader from "../components/layout/TopHeader";
 
 /**
  * Patients Screen Component
@@ -131,9 +132,7 @@ const PatientsScreen = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>Patient List</h1>
-      </div>
+      <TopHeader title="Patient List" showBack={false} />
 
       <div style={styles.content}>
         {/* Search Bar */}

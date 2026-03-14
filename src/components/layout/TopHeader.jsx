@@ -1,0 +1,60 @@
+import React from 'react';
+
+const TopHeader = ({ title, onBack, showBack = true, right = null }) => {
+  return (
+    <div style={styles.header} className="top-bar">
+      <div style={styles.left}>
+        {showBack ? (
+          <button aria-label="Back" onClick={onBack} style={styles.backButton}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18l-6-6 6-6" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        ) : (
+          <div style={{ width: 40 }} />
+        )}
+      </div>
+
+      <div style={styles.center}>
+        <h1 style={styles.title}>{title}</h1>
+      </div>
+
+      <div style={styles.right}>{right ? right : <div style={{ width: 40 }} />}</div>
+    </div>
+  );
+};
+
+const styles = {
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px 14px',
+    background: 'var(--oscar-white)',
+    borderBottom: '1px solid var(--color-neutral-2)',
+    flexShrink: 0,
+  },
+  left: { display: 'flex', alignItems: 'center', width: 56 },
+  center: { flex: 1, display: 'flex', justifyContent: 'center' },
+  right: { display: 'flex', alignItems: 'center', width: 56, justifyContent: 'flex-end' },
+  backButton: {
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: 'var(--color-text)',
+    margin: 0,
+  },
+};
+
+export default TopHeader;
+

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import TopHeader from "../components/layout/TopHeader";
 
 /**
  * Inbox Screen Component
@@ -103,12 +104,11 @@ const InboxScreen = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>Inbox</h1>
-        <button style={styles.markAllReadButton} onClick={handleMarkAllRead}>
-          Mark all read
-        </button>
-      </div>
+      <TopHeader
+        title="Inbox"
+        showBack={false}
+        right={<button style={styles.markAllReadButton} onClick={handleMarkAllRead}>Mark all read</button>}
+      />
 
       {/* Messages List */}
       <div style={styles.messagesList}>

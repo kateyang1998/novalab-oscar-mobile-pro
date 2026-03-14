@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import TopHeader from "../components/layout/TopHeader";
 
 /**
  * Patient Record Summary Screen Component
