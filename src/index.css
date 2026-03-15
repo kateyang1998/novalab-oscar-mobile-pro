@@ -1,5 +1,6 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Use theme font variable (Encode Sans) defined in global.css */
+  font-family: var(--font-family);
   line-height: 1.5;
   font-weight: 400;
 

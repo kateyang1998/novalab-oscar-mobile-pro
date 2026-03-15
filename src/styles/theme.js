@@ -24,7 +24,7 @@ export const theme = {
   // typography
   font: {
     family:
-      'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+      'Encode Sans, Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
     baseSize: '16px',
     sizes: { xs: '12px', sm: '14px', md: '16px', lg: '18px' },
     weights: { regular: 400, medium: 500, bold: 700 },
