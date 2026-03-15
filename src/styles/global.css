@@ -126,3 +126,23 @@ button { font-family: inherit; }
 .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
 .shadow-md { box-shadow: 0 4px 8px rgba(33,37,41,0.08); }
 
+/* Form controls */
+.form-group { margin-bottom: var(--space-md); }
+.form-label { display: block; font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid var(--color-neutral-2);
+  border-radius: 8px;
+  background-color: var(--oscar-white);
+  box-sizing: border-box;
+  outline: none;
+  /* Ensure input text color comes from theme (fixes white-on-white issue) */
+  color: var(--oscar-black);
+}
+.form-input:focus { border-color: var(--oscar-blue); box-shadow: 0 0 0 3px rgba(0,86,179,0.08); }
+.form-input::placeholder { color: var(--pale-sky); }
+
+.form-subtle { color: var(--pale-sky); font-size: 14px; }
+

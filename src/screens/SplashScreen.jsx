@@ -14,7 +14,7 @@ const SplashScreen = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/signin");
-    }, 3000);
+    }, 2000);
 
     // Cleanup timer on component unmount
     return () => clearTimeout(timer);
@@ -33,7 +33,8 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     minHeight: "100vh",
-    background: "linear-gradient(180deg, #0066CC 0%, #004C99 100%)",
+    /* Use OSCAR theme blue as background */
+    background: "var(--oscar-blue)",
   },
   logo: {
     width: "100px",
