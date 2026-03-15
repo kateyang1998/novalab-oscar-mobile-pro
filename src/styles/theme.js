@@ -7,6 +7,7 @@ export const theme = {
     oscarBlack: '#000000', // OSCAR Black
     oscarRed: '#C82333', // OSCAR Red
     oscarGreen: '#28A745', // OSCAR Green
+    overlay: 'rgba(0,0,0,0.5)',
     oscarYellow: '#FFEAA7', // OSCAR Yellow
     paleSky: '#757575',
     shark: '#212529',

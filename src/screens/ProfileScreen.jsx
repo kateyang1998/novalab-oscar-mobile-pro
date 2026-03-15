@@ -2,6 +2,15 @@ import { useNavigate } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import { useState } from "react";
 import BottomTab from "../components/BottomTab";
+import theme from '../styles/theme';
+import UserProfileCard from '../components/profile/UserProfileCard';
+import SecuritySection from '../components/profile/SecuritySection';
+import SystemSection from '../components/profile/SystemSection';
+import LogoutButton from '../components/profile/LogoutButton';
+import LogoutConfirmModal from '../components/profile/LogoutConfirmModal';
+import ChangePasswordModal from '../components/profile/ChangePasswordModal';
+import SyncStatusModal from '../components/profile/SyncStatusModal';
+import { IconChevronRight } from '../components/common/Icons';
 
 /**
  * Profile Screen Component
@@ -19,10 +28,7 @@ const ProfileScreen = () => {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showSyncStatusModal, setShowSyncStatusModal] = useState(false);
 
-  // Change password form state
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  // (Change password modal manages its own form state)
 
 
   const handleBackClick = () => {
@@ -52,35 +58,20 @@ const ProfileScreen = () => {
     setShowChangePasswordModal(true);
   };
 
-  const handleChangePasswordSubmit = () => {
-    // TODO: Implement change password API call
-    if (newPassword !== confirmNewPassword) {
+  const handleChangePasswordSubmit = ({ current, next, confirm }) => {
+    if (next !== confirm) {
       alert("New passwords don't match!");
       return;
     }
-    if (newPassword.length < 8) {
+    if (next.length < 8) {
       alert("Password must be at least 8 characters long!");
       return;
     }
 
-    console.log("Change password:", {
-      currentPassword,
-      newPassword
-    });
-
-    // Clear form and close modal
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmNewPassword("");
+    // TODO: call change password API
+    console.log('Change password', { current, next });
     setShowChangePasswordModal(false);
-    alert("Password changed successfully!");
-  };
-
-  const cancelChangePassword = () => {
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmNewPassword("");
-    setShowChangePasswordModal(false);
+    alert('Password changed successfully!');
   };
 
   const handleSyncStatusClick = () => {
@@ -105,125 +96,20 @@ const ProfileScreen = () => {
       <TopHeader title="Profile" onBack={handleBackClick} />
 
       <div style={styles.content}>
-        {/* User Profile Card */}
-        <div style={styles.profileCard}>
-          <div style={styles.profileIcon}>
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="20" cy="20" r="20" fill="#B0B0B0" />
-              <path
-                d="M20 20c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                fill="white"
-              />
-            </svg>
-          </div>
-          <div style={styles.profileInfo}>
-            <h2 style={styles.doctorName}>Dr. Full Name</h2>
-            <p style={styles.specialty}>Family Physician</p>
-            <p style={styles.email}>adkfij@oscar.ca</p>
-            <p style={styles.doctorId}>ID: CL001234</p>
-          </div>
-        </div>
+        <UserProfileCard />
 
-        {/* Security Section */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>Security</h3>
+        <SecuritySection
+          onChangePassword={handleChangePasswordClick}
+          biometricEnabled={biometricEnabled}
+          onToggleBiometric={() => setBiometricEnabled(!biometricEnabled)}
+        />
 
-          <div style={styles.menuItem} onClick={handleChangePasswordClick}>
-            <span style={styles.menuItemText}>Change Password</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#8E8E93"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
+        <SystemSection
+          onSettings={handleSettingsClick}
+          onSyncStatus={handleSyncStatusClick}
+        />
 
-          <div style={styles.menuItem}>
-            <span style={styles.menuItemText}>Biometric Login</span>
-            <div
-              style={{
-                ...styles.toggleSwitch,
-                backgroundColor: biometricEnabled ? "#007AFF" : "#E5E5E7"
-              }}
-              onClick={() => setBiometricEnabled(!biometricEnabled)}
-            >
-              <div
-                style={{
-                  ...styles.toggleKnob,
-                  transform: biometricEnabled ? "translateX(20px)" : "translateX(2px)"
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        {/* System Section */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>System</h3>
-
-          <div style={styles.menuItem} onClick={handleSettingsClick}>
-            <span style={styles.menuItemText}>Settings</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#8E8E93"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-
-          <div style={styles.menuItem} onClick={handleSyncStatusClick}>
-            <span style={styles.menuItemText}>Sync Status</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#8E8E93"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-
-          <div style={styles.menuItemNoBorder}>
-            <span style={styles.menuItemText}>App Version</span>
-            <span style={styles.versionText}>v2.1.0</span>
-          </div>
-        </div>
-
-        {/* Logout Button */}
-        <button style={styles.logoutButton} onClick={handleLogout}>
-          Logout
-        </button>
+        <LogoutButton onLogout={handleLogout} />
       </div>
 
       {/* Bottom Navigation */}
@@ -231,120 +117,17 @@ const ProfileScreen = () => {
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirmation && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContainer}>
-            <div style={styles.modalContent}>
-              <h3 style={styles.modalTitle}>Are you sure you want to logout?</h3>
-              <p style={styles.modalMessage}>
-                You will need to sign in again to access the app.
-              </p>
-              <div style={styles.modalButtons}>
-                <button style={styles.confirmButton} onClick={confirmLogout}>
-                  Yes
-                </button>
-                <button style={styles.cancelButton} onClick={cancelLogout}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LogoutConfirmModal onConfirm={confirmLogout} onDismiss={cancelLogout} />
       )}
 
       {/* Change Password Modal */}
       {showChangePasswordModal && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContainer}>
-            <div style={styles.modalContent}>
-              <h3 style={styles.modalTitle}>Change Password</h3>
-              <div style={styles.formContainer}>
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>Current Password</label>
-                  <input
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    style={styles.inputField}
-                    placeholder="Enter current password"
-                  />
-                </div>
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>New Password</label>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    style={styles.inputField}
-                    placeholder="Enter new password"
-                  />
-                </div>
-                <div style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>Confirm New Password</label>
-                  <input
-                    type="password"
-                    value={confirmNewPassword}
-                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    style={styles.inputField}
-                    placeholder="Confirm new password"
-                  />
-                </div>
-              </div>
-              <div style={styles.modalButtons}>
-                <button style={styles.confirmButton} onClick={handleChangePasswordSubmit}>
-                  Change Password
-                </button>
-                <button style={styles.cancelButton} onClick={cancelChangePassword}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ChangePasswordModal onSubmit={handleChangePasswordSubmit} onDismiss={() => setShowChangePasswordModal(false)} />
       )}
 
       {/* Sync Status Modal */}
       {showSyncStatusModal && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContainer}>
-            <div style={styles.modalContent}>
-              <h3 style={styles.modalTitle}>Sync Status</h3>
-              <div style={styles.syncStatusContainer}>
-                <div style={styles.syncItem}>
-                  <span style={styles.syncLabel}>Last Sync:</span>
-                  <span style={styles.syncValue}>Mar 4, 2026 2:30 PM</span>
-                </div>
-                <div style={styles.syncItem}>
-                  <span style={styles.syncLabel}>Status:</span>
-                  <span style={{...styles.syncValue, color: "#28A745"}}>✓ Up to date</span>
-                </div>
-                <div style={styles.syncItem}>
-                  <span style={styles.syncLabel}>Patient Records:</span>
-                  <span style={styles.syncValue}>1,247 synced</span>
-                </div>
-                <div style={styles.syncItem}>
-                  <span style={styles.syncLabel}>Clinical Notes:</span>
-                  <span style={styles.syncValue}>863 synced</span>
-                </div>
-                <div style={styles.syncItem}>
-                  <span style={styles.syncLabel}>Appointments:</span>
-                  <span style={styles.syncValue}>425 synced</span>
-                </div>
-                <div style={styles.syncItem}>
-                  <span style={styles.syncLabel}>Network:</span>
-                  <span style={styles.syncValue}>Connected</span>
-                </div>
-              </div>
-              <div style={styles.syncButtonContainer}>
-                <button style={styles.syncNowButton} onClick={handleSyncNow}>
-                  Sync Now
-                </button>
-                <button style={styles.cancelButton} onClick={closeSyncStatusModal}>
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SyncStatusModal onClose={closeSyncStatusModal} onSync={() => { handleSyncNow(); }} />
       )}
     </div>
   );
@@ -352,18 +135,18 @@ const ProfileScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: "#E8E8E8",
+    backgroundColor: theme.colors.oscarGray,
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
   },
   header: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     padding: "16px 20px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    borderBottom: "1px solid #E0E0E0",
+    borderBottom: `1px solid ${theme.colors.oscarGray}`,
   },
   backButton: {
     background: "none",
@@ -376,7 +159,7 @@ const styles = {
   headerTitle: {
     fontSize: "18px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0",
     flex: 1,
     textAlign: "center",
@@ -393,7 +176,7 @@ const styles = {
     boxSizing: "border-box",
   },
   profileCard: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     borderRadius: "12px",
     padding: "24px",
     marginBottom: "24px",
@@ -410,26 +193,26 @@ const styles = {
   doctorName: {
     fontSize: "20px",
     fontWeight: "700",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0 0 4px 0",
   },
   specialty: {
     fontSize: "14px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     margin: "0 0 4px 0",
   },
   email: {
     fontSize: "14px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     margin: "0 0 4px 0",
   },
   doctorId: {
     fontSize: "14px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     margin: "0",
   },
   section: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     borderRadius: "12px",
     padding: "0",
     marginBottom: "24px",
@@ -438,7 +221,7 @@ const styles = {
   sectionTitle: {
     fontSize: "18px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0",
     padding: "20px 20px 16px 20px",
   },
@@ -447,7 +230,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "16px 20px",
-    borderBottom: "1px solid #E5E5E7",
+    borderBottom: `1px solid ${theme.colors.oscarGray}`,
     cursor: "pointer",
   },
   menuItemNoBorder: {
@@ -459,12 +242,12 @@ const styles = {
   },
   menuItemText: {
     fontSize: "16px",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     fontWeight: "400",
   },
   versionText: {
     fontSize: "16px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     fontWeight: "400",
   },
   toggleSwitch: {
@@ -478,18 +261,18 @@ const styles = {
   toggleKnob: {
     width: "22px",
     height: "22px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     borderRadius: "11px",
     position: "absolute",
     top: "2px",
     transition: "transform 0.2s",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    boxShadow: theme.shadows.sm,
   },
   logoutButton: {
     width: "100%",
     padding: "16px",
-    backgroundColor: "#DC3545",
-    color: "#FFFFFF",
+    backgroundColor: theme.colors.oscarRed,
+    color: theme.colors.oscarWhite,
     border: "none",
     borderRadius: "12px",
     fontSize: "16px",
@@ -497,40 +280,21 @@ const styles = {
     cursor: "pointer",
     marginBottom: "20px",
   },
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-    padding: "20px",
-  },
-  modalContainer: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: "12px",
-    padding: "24px",
-    width: "100%",
-    maxWidth: "320px",
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
-  },
+  modalOverlay: {},
+  modalContainer: {},
   modalContent: {
     textAlign: "center",
   },
   modalTitle: {
     fontSize: "16px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0 0 16px 0",
     lineHeight: "1.4",
   },
   modalMessage: {
     fontSize: "14px",
-    color: "#666666",
+    color: theme.colors.paleSky,
     margin: "0 0 24px 0",
     lineHeight: "1.5",
   },
@@ -542,9 +306,9 @@ const styles = {
   },
   cancelButton: {
     padding: "14px 16px",
-    backgroundColor: "#F8F9FA",
-    color: "#666666",
-    border: "1px solid #E5E5E7",
+    backgroundColor: theme.colors.oscarWhite,
+    color: theme.colors.paleSky,
+    border: `1px solid ${theme.colors.oscarGray}`,
     borderRadius: "8px",
     fontSize: "16px",
     fontWeight: "500",
@@ -553,8 +317,8 @@ const styles = {
   },
   confirmButton: {
     padding: "14px 16px",
-    backgroundColor: "#DC3545",
-    color: "#FFFFFF",
+    backgroundColor: theme.colors.oscarRed,
+    color: theme.colors.oscarWhite,
     border: "none",
     borderRadius: "8px",
     fontSize: "16px",
@@ -572,16 +336,16 @@ const styles = {
     display: "block",
     fontSize: "14px",
     fontWeight: "500",
-    color: "#333333",
+    color: theme.colors.shark,
     marginBottom: "6px",
   },
   inputField: {
     width: "100%",
     padding: "12px 16px",
     fontSize: "14px",
-    border: "1px solid #D1D1D6",
+    border: `1px solid ${theme.colors.oscarGray}`,
     borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     boxSizing: "border-box",
     outline: "none",
     fontFamily: "inherit",
@@ -595,16 +359,16 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "12px 0",
-    borderBottom: "1px solid #F0F0F0",
+    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
   },
   syncLabel: {
     fontSize: "14px",
-    color: "#666666",
+    color: theme.colors.paleSky,
     fontWeight: "500",
   },
   syncValue: {
     fontSize: "14px",
-    color: "#333333",
+    color: theme.colors.shark,
     fontWeight: "400",
   },
   syncButtonContainer: {
@@ -614,8 +378,8 @@ const styles = {
   },
   syncNowButton: {
     padding: "14px 16px",
-    backgroundColor: "#007AFF",
-    color: "#FFFFFF",
+    backgroundColor: theme.colors.oscarBlue,
+    color: theme.colors.oscarWhite,
     border: "none",
     borderRadius: "8px",
     fontSize: "16px",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Search, ChevronRight, ChevronLeft, Check, X, Menu, Bell, Home, Users, Calendar, Inbox } from 'lucide-react';
+import { User, Search, ChevronRight, ChevronLeft, Check, X, Menu, Bell, Home, Users, Calendar, Inbox, RefreshCw } from 'lucide-react';
 
 export const IconUser = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
   <User size={size} color={color} className={className} style={style} {...rest} />
@@ -48,6 +48,10 @@ export const IconCalendar = ({ size = 24, color = 'currentColor', className, sty
 
 export const IconInbox = ({ size = 24, color = 'currentColor', className, style, ...rest }) => (
   <Inbox size={size} color={color} className={className} style={style} {...rest} />
+);
+
+export const IconRefresh = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
+  <RefreshCw size={size} color={color} className={className} style={style} {...rest} />
 );
 
 
