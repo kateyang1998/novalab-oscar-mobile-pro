@@ -134,7 +134,7 @@ const PatientsScreen = () => {
       {/* Header */}
       <TopHeader title="Patient List" showBack={false} />
 
-      <div style={styles.content}>
+      <div className="container" style={styles.content}>
         {/* Search Bar */}
         <div style={styles.searchContainer}>
           <svg

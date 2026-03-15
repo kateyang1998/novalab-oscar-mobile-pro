@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { IconUser, IconSearch, IconChevronRight } from "../components/common/Icons";
 
 /**
  * Home Screen Component
@@ -82,35 +83,14 @@ const HomeScreen = () => {
       {/* Header */}
       <header style={styles.header}>
         <h1 style={styles.title}>Welcome, Dr. Lee</h1>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          style={styles.profileIcon}
-          onClick={() => navigate("/profile")}
-        >
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-        </svg>
+        <div style={styles.profileIcon} onClick={() => navigate("/profile")}> 
+          <IconUser size={24} color="var(--oscar-black)" />
+        </div>
       </header>
 
       {/* Search Bar */}
       <div style={styles.searchBarContainer}>
-        <svg
-          style={styles.searchIcon}
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
-            stroke="#8E8E93"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <div style={styles.searchIcon}><IconSearch size={20} color="var(--color-neutral-7)" /></div>
         <input
           type="text"
           placeholder="Search patients"
@@ -191,22 +171,7 @@ const HomeScreen = () => {
                   ID: {patient.id} • {patient.time}
                 </p>
               </div>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={styles.arrowIcon}
-              >
-                <path
-                  d="M7.5 15L12.5 10L7.5 5"
-                  stroke="#8E8E93"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <IconChevronRight size={20} color="var(--color-neutral-7)" style={styles.arrowIcon} />
             </div>
           ))}
         </div>
