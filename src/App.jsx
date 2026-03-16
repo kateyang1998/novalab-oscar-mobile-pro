@@ -8,6 +8,7 @@ import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import PatientRecordScreen from "./screens/PatientRecordScreen";
 import PatientRecordSummaryScreen from "./screens/PatientRecordSummaryScreen";
 import PatientRecordNotesScreen from "./screens/PatientRecordNotesScreen";
 import PatientRecordHistoryScreen from "./screens/PatientRecordHistoryScreen";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/inbox" element={<InboxScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
+        <Route path="/patient/:id" element={<PatientRecordScreen />} />
         <Route path="/patient/:id/summary" element={<PatientRecordSummaryScreen />} />
         <Route path="/patient/:id/notes" element={<PatientRecordNotesScreen />} />
         <Route path="/patient/:id/history" element={<PatientRecordHistoryScreen />} />

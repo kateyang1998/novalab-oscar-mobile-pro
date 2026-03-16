@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Search, ChevronRight, ChevronLeft, Check, X, Menu, Bell, Home, Users, Calendar, Inbox, RefreshCw } from 'lucide-react';
+import { User, Search, ChevronRight, ChevronLeft, Check, X, Menu, Bell, Home, Users, Calendar, Inbox, RefreshCw, AlertTriangle, Thermometer, Plus } from 'lucide-react';
 
 export const IconUser = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
   <User size={size} color={color} className={className} style={style} {...rest} />
@@ -52,6 +52,18 @@ export const IconInbox = ({ size = 24, color = 'currentColor', className, style,
 
 export const IconRefresh = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
   <RefreshCw size={size} color={color} className={className} style={style} {...rest} />
+);
+
+export const IconAlert = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
+  <AlertTriangle size={size} color={color} className={className} style={style} {...rest} />
+);
+
+export const IconThermometer = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
+  <Thermometer size={size} color={color} className={className} style={style} {...rest} />
+);
+
+export const IconPlus = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
+  <Plus size={size} color={color} className={className} style={style} {...rest} />
 );
 
 

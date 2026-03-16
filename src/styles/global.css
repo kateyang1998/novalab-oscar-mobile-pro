@@ -24,7 +24,7 @@
   --color-primary: var(--oscar-blue);
   --color-background: var(--oscar-gray);
   --color-surface: var(--oscar-white);
-  --color-text: var(--shark);
+  --color-text: var(--oscar-black);
   --color-danger: var(--oscar-red);
 
   /* Back-compat neutral tokens (used by existing components) */
