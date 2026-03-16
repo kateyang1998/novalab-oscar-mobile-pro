@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import SearchBar from "../components/common/SearchBar";
 import theme from "../styles/theme";
+import PatientGrid from "../components/patient/PatientGrid";
 
 /**
  * Patients Screen Component
@@ -158,23 +159,7 @@ const PatientsScreen = () => {
 
         {/* Patient Cards Grid */}
         {!loading && filteredPatients.length > 0 && (
-          <div style={styles.patientsGrid}>
-            {filteredPatients.map((patient) => (
-              <div
-                key={patient.id}
-                style={styles.patientCard}
-                onClick={() => handlePatientClick(patient.id)}
-              >
-                <h3 style={styles.patientName}>{patient.name}</h3>
-                <p style={styles.patientId}>ID: {patient.id}</p>
-                <p style={styles.patientInfo}>
-                  {patient.age} years old • {patient.gender}
-                </p>
-                <p style={styles.patientInfo}>DOB: {patient.dob}</p>
-                <p style={styles.lastVisit}>Last Visit: {patient.lastVisit}</p>
-              </div>
-            ))}
-          </div>
+          <PatientGrid patients={filteredPatients} onPatientClick={handlePatientClick} />
         )}
       </div>
     </div>
@@ -200,7 +185,7 @@ const styles = {
   title: {
     fontSize: "18px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     textAlign: "center",
     margin: "0",
   },
