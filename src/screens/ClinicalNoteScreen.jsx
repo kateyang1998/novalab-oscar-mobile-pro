@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
+import PatientInfoCard from "../components/patient/PatientInfoCard";
+import FormSection from "../components/common/FormSection.jsx";
+import { IconPlus, IconAlert } from "../components/common/Icons";
+import { TextInput, SelectInput, TextAreaInput, CheckboxInput } from "../components/common/FormControls";
+import theme from "../styles/theme";
 
 /**
  * Clinical Note Screen Component
@@ -55,7 +60,10 @@ const ClinicalNoteScreen = () => {
       const mockPatientData = {
         id: patientId || "P-0021",
         name: "Sarah Johnson",
-        dateTime: "2026. 2. 11. 11:16 PM",
+        age: 45,
+        gender: "Female",
+        dob: "Jan 14, 1979",
+        phone: "(555) 123-4567"
       };
 
       setPatientData(mockPatientData);
@@ -157,181 +165,94 @@ const ClinicalNoteScreen = () => {
 
       <div style={styles.content}>
         {/* Patient Info Card */}
-        {patientData && (
-          <div style={styles.patientInfoCard}>
-            <h2 style={styles.patientName}>{patientData.name}</h2>
-            <p style={styles.patientDetail}>ID: {patientData.id}</p>
-            <p style={styles.patientDetail}>{patientData.dateTime}</p>
-          </div>
-        )}
+        {patientData && <PatientInfoCard patient={{ id: patientData.id, name: patientData.name, dob: patientData.dob, age: patientData.age, gender: patientData.gender, phone: patientData.phone }} />}
 
-        {/* S - Subjective Section */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>S - Subjective</h3>
-
+        <FormSection title="S - Subjective">
           <label style={styles.label}>Chief Complaint Category</label>
-          <select
-            value={chiefComplaint}
-            onChange={(e) => setChiefComplaint(e.target.value)}
-            style={styles.select}
-          >
+          <SelectInput value={chiefComplaint} onChange={(e) => setChiefComplaint(e.target.value)}>
             <option value="">Select Category</option>
             <option value="Diabetes Management">Diabetes Management</option>
             <option value="Hypertension">Hypertension</option>
             <option value="Routine Checkup">Routine Checkup</option>
             <option value="Acute Illness">Acute Illness</option>
             <option value="Follow-up">Follow-up</option>
-          </select>
+          </SelectInput>
 
           <label style={styles.label}>Patient's Description</label>
-          <textarea
-            value={subjectiveDescription}
-            onChange={(e) => setSubjectiveDescription(e.target.value)}
-            placeholder="Patient reports..."
-            style={styles.textarea}
-          />
-        </div>
+          <TextAreaInput value={subjectiveDescription} onChange={(e) => setSubjectiveDescription(e.target.value)} placeholder="Patient reports..." />
+        </FormSection>
 
-        {/* O - Objective Section */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>O - Objective</h3>
-
+        {/* O - Objective FormSection */}
+        <FormSection title="O - Objective">
           <div style={styles.vitalsGrid}>
             <div style={styles.inputGroup}>
               <label style={styles.label}>Blood Pressure</label>
-              <input
-                type="text"
-                value={bloodPressure}
-                onChange={(e) => setBloodPressure(e.target.value)}
-                placeholder="120/80"
-                style={styles.input}
-              />
+              <TextInput value={bloodPressure} onChange={(e) => setBloodPressure(e.target.value)} placeholder="120/80" />
             </div>
 
             <div style={styles.inputGroup}>
               <label style={styles.label}>Heart Rate</label>
-              <input
-                type="text"
-                value={heartRate}
-                onChange={(e) => setHeartRate(e.target.value)}
-                placeholder="72"
-                style={styles.input}
-              />
+              <TextInput value={heartRate} onChange={(e) => setHeartRate(e.target.value)} placeholder="72" />
             </div>
 
             <div style={styles.inputGroup}>
               <label style={styles.label}>Temperature (°C)</label>
-              <input
-                type="text"
-                value={temperature}
-                onChange={(e) => setTemperature(e.target.value)}
-                placeholder="36.7"
-                style={styles.input}
-              />
+              <TextInput value={temperature} onChange={(e) => setTemperature(e.target.value)} placeholder="36.7" />
             </div>
 
             <div style={styles.inputGroup}>
               <label style={styles.label}>Weight (kg)</label>
-              <input
-                type="text"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                placeholder="68"
-                style={styles.input}
-              />
+              <TextInput value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="68" />
             </div>
           </div>
 
           <label style={styles.label}>Patient's Description</label>
-          <textarea
-            value={objectiveDescription}
-            onChange={(e) => setObjectiveDescription(e.target.value)}
-            placeholder="Patient reports..."
-            style={styles.textarea}
-          />
-        </div>
+          <TextAreaInput value={objectiveDescription} onChange={(e) => setObjectiveDescription(e.target.value)} placeholder="Patient reports..." />
+        </FormSection>
 
-        {/* A - Assessment Section */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>A - Assessment</h3>
-
+        {/* A - Assessment FormSection */}
+        <FormSection title="A - Assessment">
           <label style={styles.label}>Diagnosis Category</label>
-          <select
-            value={diagnosisCategory}
-            onChange={(e) => setDiagnosisCategory(e.target.value)}
-            style={styles.select}
-          >
+          <SelectInput value={diagnosisCategory} onChange={(e) => setDiagnosisCategory(e.target.value)}>
             <option value="">Select Category</option>
             <option value="Type 2 Diabetes">Type 2 Diabetes</option>
             <option value="Hypertension">Hypertension</option>
             <option value="Hyperlipidemia">Hyperlipidemia</option>
             <option value="Upper Respiratory Infection">Upper Respiratory Infection</option>
             <option value="Other">Other</option>
-          </select>
+          </SelectInput>
 
           <label style={styles.label}>Clinical Assessment</label>
-          <textarea
-            value={clinicalAssessment}
-            onChange={(e) => setClinicalAssessment(e.target.value)}
-            placeholder="Clinical impression and diagnosis..."
-            style={styles.textarea}
-          />
-        </div>
+          <TextAreaInput value={clinicalAssessment} onChange={(e) => setClinicalAssessment(e.target.value)} placeholder="Clinical impression and diagnosis..." />
+        </FormSection>
 
-        {/* P - Plan Section */}
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>P - Plan</h3>
-
+        {/* P - Plan FormSection */}
+        <FormSection title="P - Plan">
           <label style={styles.label}>Treatment Plan</label>
-          <textarea
-            value={treatmentPlan}
-            onChange={(e) => setTreatmentPlan(e.target.value)}
-            placeholder="Treatment Plan Details..."
-            style={styles.textarea}
-          />
+          <TextAreaInput value={treatmentPlan} onChange={(e) => setTreatmentPlan(e.target.value)} placeholder="Treatment Plan Details..." />
 
           <div style={styles.checkboxGroup}>
             <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={medicationPrescribed}
-                onChange={(e) => setMedicationPrescribed(e.target.checked)}
-                style={styles.checkbox}
-              />
+              <CheckboxInput checked={medicationPrescribed} onChange={(e) => setMedicationPrescribed(e.target.checked)} />
               Medication prescribed
             </label>
 
             <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={labTestOrdered}
-                onChange={(e) => setLabTestOrdered(e.target.checked)}
-                style={styles.checkbox}
-              />
+              <CheckboxInput checked={labTestOrdered} onChange={(e) => setLabTestOrdered(e.target.checked)} />
               Lab test ordered
             </label>
 
             <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={referralMade}
-                onChange={(e) => setReferralMade(e.target.checked)}
-                style={styles.checkbox}
-              />
+              <CheckboxInput checked={referralMade} onChange={(e) => setReferralMade(e.target.checked)} />
               Referral made
             </label>
 
             <label style={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={followUpRequired}
-                onChange={(e) => setFollowUpRequired(e.target.checked)}
-                style={styles.checkbox}
-              />
+              <CheckboxInput checked={followUpRequired} onChange={(e) => setFollowUpRequired(e.target.checked)} />
               Follow-up required
             </label>
           </div>
-        </div>
+        </FormSection>
 
         {/* Action Buttons */}
         <button style={styles.saveButton} onClick={handleSaveAndSync}>
@@ -347,182 +268,57 @@ const ClinicalNoteScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: "#E8E8E8",
-    minHeight: "100vh",
-    paddingBottom: "80px",
+    backgroundColor: theme.colors.oscarGray,
+    minHeight: '100vh',
+    paddingBottom: '80px',
   },
-  header: {
-    backgroundColor: "#FFFFFF",
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: "1px solid #E0E0E0",
-  },
-  backButton: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: "0",
-    display: "flex",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#000000",
-    margin: "0",
-    flex: 1,
-    textAlign: "center",
-  },
+  content: { padding: 20, maxWidth: 800, margin: '0 auto' },
   draftBadge: {
-    fontSize: "12px",
-    fontWeight: "600",
-    color: "#666666",
-    backgroundColor: "#E8E8E8",
-    padding: "4px 12px",
-    borderRadius: "12px",
-  },
-  content: {
-    padding: "20px",
-    maxWidth: "800px",
-    margin: "0 auto",
-  },
-  patientInfoCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: "8px",
-    padding: "20px",
-    marginBottom: "16px",
-  },
-  patientName: {
-    fontSize: "20px",
-    fontWeight: "700",
-    color: "#000000",
-    margin: "0 0 8px 0",
-  },
-  patientDetail: {
-    fontSize: "13px",
-    color: "#666666",
-    margin: "4px 0",
-  },
-  section: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: "8px",
-    padding: "20px",
-    marginBottom: "16px",
-  },
-  sectionTitle: {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#007AFF",
-    margin: "0 0 16px 0",
-    paddingBottom: "8px",
-    borderBottom: "2px solid #007AFF",
+    fontSize: 12,
+    fontWeight: 600,
+    color: theme.colors.paleSky,
+    backgroundColor: theme.colors.oscarGray,
+    padding: '4px 12px',
+    borderRadius: '12px',
   },
   label: {
-    display: "block",
-    fontSize: "14px",
-    fontWeight: "600",
-    color: "#000000",
-    marginBottom: "8px",
-    marginTop: "16px",
+    display: 'block',
+    fontSize: 14,
+    fontWeight: 600,
+    color: theme.colors.oscarBlack,
+    marginBottom: 8,
+    marginTop: 16,
   },
-  input: {
-    width: "100%",
-    padding: "12px",
-    fontSize: "14px",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
-    boxSizing: "border-box",
-    outline: "none",
-  },
-  select: {
-    width: "100%",
-    padding: "12px",
-    fontSize: "14px",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
-    boxSizing: "border-box",
-    outline: "none",
-    cursor: "pointer",
-  },
-  textarea: {
-    width: "100%",
-    padding: "12px",
-    fontSize: "14px",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
-    boxSizing: "border-box",
-    outline: "none",
-    minHeight: "100px",
-    resize: "vertical",
-    fontFamily: "inherit",
-  },
-  vitalsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "16px",
-    marginBottom: "8px",
-  },
-  inputGroup: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  checkboxGroup: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    marginTop: "16px",
-  },
-  checkboxLabel: {
-    display: "flex",
-    alignItems: "center",
-    fontSize: "14px",
-    color: "#000000",
-    cursor: "pointer",
-  },
-  checkbox: {
-    width: "18px",
-    height: "18px",
-    marginRight: "10px",
-    cursor: "pointer",
-  },
+  vitalsGrid: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 8 },
+  inputGroup: { display: 'flex', flexDirection: 'column' },
+  checkboxGroup: { display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 },
+  checkboxLabel: { display: 'flex', alignItems: 'center', fontSize: 14, color: theme.colors.oscarBlack, cursor: 'pointer' },
+  checkbox: { width: 18, height: 18, marginRight: 10, cursor: 'pointer' },
   saveButton: {
-    width: "100%",
-    padding: "16px",
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#FFFFFF",
-    backgroundColor: "#007AFF",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    marginBottom: "12px",
+    width: '100%',
+    padding: '16px',
+    fontSize: 16,
+    fontWeight: 600,
+    color: theme.colors.oscarWhite,
+    backgroundColor: theme.colors.oscarBlue,
+    border: 'none',
+    borderRadius: 8,
+    cursor: 'pointer',
+    marginBottom: 12,
   },
   cancelButton: {
-    width: "100%",
-    padding: "16px",
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#000000",
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    cursor: "pointer",
+    width: '100%',
+    padding: '16px',
+    fontSize: 16,
+    fontWeight: 600,
+    color: theme.colors.paleSky,
+    backgroundColor: theme.colors.oscarWhite,
+    border: `1px solid ${theme.colors.oscarGray}`,
+    borderRadius: 8,
+    cursor: 'pointer',
   },
-  loadingContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "60px 20px",
-  },
-  loadingText: {
-    fontSize: "16px",
-    color: "#8E8E93",
-  },
+  loadingContainer: { display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '60px 20px' },
+  loadingText: { fontSize: 16, color: theme.colors.paleSky },
 };
 
 export default ClinicalNoteScreen;
