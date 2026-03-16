@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import TopHeader from "../components/layout/TopHeader";
 
 /**
  * Clinical Note Screen Component
