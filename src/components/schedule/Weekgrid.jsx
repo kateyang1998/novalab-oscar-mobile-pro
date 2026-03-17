@@ -142,6 +142,5 @@ const styles = {
   dayColumn: {
     flex: 1,
     position: "relative",
-    borderLeft: `1px solid ${theme.colors.oscarWhite}`,
   },
 };

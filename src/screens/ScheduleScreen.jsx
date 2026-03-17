@@ -25,7 +25,7 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
   const todayStr = getTodayString();
 
   // allow navigation to open the schedule in a specific view/date
-  const initialView = location.state?.view ?? "month";
+  const initialView = location.state?.view ?? "day";
   const initialSelectedDate = location.state?.date ?? "2026-04-15";
 
   const [view, setView] = useState(initialView);
@@ -155,7 +155,7 @@ const styles = {
   screen: {
     display: "flex",
     flexDirection: "column",
-    height: "calc(100vh - 80px)",
+    height: "calc(100vh - 70px)",
     background: theme.colors.oscarWhite,
     fontFamily: "-apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif",
     overflow: "hidden",
