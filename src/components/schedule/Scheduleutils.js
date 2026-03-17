@@ -27,8 +27,8 @@ export const APPOINTMENT_TYPE_COLORS = {
 
 export const APPOINTMENT_STATUS = {
   Finished: { color: theme.colors.oscarGreen },
-  Scheduled: { color: theme.colors.oscarBlue },
-  Cancelled: { color: theme.colors.paleSky },
+  Scheduled: { color: theme.colors.paleSky },
+  Cancelled: { color: theme.colors.oscarRed },
 };
 
 export function toDateString(year, month, day) {
