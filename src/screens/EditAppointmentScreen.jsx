@@ -20,6 +20,7 @@ import theme from '../styles/theme';
 import AddNoteButton from '../components/clinical_note/AddNoteButton';
 import NoteCard from '../components/clinical_note/NoteCard';
 import PatientInfoCard from '../components/patient/PatientInfoCard';
+import UnsavedChangesModal from '../components/common/UnsavedChangesModal';
 
 /*
   TODOs: Backend & Database integration (high-level)
@@ -87,6 +88,8 @@ export default function EditAppointmentScreen() {
   });
 
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   // notes state (moved from AppointmentForm)
   const [notes, _setNotes] = useState(SAMPLE_NOTES);
 
@@ -114,6 +117,7 @@ export default function EditAppointmentScreen() {
 
   function handleFieldChange(field, value) {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setIsDirty(true);
   }
 
   function handleSaveAndSync() {
@@ -125,6 +129,17 @@ export default function EditAppointmentScreen() {
     console.log("Saving appointment (TODO: call backend API):", formData);
     // Example implementation outline:
     // try { await api.put(`/api/appointments/${incoming.id}`, formData); navigate(-1); } catch (err) { showError(err); }
+    // Clear dirty state and navigate back
+    setIsDirty(false);
+    navigate(-1);
+  }
+
+  function handleBackClick() {
+    if (isDirty) {
+      setShowUnsavedModal(true);
+      return;
+    }
+
     navigate(-1);
   }
 
@@ -162,7 +177,7 @@ export default function EditAppointmentScreen() {
   return (
     <div style={styles.screen}>
       {/* ── Header ── */}
-      <TopHeader title="Edit Appointment" onBack={() => navigate(-1)} />
+      <TopHeader title="Edit Appointment" onBack={handleBackClick} />
 
       {/* ── Scrollable body ── */}
       <div style={styles.body}>
@@ -224,6 +239,16 @@ export default function EditAppointmentScreen() {
           onDismiss={() => setShowCancelModal(false)}
         />
       )}
+
+      <UnsavedChangesModal
+        open={showUnsavedModal}
+        onDismiss={() => setShowUnsavedModal(false)}
+        onDiscard={() => {
+          setShowUnsavedModal(false);
+          setIsDirty(false);
+          navigate(-1);
+        }}
+      />
     </div>
   );
 }

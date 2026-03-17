@@ -3,8 +3,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import FormSection from "../components/common/FormSection.jsx";
-import { IconPlus, IconAlert } from "../components/common/Icons";
+import { IconAlert } from "../components/common/Icons";
 import { TextInput, SelectInput, TextAreaInput, CheckboxInput, FormLabel } from "../components/common/FormControls";
+import UnsavedChangesModal from "../components/common/UnsavedChangesModal";
 import theme from "../styles/theme";
 
 /**
@@ -25,6 +26,8 @@ const ClinicalNoteScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [patientData, setPatientData] = useState(null);
+  const [isDirty, setIsDirty] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Form state - Subjective
   const [chiefComplaint, setChiefComplaint] = useState("");
@@ -47,6 +50,17 @@ const ClinicalNoteScreen = () => {
   const [labTestOrdered, setLabTestOrdered] = useState(false);
   const [referralMade, setReferralMade] = useState(false);
   const [followUpRequired, setFollowUpRequired] = useState(false);
+
+  // Helpers to mark form as dirty when user edits fields
+  const onChangeVal = (setter) => (e) => {
+    setter(e.target.value);
+    setIsDirty(true);
+  };
+
+  const onChangeChecked = (setter) => (e) => {
+    setter(e.target.checked);
+    setIsDirty(true);
+  };
 
   // Load patient data and note data (if editing)
   useEffect(() => {
@@ -111,6 +125,11 @@ const ClinicalNoteScreen = () => {
   }, [patientId, noteId, isEditMode]);
 
   const handleBackClick = () => {
+    if (isDirty) {
+      setShowConfirmModal(true);
+      return;
+    }
+
     navigate(-1);
   };
 
@@ -137,10 +156,16 @@ const ClinicalNoteScreen = () => {
     console.log(isEditMode ? "Updating note:" : "Creating note:", noteData);
 
     // Navigate back after save
+    setIsDirty(false);
     navigate(-1);
   };
 
   const handleCancel = () => {
+    if (isDirty) {
+      setShowConfirmModal(true);
+      return;
+    }
+
     navigate(-1);
   };
 
@@ -170,7 +195,7 @@ const ClinicalNoteScreen = () => {
         <FormSection title="S - Subjective">
           <div style={{ marginBottom: 8 }}>
             <FormLabel>Chief Complaint Category</FormLabel>
-            <SelectInput value={chiefComplaint} onChange={(e) => setChiefComplaint(e.target.value)}>
+            <SelectInput value={chiefComplaint} onChange={onChangeVal(setChiefComplaint)}>
               <option value="">Select Category</option>
               <option value="Diabetes Management">Diabetes Management</option>
               <option value="Hypertension">Hypertension</option>
@@ -182,7 +207,7 @@ const ClinicalNoteScreen = () => {
 
           <div>
             <FormLabel>Patient's Description</FormLabel>
-            <TextAreaInput value={subjectiveDescription} onChange={(e) => setSubjectiveDescription(e.target.value)} placeholder="Patient reports..." />
+            <TextAreaInput value={subjectiveDescription} onChange={onChangeVal(setSubjectiveDescription)} placeholder="Patient reports..." />
           </div>
         </FormSection>
 
@@ -191,34 +216,34 @@ const ClinicalNoteScreen = () => {
           <div style={styles.vitalsGrid}>
             <div style={styles.inputGroup}>
               <FormLabel>Blood Pressure</FormLabel>
-              <TextInput value={bloodPressure} onChange={(e) => setBloodPressure(e.target.value)} placeholder="120/80" />
+              <TextInput value={bloodPressure} onChange={onChangeVal(setBloodPressure)} placeholder="120/80" />
             </div>
 
             <div style={styles.inputGroup}>
               <FormLabel>Heart Rate</FormLabel>
-              <TextInput value={heartRate} onChange={(e) => setHeartRate(e.target.value)} placeholder="72" />
+              <TextInput value={heartRate} onChange={onChangeVal(setHeartRate)} placeholder="72" />
             </div>
 
             <div style={styles.inputGroup}>
               <FormLabel>Temperature (°C)</FormLabel>
-              <TextInput value={temperature} onChange={(e) => setTemperature(e.target.value)} placeholder="36.7" />
+              <TextInput value={temperature} onChange={onChangeVal(setTemperature)} placeholder="36.7" />
             </div>
 
             <div style={styles.inputGroup}>
               <FormLabel>Weight (kg)</FormLabel>
-              <TextInput value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="68" />
+              <TextInput value={weight} onChange={onChangeVal(setWeight)} placeholder="68" />
             </div>
           </div>
 
           <FormLabel>Patient's Description</FormLabel>
-          <TextAreaInput value={objectiveDescription} onChange={(e) => setObjectiveDescription(e.target.value)} placeholder="Patient reports..." />
+          <TextAreaInput value={objectiveDescription} onChange={onChangeVal(setObjectiveDescription)} placeholder="Patient reports..." />
         </FormSection>
 
         {/* A - Assessment FormSection */}
         <FormSection title="A - Assessment">
           <div style={{ marginBottom: 8 }}>
             <FormLabel>Diagnosis Category</FormLabel>
-            <SelectInput value={diagnosisCategory} onChange={(e) => setDiagnosisCategory(e.target.value)}>
+            <SelectInput value={diagnosisCategory} onChange={onChangeVal(setDiagnosisCategory)}>
               <option value="">Select Category</option>
               <option value="Type 2 Diabetes">Type 2 Diabetes</option>
               <option value="Hypertension">Hypertension</option>
@@ -230,33 +255,33 @@ const ClinicalNoteScreen = () => {
 
           <div>
             <FormLabel>Clinical Assessment</FormLabel>
-            <TextAreaInput value={clinicalAssessment} onChange={(e) => setClinicalAssessment(e.target.value)} placeholder="Clinical impression and diagnosis..." />
+            <TextAreaInput value={clinicalAssessment} onChange={onChangeVal(setClinicalAssessment)} placeholder="Clinical impression and diagnosis..." />
           </div>
         </FormSection>
 
         {/* P - Plan FormSection */}
         <FormSection title="P - Plan">
           <FormLabel>Treatment Plan</FormLabel>
-          <TextAreaInput value={treatmentPlan} onChange={(e) => setTreatmentPlan(e.target.value)} placeholder="Treatment Plan Details..." />
+          <TextAreaInput value={treatmentPlan} onChange={onChangeVal(setTreatmentPlan)} placeholder="Treatment Plan Details..." />
 
           <div style={styles.checkboxGroup}>
             <label style={styles.checkboxLabel}>
-              <CheckboxInput checked={medicationPrescribed} onChange={(e) => setMedicationPrescribed(e.target.checked)} />
+              <CheckboxInput checked={medicationPrescribed} onChange={onChangeChecked(setMedicationPrescribed)} />
               Medication prescribed
             </label>
 
             <label style={styles.checkboxLabel}>
-              <CheckboxInput checked={labTestOrdered} onChange={(e) => setLabTestOrdered(e.target.checked)} />
+              <CheckboxInput checked={labTestOrdered} onChange={onChangeChecked(setLabTestOrdered)} />
               Lab test ordered
             </label>
 
             <label style={styles.checkboxLabel}>
-              <CheckboxInput checked={referralMade} onChange={(e) => setReferralMade(e.target.checked)} />
+              <CheckboxInput checked={referralMade} onChange={onChangeChecked(setReferralMade)} />
               Referral made
             </label>
 
             <label style={styles.checkboxLabel}>
-              <CheckboxInput checked={followUpRequired} onChange={(e) => setFollowUpRequired(e.target.checked)} />
+              <CheckboxInput checked={followUpRequired} onChange={onChangeChecked(setFollowUpRequired)} />
               Follow-up required
             </label>
           </div>
@@ -269,6 +294,15 @@ const ClinicalNoteScreen = () => {
         <button style={styles.cancelButton} onClick={handleCancel}>
           Cancel
         </button>
+        <UnsavedChangesModal
+          open={showConfirmModal}
+          onDismiss={() => setShowConfirmModal(false)}
+          onDiscard={() => {
+            setShowConfirmModal(false);
+            setIsDirty(false);
+            navigate(-1);
+          }}
+        />
       </div>
     </div>
   );
@@ -297,7 +331,7 @@ const styles = {
   saveButton: {
     width: '100%',
     padding: '16px',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 600,
     color: theme.colors.oscarWhite,
     backgroundColor: theme.colors.oscarBlue,
@@ -309,7 +343,7 @@ const styles = {
   cancelButton: {
     width: '100%',
     padding: '16px',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 600,
     color: theme.colors.paleSky,
     backgroundColor: theme.colors.oscarWhite,
