@@ -1,11 +1,11 @@
 import React from 'react';
 import theme from '../../styles/theme';
 
-const PatientInfoCard = ({ patient }) => {
+const PatientInfoCard = ({ patient, style = {} }) => {
   if (!patient) return null;
 
   return (
-    <div style={styles.patientInfoCard}>
+    <div style={{ ...styles.patientInfoCard, ...style }}>
       <h2 style={styles.patientName}>{patient.name}</h2>
       <p style={styles.patientDetail}>ID: {patient.id}</p>
       <p style={styles.patientDetail}>{patient.age} years old • {patient.gender}</p>

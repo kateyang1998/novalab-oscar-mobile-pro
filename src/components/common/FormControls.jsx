@@ -2,11 +2,51 @@ import React from 'react';
 import theme from '../../styles/theme';
 
 // Simple styled text input wrapper
+// Form header used above grouped sections
+export const FormHeader = ({ children, style = {} }) => (
+  <h3
+    style={{
+      fontFamily: theme.font.family,
+      // ClinicalNoteScreen uses section titles around 16px / 700 weight
+      fontSize: theme.font.sizes.md,
+      fontWeight: theme.font.weights.bold,
+      color: theme.colors.oscarBlue,
+      margin: '0 0 8px 0',
+      ...style,
+    }}
+  >
+    {children}
+  </h3>
+);
+
+// Standard label used for form fields
+export const FormLabel = ({ children, htmlFor, style = {} }) => (
+  <label
+    htmlFor={htmlFor}
+    style={{
+      display: 'block',
+      fontFamily: theme.font.family,
+      // ClinicalNoteScreen label style: 14px, 600
+      fontSize: theme.font.sizes.sm,
+      fontWeight: 600,
+      color: theme.colors.shark,
+      marginBottom: 6,
+      paddingLeft: 6,
+      ...style,
+    }}
+  >
+    {children}
+  </label>
+);
+
 export const TextInput = ({ style, ...props }) => {
   const base = {
     width: '100%',
     padding: 12,
-    fontSize: 14,
+    // ClinicalNoteScreen uses 14px inputs
+    fontSize: theme.font.sizes.sm,
+    fontFamily: theme.font.family,
+    fontWeight: theme.font.weights.regular,
     border: `1px solid ${theme.colors.oscarGray}`,
     borderRadius: 8,
     backgroundColor: theme.colors.oscarWhite,
@@ -20,7 +60,9 @@ export const SelectInput = ({ style, children, ...props }) => {
   const base = {
     width: '100%',
     padding: 12,
-    fontSize: 14,
+    fontSize: theme.font.sizes.sm,
+    fontFamily: theme.font.family,
+    fontWeight: theme.font.weights.regular,
     border: `1px solid ${theme.colors.oscarGray}`,
     borderRadius: 8,
     backgroundColor: theme.colors.oscarWhite,
@@ -39,7 +81,9 @@ export const TextAreaInput = ({ style, ...props }) => {
   const base = {
     width: '100%',
     padding: 12,
-    fontSize: 14,
+    fontSize: theme.font.sizes.sm,
+    fontFamily: theme.font.family,
+    fontWeight: theme.font.weights.regular,
     border: `1px solid ${theme.colors.oscarGray}`,
     borderRadius: 8,
     backgroundColor: theme.colors.oscarWhite,
@@ -47,7 +91,6 @@ export const TextAreaInput = ({ style, ...props }) => {
     outline: 'none',
     minHeight: '100px',
     resize: 'vertical',
-    fontFamily: 'inherit',
   };
   return <textarea {...props} style={{ ...base, ...style }} />;
 };
@@ -62,5 +105,5 @@ export const CheckboxInput = ({ style, ...props }) => {
   return <input type="checkbox" {...props} style={{ ...base, ...style }} />;
 };
 
-export default { TextInput, SelectInput, TextAreaInput, CheckboxInput };
+export default { TextInput, SelectInput, TextAreaInput, CheckboxInput, FormLabel, FormHeader };
 

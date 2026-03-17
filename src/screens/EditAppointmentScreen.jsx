@@ -168,7 +168,7 @@ export default function EditAppointmentScreen() {
       <div style={styles.body}>
 
         {/* Patient info card — use PatientInfoCard (mock data if none) */}
-        <PatientInfoCard patient={patient} />
+        <PatientInfoCard patient={patient} style={{ marginBottom: 0 }} />
 
         {/* Appointment form */}
         <AppointmentForm
@@ -177,11 +177,20 @@ export default function EditAppointmentScreen() {
         />
 
         {/* Notes section (separate from the form) */}
-        <div>
+        <div style={{ marginBottom: 8 }}>
           {/* Add note navigates to Clinical Note screen for this patient */}
-          <AddNoteButton onClick={() => navigate(`/clinical-note?patientId=${patient.id}`)} />
+          <AddNoteButton
+            onClick={() => navigate(`/clinical-note?patientId=${patient.id}`)}
+            style={{
+              marginBottom: 8,
+              border: `1.5px solid ${theme.colors.oscarBlue}`,
+              color: theme.colors.oscarBlue,
+              backgroundColor: theme.colors.oscarWhite,
+            }}
+            iconColor={theme.colors.oscarBlue}
+          />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {notes.map((n) => (
               <NoteCard
                 key={n.id}
@@ -193,16 +202,18 @@ export default function EditAppointmentScreen() {
         </div>
 
         {/* Action buttons */}
-        <button onClick={handleSaveAndSync} style={styles.saveBtn}>
-          Save &amp; Sync
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button onClick={handleSaveAndSync} style={styles.saveBtn}>
+            Save &amp; Sync
+          </button>
 
-        <button
-          onClick={() => setShowCancelModal(true)}
-          style={styles.cancelApptBtn}
-        >
-          Cancel Appointment
-        </button>
+          <button
+              onClick={() => setShowCancelModal(true)}
+              style={styles.cancelApptBtn}
+          >
+            Cancel Appointment
+          </button>
+        </div>
       </div>
 
       {/* Cancel confirmation modal */}
@@ -288,7 +299,7 @@ const styles = {
     border: "none",
     borderRadius: theme.radius.md,
     fontSize: 15,
-    fontWeight: 700,
+    fontWeight: 600,
     cursor: "pointer",
     fontFamily: theme.font.family,
   },
@@ -300,9 +311,9 @@ const styles = {
     border: "none",
     borderRadius: theme.radius.md,
     fontSize: 15,
-    fontWeight: 700,
+    fontWeight: 600,
     cursor: "pointer",
     fontFamily: theme.font.family,
-    marginBottom: 8,
+    marginBottom: 0,
   },
 };

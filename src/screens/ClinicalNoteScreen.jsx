@@ -4,7 +4,7 @@ import TopHeader from "../components/layout/TopHeader";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import FormSection from "../components/common/FormSection.jsx";
 import { IconPlus, IconAlert } from "../components/common/Icons";
-import { TextInput, SelectInput, TextAreaInput, CheckboxInput } from "../components/common/FormControls";
+import { TextInput, SelectInput, TextAreaInput, CheckboxInput, FormLabel } from "../components/common/FormControls";
 import theme from "../styles/theme";
 
 /**
@@ -168,67 +168,75 @@ const ClinicalNoteScreen = () => {
         {patientData && <PatientInfoCard patient={{ id: patientData.id, name: patientData.name, dob: patientData.dob, age: patientData.age, gender: patientData.gender, phone: patientData.phone }} />}
 
         <FormSection title="S - Subjective">
-          <label style={styles.label}>Chief Complaint Category</label>
-          <SelectInput value={chiefComplaint} onChange={(e) => setChiefComplaint(e.target.value)}>
-            <option value="">Select Category</option>
-            <option value="Diabetes Management">Diabetes Management</option>
-            <option value="Hypertension">Hypertension</option>
-            <option value="Routine Checkup">Routine Checkup</option>
-            <option value="Acute Illness">Acute Illness</option>
-            <option value="Follow-up">Follow-up</option>
-          </SelectInput>
+          <div style={{ marginBottom: 8 }}>
+            <FormLabel>Chief Complaint Category</FormLabel>
+            <SelectInput value={chiefComplaint} onChange={(e) => setChiefComplaint(e.target.value)}>
+              <option value="">Select Category</option>
+              <option value="Diabetes Management">Diabetes Management</option>
+              <option value="Hypertension">Hypertension</option>
+              <option value="Routine Checkup">Routine Checkup</option>
+              <option value="Acute Illness">Acute Illness</option>
+              <option value="Follow-up">Follow-up</option>
+            </SelectInput>
+          </div>
 
-          <label style={styles.label}>Patient's Description</label>
-          <TextAreaInput value={subjectiveDescription} onChange={(e) => setSubjectiveDescription(e.target.value)} placeholder="Patient reports..." />
+          <div>
+            <FormLabel>Patient's Description</FormLabel>
+            <TextAreaInput value={subjectiveDescription} onChange={(e) => setSubjectiveDescription(e.target.value)} placeholder="Patient reports..." />
+          </div>
         </FormSection>
 
         {/* O - Objective FormSection */}
         <FormSection title="O - Objective">
           <div style={styles.vitalsGrid}>
             <div style={styles.inputGroup}>
-              <label style={styles.label}>Blood Pressure</label>
+              <FormLabel>Blood Pressure</FormLabel>
               <TextInput value={bloodPressure} onChange={(e) => setBloodPressure(e.target.value)} placeholder="120/80" />
             </div>
 
             <div style={styles.inputGroup}>
-              <label style={styles.label}>Heart Rate</label>
+              <FormLabel>Heart Rate</FormLabel>
               <TextInput value={heartRate} onChange={(e) => setHeartRate(e.target.value)} placeholder="72" />
             </div>
 
             <div style={styles.inputGroup}>
-              <label style={styles.label}>Temperature (°C)</label>
+              <FormLabel>Temperature (°C)</FormLabel>
               <TextInput value={temperature} onChange={(e) => setTemperature(e.target.value)} placeholder="36.7" />
             </div>
 
             <div style={styles.inputGroup}>
-              <label style={styles.label}>Weight (kg)</label>
+              <FormLabel>Weight (kg)</FormLabel>
               <TextInput value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="68" />
             </div>
           </div>
 
-          <label style={styles.label}>Patient's Description</label>
+          <FormLabel>Patient's Description</FormLabel>
           <TextAreaInput value={objectiveDescription} onChange={(e) => setObjectiveDescription(e.target.value)} placeholder="Patient reports..." />
         </FormSection>
 
         {/* A - Assessment FormSection */}
         <FormSection title="A - Assessment">
-          <label style={styles.label}>Diagnosis Category</label>
-          <SelectInput value={diagnosisCategory} onChange={(e) => setDiagnosisCategory(e.target.value)}>
-            <option value="">Select Category</option>
-            <option value="Type 2 Diabetes">Type 2 Diabetes</option>
-            <option value="Hypertension">Hypertension</option>
-            <option value="Hyperlipidemia">Hyperlipidemia</option>
-            <option value="Upper Respiratory Infection">Upper Respiratory Infection</option>
-            <option value="Other">Other</option>
-          </SelectInput>
+          <div style={{ marginBottom: 8 }}>
+            <FormLabel>Diagnosis Category</FormLabel>
+            <SelectInput value={diagnosisCategory} onChange={(e) => setDiagnosisCategory(e.target.value)}>
+              <option value="">Select Category</option>
+              <option value="Type 2 Diabetes">Type 2 Diabetes</option>
+              <option value="Hypertension">Hypertension</option>
+              <option value="Hyperlipidemia">Hyperlipidemia</option>
+              <option value="Upper Respiratory Infection">Upper Respiratory Infection</option>
+              <option value="Other">Other</option>
+            </SelectInput>
+          </div>
 
-          <label style={styles.label}>Clinical Assessment</label>
-          <TextAreaInput value={clinicalAssessment} onChange={(e) => setClinicalAssessment(e.target.value)} placeholder="Clinical impression and diagnosis..." />
+          <div>
+            <FormLabel>Clinical Assessment</FormLabel>
+            <TextAreaInput value={clinicalAssessment} onChange={(e) => setClinicalAssessment(e.target.value)} placeholder="Clinical impression and diagnosis..." />
+          </div>
         </FormSection>
 
         {/* P - Plan FormSection */}
         <FormSection title="P - Plan">
-          <label style={styles.label}>Treatment Plan</label>
+          <FormLabel>Treatment Plan</FormLabel>
           <TextAreaInput value={treatmentPlan} onChange={(e) => setTreatmentPlan(e.target.value)} placeholder="Treatment Plan Details..." />
 
           <div style={styles.checkboxGroup}>
@@ -280,14 +288,6 @@ const styles = {
     backgroundColor: theme.colors.oscarGray,
     padding: '4px 12px',
     borderRadius: '12px',
-  },
-  label: {
-    display: 'block',
-    fontSize: 14,
-    fontWeight: 600,
-    color: theme.colors.oscarBlack,
-    marginBottom: 8,
-    marginTop: 16,
   },
   vitalsGrid: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 8 },
   inputGroup: { display: 'flex', flexDirection: 'column' },
