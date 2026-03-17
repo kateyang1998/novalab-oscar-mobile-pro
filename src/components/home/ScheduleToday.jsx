@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import theme from '../../styles/theme';
 import { IconCheck, IconX, IconChevronRight, IconCircle } from '../common/Icons';
-import { getTypeColors } from '../schedule/Scheduleutils';
+import { getTypeColors, formatTime12h } from '../schedule/Scheduleutils';
 
 // ScheduleToday: Displays list of today's appointments. Props:
 // - items: array of appointments { id, patientName, type, startTime, status }
@@ -35,7 +35,7 @@ const ScheduleToday = ({ items = [], emptyText = 'No schedule for today yet' }) 
 
                   return (
                     <div key={it.id} style={itemStyle} onClick={() => handleItemClick(it)}>
-                      <span style={styles.time}>{it.startTime}</span>
+                      <span style={styles.time}>{formatTime12h(it.startTime)}</span>
                       <div style={styles.details}>
                         <p style={nameStyle}>{it.patientName}</p>
                         <p style={typeStyle}>{it.type}</p>
@@ -97,13 +97,12 @@ const styles = {
   itemCancelled: {
     opacity: 0.9,
     backgroundColor: 'transparent',
-    borderBottom: `1px dashed ${theme.colors.paleSky}`,
   },
   textCancelled: {
     textDecoration: 'line-through',
     opacity: 0.6,
   },
-  time: { fontSize: 14, fontWeight: 700, minWidth: 70, color: theme.colors.oscarBlack },
+  time: { fontSize: 14, fontWeight: 600, minWidth: 70, color: theme.colors.oscarBlack },
   details: { flex: 1, marginLeft: 12, marginRight: 12, display: 'flex', flexDirection: 'column', justifyContent: 'center' },
   patientName: { fontSize: 14, fontWeight: 700, margin: '0 0 2px 0', color: theme.colors.oscarBlack },
   type: { fontSize: 12, margin: 0 },
