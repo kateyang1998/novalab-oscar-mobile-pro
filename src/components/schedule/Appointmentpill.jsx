@@ -51,6 +51,6 @@ const styles = {
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     lineHeight: 1.4,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
 };

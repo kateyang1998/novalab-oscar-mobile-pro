@@ -119,7 +119,7 @@ const styles = {
     fontSize: 10,
     color: theme.colors.paleSky,
     fontWeight: 600,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   dayNum: {
     width: 24,
@@ -129,7 +129,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: 12,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   scrollArea: {
     flex: 1,

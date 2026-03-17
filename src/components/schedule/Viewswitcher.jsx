@@ -52,6 +52,6 @@ const styles = {
     fontSize: 13,
     cursor: "pointer",
     transition: "all 0.15s ease",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
 };

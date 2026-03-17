@@ -57,7 +57,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: 6,
-    fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
+    fontFamily: theme.font.family,
     padding: 0,
   },
   caret: {

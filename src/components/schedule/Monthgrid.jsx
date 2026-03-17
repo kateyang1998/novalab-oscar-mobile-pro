@@ -120,7 +120,7 @@ const styles = {
     fontWeight: 600,
     color: theme.colors.paleSky,
     padding: "4px 0",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   grid: {
     display: "grid",
@@ -145,7 +145,7 @@ const styles = {
     justifyContent: "center",
     fontSize: 12,
     margin: "0 auto 2px",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   pills: {
     display: "flex",
@@ -156,6 +156,6 @@ const styles = {
     fontSize: 7.5,
     color: theme.colors.paleSky,
     paddingLeft: 3,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
 };

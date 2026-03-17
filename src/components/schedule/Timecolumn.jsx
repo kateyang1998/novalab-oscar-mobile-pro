@@ -36,7 +36,7 @@ const styles = {
     textAlign: "right",
     width: "100%",
     paddingRight: 6,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
     lineHeight: 1,
   },
 };
