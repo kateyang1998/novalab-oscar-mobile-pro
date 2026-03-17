@@ -1,6 +1,6 @@
 // ─── src/screens/ScheduleScreen.jsx ──────────────────────────────────────────
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ViewSwitcher from "../components/schedule/ViewSwitcher";
 import CalendarHeader from "../components/schedule/CalendarHeader";
@@ -14,24 +14,29 @@ import {
   getWeekDates,
   groupAppointmentsByDate,
 } from "../components/schedule/Scheduleutils";
-import SAMPLE_APPOINTMENTS from '../data/sampleAppointments';
 import theme from '../styles/theme';
 
-// ─── Replace with API fetch when OSCAR backend is ready ──────────────────────
-
-export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
+export default function ScheduleScreen() {
   const navigate = useNavigate();
   const location = useLocation();
   const todayStr = getTodayString();
 
-  // allow navigation to open the schedule in a specific view/date
-  const initialView = location.state?.view ?? "day";
-  const initialSelectedDate = location.state?.date ?? "2026-04-15";
+  const initialView         = location.state?.view ?? "day";
+  const initialSelectedDate = location.state?.date ?? todayStr;
 
-  const [view, setView] = useState(initialView);
+  const [view, setView]               = useState(initialView);
   const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
-  const [calYear, setCalYear] = useState(2026);
-  const [calMonth, setCalMonth] = useState(3);
+  const [calYear, setCalYear]         = useState(() => new Date(initialSelectedDate + 'T00:00:00').getFullYear());
+  const [calMonth, setCalMonth]       = useState(() => new Date(initialSelectedDate + 'T00:00:00').getMonth());
+  const [appointments, setAppointments] = useState([]);
+
+  // Fetch all appointments from the API on mount
+  useEffect(() => {
+    fetch('/api/appointments')
+      .then(r => r.json())
+      .then(data => setAppointments(Array.isArray(data) ? data : []))
+      .catch(() => setAppointments([]));
+  }, []);
 
   const appointmentsByDate = useMemo(
     () => groupAppointmentsByDate(appointments),
@@ -55,8 +60,8 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
   function shiftMonth(delta) {
     let m = calMonth + delta;
     let y = calYear;
-    if (m < 0) { m = 11; y--; }
-    if (m > 11) { m = 0; y++; }
+    if (m < 0)  { m = 11; y--; }
+    if (m > 11) { m = 0;  y++; }
     setCalMonth(m);
     setCalYear(y);
   }
@@ -78,8 +83,6 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
     setView("day");
   }
 
-  // ── Tapping an appointment → go to Edit screen ─────────────────────────────
-
   function handleAppointmentPress(appointment) {
     navigate("/appointment/edit", { state: { appointment } });
   }
@@ -91,7 +94,7 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
     if (view === "week") {
       const dates = getWeekDates(selectedDate);
       const start = new Date(dates[0] + "T00:00:00");
-      const end = new Date(dates[6] + "T00:00:00");
+      const end   = new Date(dates[6] + "T00:00:00");
       if (start.getMonth() === end.getMonth()) {
         return `${MONTHS[start.getMonth()]} ${start.getFullYear()}`;
       }
@@ -101,7 +104,7 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
     return `${DAYS_FULL[d.getDay()]} - ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   }
 
-  const weekDates = getWeekDates(selectedDate);
+  const weekDates       = getWeekDates(selectedDate);
   const dayAppointments = appointmentsByDate[selectedDate] ?? [];
 
   return (
@@ -112,7 +115,7 @@ export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
         title={getHeaderTitle()}
         onPrev={handlePrev}
         onNext={handleNext}
-        onTitlePress={() => { }}
+        onTitlePress={() => {}}
       />
 
       <div style={styles.content}>

@@ -1,10 +1,10 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconUser } from "../components/common/Icons";
 import theme from "../styles/theme";
 import SearchBar from "../components/common/SearchBar";
 import ScheduleToday from "../components/home/ScheduleToday";
 import RecentPatients from "../components/home/RecentPatients";
-import SAMPLE_APPOINTMENTS from "../data/sampleAppointments";
 
 /**
  * Home Screen Component
@@ -13,39 +13,67 @@ import SAMPLE_APPOINTMENTS from "../data/sampleAppointments";
  * - Patient search functionality
  * - Today's schedule overview with appointment types and statuses
  * - Recent patients with quick access to patient records
- * - Navigation to profile, schedule, and patient summary screens
- * - Appointment type color coding (Follow-up: #0056B3, New Patient: #816300, Physical: #5F0088, etc.)
- * - Status indicators (Finished: green checkmark, Scheduled: gray dot, Cancelled: red cross)
  */
 const HomeScreen = () => {
   const navigate = useNavigate();
+  const [todayAppointments, setTodayAppointments] = useState([]);
+  const [recentPatients, setRecentPatients] = useState([]);
+  const [clinician, setClinician] = useState(null);
 
-  // Placeholder for recent patients data - using mockup data from patients screen
-  const recentPatients = [
-    { id: "P-0021", name: "Sarah Johnson", time: "2h ago" },
-    { id: "P-0022", name: "Michael Chen", time: "yesterday" },
-    { id: "P-0023", name: "Emily Rodriguez", time: "yesterday" },
-  ];
+  // Compute today's date string and display label
+  const todayDate = new Date();
+  const todayStr = todayDate.toISOString().slice(0, 10);
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const displayDate = `${MONTHS[todayDate.getMonth()]} ${todayDate.getDate()}, ${todayDate.getFullYear()}`;
 
-  // (no local helpers required here)
+  // Helper: compute relative time string from an ISO date string
+  function relativeTime(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const diffDays = Math.floor((now - d) / 86400000);
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) > 1 ? 's' : ''} ago`;
+    return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) > 1 ? 's' : ''} ago`;
+  }
 
-  // derive today's appointments from sample appointments in schedule screen
-  // Use the mock date that matches the sample appointments so the Home preview shows items
-  const todayStr = '2026-04-15';
-  const todayAppointments = (SAMPLE_APPOINTMENTS || []).filter(a => a.date === todayStr).map(a => ({
-    id: a.id,
-    patientName: a.patientName,
-    type: a.type,
-    startTime: a.startTime,
-    status: a.status,
-  }));
+  useEffect(() => {
+    // Fetch today's appointments
+    fetch('/api/appointments/today')
+      .then(r => r.json())
+      .then(data => setTodayAppointments(Array.isArray(data) ? data : []))
+      .catch(() => setTodayAppointments([]));
+
+    // Fetch patients to derive recent patients (sorted by lastVisit)
+    fetch('/api/patients')
+      .then(r => r.json())
+      .then(data => {
+        if (!Array.isArray(data)) return;
+        const recent = data
+          .filter(p => p.lastVisitDate)
+          .sort((a, b) => b.lastVisitDate.localeCompare(a.lastVisitDate))
+          .slice(0, 3)
+          .map(p => ({ id: p.id, name: p.name, time: relativeTime(p.lastVisitDate) }));
+        setRecentPatients(recent);
+      })
+      .catch(() => setRecentPatients([]));
+
+    // Fetch current clinician
+    fetch('/api/clinician')
+      .then(r => r.json())
+      .then(data => setClinician(data))
+      .catch(() => {});
+  }, []);
 
   return (
     <div style={{ ...styles.container, backgroundColor: theme.colors.oscarGray }}>
       {/* Header */}
       <header style={styles.header}>
-        <h1 style={styles.title}>Welcome, Dr. Lee</h1>
-        <div style={styles.profileIcon} onClick={() => navigate("/profile")}> 
+        <h1 style={styles.title}>Welcome, {clinician ? clinician.name : 'Dr. Lee'}</h1>
+        <div style={styles.profileIcon} onClick={() => navigate("/profile")}>
           <IconUser size={24} color={theme.colors.oscarBlack} />
         </div>
       </header>
@@ -58,7 +86,7 @@ const HomeScreen = () => {
         <div style={styles.sectionHeader}>
           <div style={styles.titleWithDate}>
             <h2 style={styles.sectionTitle}>Today's Schedule</h2>
-            <span style={styles.dateText}>Apr 15, 2026</span>
+            <span style={styles.dateText}>{displayDate}</span>
           </div>
           <span
             style={styles.viewAll}
@@ -104,28 +132,6 @@ const styles = {
     color: theme.colors.oscarBlack,
     cursor: "pointer",
   },
-  searchBarContainer: {
-    position: "relative",
-    marginBottom: "20px",
-  },
-  searchBar: {
-    width: "100%",
-    padding: "14px 16px 14px 48px",
-    fontSize: theme.font.sizes.md,
-    border: `1px solid ${theme.colors.oscarWhite}`,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.oscarWhite,
-    boxSizing: "border-box",
-    outline: "none",
-    color: theme.colors.oscarBlack,
-  },
-  searchIcon: {
-    position: "absolute",
-    left: "16px",
-    top: "50%",
-    transform: "translateY(-50%)",
-    pointerEvents: "none",
-  },
   section: {
     backgroundColor: theme.colors.oscarWhite,
     borderRadius: "8px",
@@ -159,108 +165,6 @@ const styles = {
     fontSize: "14px",
     color: theme.colors.oscarBlue,
     cursor: "pointer",
-  },
-  scheduleList: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: theme.colors.oscarGray,
-    borderRadius: "8px",
-    overflow: "hidden",
-  },
-  scheduleItem: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "12px 16px",
-    backgroundColor: theme.colors.oscarGray,
-    cursor: "pointer",
-    minHeight: "60px",
-    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
-  },
-  time: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    color: theme.colors.oscarBlack,
-    minWidth: "70px",
-    textAlign: "left",
-  },
-  scheduleDetails: {
-    flex: 1,
-    marginLeft: "12px",
-    marginRight: "12px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  patientName: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    color: theme.colors.oscarBlack,
-    margin: "0 0 2px 0",
-    lineHeight: "1.3",
-  },
-  statusContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    minWidth: "80px",
-    justifyContent: "flex-end",
-  },
-  statusFinished: {
-    fontSize: "12px",
-    color: theme.colors.oscarGreen,
-  },
-  statusScheduled: {
-    fontSize: "12px",
-    color: theme.colors.paleSky,
-  },
-  statusCancelled: {
-    fontSize: "12px",
-    color: theme.colors.oscarRed,
-  },
-  checkIcon: {
-    fontSize: "14px",
-    color: theme.colors.oscarGreen,
-  },
-  dot: {
-    fontSize: "16px",
-    color: theme.colors.paleSky,
-  },
-  cancelIcon: {
-    fontSize: "14px",
-    color: theme.colors.oscarRed,
-  },
-  patientList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  patientItem: {
-    padding: "12px 16px",
-    border: `1px solid ${theme.colors.oscarWhite}`,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.oscarWhite,
-    cursor: "pointer",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    minHeight: "60px",
-  },
-  patientInfo: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  patientDetails: {
-    fontSize: "12px",
-    color: theme.colors.paleSky,
-    margin: "0",
-    lineHeight: "1.3",
-  },
-  arrowIcon: {
-    flexShrink: 0,
   },
 };
 
