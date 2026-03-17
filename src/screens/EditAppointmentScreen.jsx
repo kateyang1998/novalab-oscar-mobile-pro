@@ -11,20 +11,61 @@
  * On Cancel Appointment → shows confirmation modal → goes back
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppointmentForm from "../components/appointment/AppointmentForm.jsx";
 import CancelConfirmModal from "../components/appointment/CancelConfirmModal.jsx";
 import TopHeader from "../components/layout/TopHeader";
 import theme from '../styles/theme';
+import AddNoteButton from '../components/clinical_note/AddNoteButton';
+import NoteCard from '../components/clinical_note/NoteCard';
+import PatientInfoCard from '../components/patient/PatientInfoCard';
+
+/*
+  TODOs: Backend & Database integration (high-level)
+
+  - Data models (database):
+    - patients: id, name, dob, gender, phone, demographics, medical_record_number, last_visit
+    - appointments: id, patient_id, type, status, date (YYYY-MM-DD), start_time (HH:MM), duration, reason, created_by, created_at, updated_at
+    - clinical_notes: id, patient_id, appointment_id (nullable), author_id, title, body (SOAP sections), created_at, updated_at
+    - audit / sync queue: records for offline edits, sync status, last_sync_at
+
+  - API endpoints (examples):
+    - GET /api/patients/:id
+    - GET /api/patients/:id/notes
+    - POST /api/patients/:id/notes
+    - GET /api/appointments/:id
+    - POST /api/appointments
+    - PUT /api/appointments/:id
+    - POST /api/appointments/:id/cancel
+
+  - Client-side responsibilities:
+    - Fetch patient and note lists on screen load (useEffect)
+    - Validate form (no past dates, reasonable duration) before save
+    - Optimistic UI updates and conflict resolution on sync failures
+    - Error handling, retries, and background sync for offline-first UX
+    - Authentication headers for API calls (bearer token/session)
+
+  - Database considerations:
+    - Create migrations for the above tables
+    - Indexes on patient_id and appointment date/time
+    - Referential integrity for appointment -> patient and note -> patient/appointment
+    - Soft-delete flags for audit/history if required
+
+  Implement the above incrementally: start with read-only GET endpoints to display real data,
+  then implement POST/PUT for creating & updating appointments and notes, and finally
+  implement cancellation & sync queue logic for offline support.
+*/
 
 // ─── Sample previous notes — replace with API data later ─────────────────────
 const SAMPLE_NOTES = [
   {
+    id: 'n1',
     date: "Feb 9, 2026",
     doctor: "Dr. Lee",
     type: "SOAP Note",
     text: "Follow-up for diabetes management...",
+    preview: "Follow-up for diabetes management...",
   },
 ];
 
@@ -46,6 +87,28 @@ export default function EditAppointmentScreen() {
   });
 
   const [showCancelModal, setShowCancelModal] = useState(false);
+  // notes state (moved from AppointmentForm)
+  const [notes, _setNotes] = useState(SAMPLE_NOTES);
+
+  // TODO: Fetch patient details and notes from backend when screen loads.
+  // Implement here: GET /api/patients/:id and GET /api/patients/:id/notes
+  // Use incoming?.patientId when available. For now we seed notes from SAMPLE_NOTES.
+  useEffect(() => {
+    // Load remote data when a patientId is available
+    if (incoming?.patientId) {
+      // Example (to implement):
+      // async function load() {
+      //   const p = await api.get(`/api/patients/${incoming.patientId}`);
+      //   setPatientState(p.data);
+      //   const r = await api.get(`/api/patients/${incoming.patientId}/notes`);
+      //   _setNotes(r.data);
+      // }
+      // load();
+
+      // For the mock mode we keep SAMPLE_NOTES initialized in state; when backend is added,
+      // replace this with an API call and call _setNotes with fetched notes.
+    }
+  }, [incoming?.patientId]);
 
   // ── Handlers ────────────────────────────────────────────────────────────────
 
@@ -54,14 +117,22 @@ export default function EditAppointmentScreen() {
   }
 
   function handleSaveAndSync() {
-    // TODO: call OSCAR API with formData
-    console.log("Saving appointment:", formData);
+    // TODO: implement save flow
+    // - Validate form (no past dates, duration reasonable)
+    // - Call backend API: POST (create) or PUT (update) to /api/appointments
+    // - Implement optimistic UI update and handle conflict / validation errors
+    // - Add to sync queue if offline and schedule background sync
+    console.log("Saving appointment (TODO: call backend API):", formData);
+    // Example implementation outline:
+    // try { await api.put(`/api/appointments/${incoming.id}`, formData); navigate(-1); } catch (err) { showError(err); }
     navigate(-1);
   }
 
   function handleCancelConfirm() {
-    // TODO: call OSCAR API to cancel appointment
-    console.log("Appointment cancelled");
+    // TODO: implement cancel appointment API call
+    // - POST /api/appointments/:id/cancel or PATCH status = 'Cancelled'
+    // - Optimistically update UI and record cancellation in audit/sync queue
+    console.log("Appointment cancelled (TODO: call backend API)");
     setShowCancelModal(false);
     navigate(-1);
   }
@@ -74,6 +145,20 @@ export default function EditAppointmentScreen() {
     patientName: incoming?.patientName ?? "Unknown",
   };
 
+  // TODO: When saving or cancelling, include audit metadata: user id, timestamp,
+  // and if applicable an offline sync token so operations can be reconciled later.
+
+  // Mock patient data (prefer incoming fields if present)
+  const patient = {
+    id: incoming?.patientId ?? 'P-0001',
+    name: incoming?.patientName ?? 'Robert Brown',
+    age: incoming?.age ?? 42,
+    gender: incoming?.gender ?? 'M',
+    dob: incoming?.dob ?? '1983-07-12',
+    phone: incoming?.phone ?? '(555) 987-6543',
+    lastVisit: incoming?.lastVisit ?? 'Mar 5, 2026',
+  };
+
   return (
     <div style={styles.screen}>
       {/* ── Header ── */}
@@ -82,33 +167,30 @@ export default function EditAppointmentScreen() {
       {/* ── Scrollable body ── */}
       <div style={styles.body}>
 
-        {/* Patient info card — uses real data from appointment */}
-        <div style={styles.patientCard}>
-          <p style={styles.patientName}>
-            {incoming?.patientName ?? "Unknown"}
-          </p>
-          {incoming?.patientId && (
-            <p style={styles.patientMeta}>ID: {incoming.patientId}</p>
-          )}
-          {(incoming?.age || incoming?.gender) && (
-            <p style={styles.patientMeta}>
-              {incoming?.age ? `${incoming.age} years old` : ""}
-              {incoming?.age && incoming?.gender ? " • " : ""}
-              {incoming?.gender ?? ""}
-            </p>
-          )}
-          {incoming?.dob && (
-            <p style={styles.patientMeta}>DOB: {incoming.dob}</p>
-          )}
-        </div>
+        {/* Patient info card — use PatientInfoCard (mock data if none) */}
+        <PatientInfoCard patient={patient} />
 
         {/* Appointment form */}
         <AppointmentForm
           formData={formData}
           onChange={handleFieldChange}
-          onAddNote={() => console.log("Add note tapped")}
-          previousNotes={SAMPLE_NOTES}
         />
+
+        {/* Notes section (separate from the form) */}
+        <div>
+          {/* Add note navigates to Clinical Note screen for this patient */}
+          <AddNoteButton onClick={() => navigate(`/clinical-note?patientId=${patient.id}`)} />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {notes.map((n) => (
+              <NoteCard
+                key={n.id}
+                note={{ ...n, title: n.type ?? 'SOAP Note', preview: n.preview ?? n.text }}
+                onClick={() => navigate(`/clinical-note?patientId=${patient.id}&noteId=${n.id}`)}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Action buttons */}
         <button onClick={handleSaveAndSync} style={styles.saveBtn}>

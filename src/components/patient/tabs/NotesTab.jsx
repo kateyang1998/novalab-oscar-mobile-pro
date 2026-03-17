@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconPlus } from '../../common/Icons';
+import AddNoteButton from '../../../components/clinical_note/AddNoteButton';
+import NoteCard from '../../../components/clinical_note/NoteCard';
 
 const NotesTab = ({ patientId }) => {
   const navigate = useNavigate();
@@ -14,21 +15,11 @@ const NotesTab = ({ patientId }) => {
 
   return (
     <div>
-      <button className="btn btn-primary" style={{ width: '100%', marginBottom: 16, padding: '16px', fontSize: 15 }} onClick={handleAdd}>
-        <IconPlus size={18} color="var(--color-surface)" />&nbsp;Add Note
-      </button>
+      <AddNoteButton onClick={handleAdd} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {mockNotes.map(n => (
-          <div key={n.id} style={styles.noteCard} onClick={() => openNote(n.id)}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <div style={{ fontSize: 14, fontWeight: 400, color: 'var(--color-text)' }}>{n.date}</div>
-              <div style={{ color: 'var(--color-text)', fontSize: 14, fontWeight: 400, }}>{n.doctor}</div>
-              <div style={styles.statusBadge}>Synced</div>
-            </div>
-            <div style={{ color: 'var(--color-primary)', fontSize: 14, fontWeight: 500, marginBottom: 6 }}>SOAP Note</div>
-            <div style={{ color: 'var(--color-neutral-7)', fontSize: 14, fontWeight: 400 }}>{n.preview}</div>
-          </div>
+          <NoteCard key={n.id} note={{ ...n, status: 'Synced', title: 'SOAP Note' }} onClick={() => openNote(n.id)} />
         ))}
       </div>
     </div>

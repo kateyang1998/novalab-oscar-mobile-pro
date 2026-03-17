@@ -2,217 +2,82 @@
 
 import { APPOINTMENT_TYPE_COLORS, APPOINTMENT_STATUS } from "../schedule/Scheduleutils.js";
 import theme from '../../styles/theme';
-import { IconChevronDown } from '../common/Icons';
+import { TextInput, SelectInput, TextAreaInput } from '../common/FormControls';
+import FormSection from '../common/FormSection';
 
 const APPOINTMENT_TYPES = Object.keys(APPOINTMENT_TYPE_COLORS);
 const STATUSES = Object.keys(APPOINTMENT_STATUS);
 const DURATIONS = ["15 min", "30 min", "45 min", "60 min", "90 min"];
 
-const MONTHS_LIST = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
-const YEARS = Array.from({ length: 10 }, (_, i) => 2024 + i);
-const HOURS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
-const MINUTES = ["00", "15", "30", "45"];
-const PERIODS = ["AM", "PM"];
-
-// ── helpers ──────────────────────────────────────────────────────────────────
-
-function parseDateStr(dateStr) {
-  // dateStr = "YYYY-MM-DD"
-  if (!dateStr) return { day: "1", month: "0", year: String(new Date().getFullYear()) };
-  const [y, m, d] = dateStr.split("-");
-  return { year: y, month: String(parseInt(m) - 1), day: String(parseInt(d)) };
-}
-
-function buildDateStr(year, month, day) {
-  return `${year}-${String(parseInt(month) + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-}
-
-function parseTimeStr(timeStr) {
-  // timeStr = "HH:MM" 24h
-  if (!timeStr) return { hour: "12", minute: "00", period: "PM" };
-  const [h, m] = timeStr.split(":").map(Number);
-  const period = h >= 12 ? "PM" : "AM";
-  const hour = h % 12 || 12;
-  return { hour: String(hour).padStart(2, "0"), minute: String(m).padStart(2, "0"), period };
-}
-
-function buildTimeStr(hour, minute, period) {
-  let h = parseInt(hour);
-  if (period === "PM" && h !== 12) h += 12;
-  if (period === "AM" && h === 12) h = 0;
-  return `${String(h).padStart(2, "0")}:${minute}`;
-}
-
 // ── AppointmentForm ──────────────────────────────────────────────────────────
 
-export default function AppointmentForm({ formData, onChange, onAddNote, previousNotes = [] }) {
-  const dateParts = parseDateStr(formData.date);
-  const timeParts = parseTimeStr(formData.startTime);
-
-  function handleDatePart(part, value) {
-    const updated = { ...dateParts, [part]: value };
-    onChange("date", buildDateStr(updated.year, updated.month, updated.day));
-  }
-
-  function handleTimePart(part, value) {
-    const updated = { ...timeParts, [part]: value };
-    onChange("startTime", buildTimeStr(updated.hour, updated.minute, updated.period));
-  }
+export default function AppointmentForm({ formData, onChange }) {
 
   return (
-    <div style={styles.wrapper}>
-      {/* ── Section heading ── */}
-      <p style={styles.sectionTitle}>Appointment Details</p>
-      <div style={styles.divider} />
-
+    <FormSection title="Appointment Details">
       {/* ── Type + Status ── */}
       <div style={styles.row}>
         <div style={styles.fieldHalf}>
           <label style={styles.label}>Appointment Type</label>
-          <Select
-            value={formData.type}
-            onChange={(v) => onChange("type", v)}
-            placeholder="Select Type"
-            options={APPOINTMENT_TYPES}
-          />
+          <SelectInput value={formData.type} onChange={(e) => onChange('type', e.target.value)}>
+            <option value="">Select Type</option>
+            {APPOINTMENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+          </SelectInput>
         </div>
         <div style={styles.fieldHalf}>
           <label style={styles.label}>Status</label>
-          <Select
-            value={formData.status}
-            onChange={(v) => onChange("status", v)}
-            placeholder="Select Status"
-            options={STATUSES}
-          />
+          <SelectInput value={formData.status} onChange={(e) => onChange('status', e.target.value)}>
+            <option value="">Select Status</option>
+            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </SelectInput>
         </div>
       </div>
 
-      {/* ── Date — 3 dropdowns ── */}
+      {/* ── Date — single date input ── */}
       <div style={styles.field}>
         <label style={styles.label}>Date</label>
-        <div style={styles.row}>
-          {/* Month */}
-          <Select
-            value={dateParts.month}
-            onChange={(v) => handleDatePart("month", v)}
-            options={MONTHS_LIST.map((m, i) => ({ label: m, value: String(i) }))}
-            style={{ flex: 1.4 }}
-          />
-          {/* Day */}
-          <Select
-            value={dateParts.day}
-            onChange={(v) => handleDatePart("day", v)}
-            options={DAYS.map((d) => ({ label: String(d), value: String(d) }))}
-            style={{ flex: 1 }}
-          />
-          {/* Year */}
-          <Select
-            value={dateParts.year}
-            onChange={(v) => handleDatePart("year", v)}
-            options={YEARS.map((y) => ({ label: String(y), value: String(y) }))}
-            style={{ flex: 1.2 }}
-          />
-        </div>
+        <TextInput
+          type="date"
+          value={formData.date || ''}
+          onChange={(e) => onChange('date', e.target.value)}
+          style={{ padding: 10 }}
+        />
       </div>
 
-      {/* ── Time + Duration ── */}
+      {/* ── Time + Duration: single time input ── */}
       <div style={styles.row}>
         <div style={styles.fieldHalf}>
           <label style={styles.label}>Time</label>
-          <div style={styles.row}>
-            <Select
-              value={timeParts.hour}
-              onChange={(v) => handleTimePart("hour", v)}
-              options={HOURS.map((h) => ({ label: h, value: h }))}
-              style={{ flex: 1 }}
-            />
-            <Select
-              value={timeParts.minute}
-              onChange={(v) => handleTimePart("minute", v)}
-              options={MINUTES.map((m) => ({ label: m, value: m }))}
-              style={{ flex: 1 }}
-            />
-            <Select
-              value={timeParts.period}
-              onChange={(v) => handleTimePart("period", v)}
-              options={PERIODS.map((p) => ({ label: p, value: p }))}
-              style={{ flex: 1 }}
-            />
-          </div>
+          <TextInput
+            type="time"
+            value={formData.startTime || ''}
+            onChange={(e) => onChange('startTime', e.target.value)}
+            style={{ padding: 10 }}
+          />
         </div>
 
         <div style={styles.fieldHalf}>
           <label style={styles.label}>Duration</label>
-          <Select
-            value={formData.duration}
-            onChange={(v) => onChange("duration", v)}
-            options={DURATIONS}
-          />
+          <SelectInput value={formData.duration} onChange={(e) => onChange('duration', e.target.value)}>
+            {DURATIONS.map((d) => <option key={d} value={d}>{d}</option>)}
+          </SelectInput>
         </div>
       </div>
 
       {/* ── Reason for Visit ── */}
       <div style={styles.field}>
         <label style={styles.label}>Reason for Visit</label>
-        <textarea
+        <TextAreaInput
           value={formData.reasonForVisit}
-          onChange={(e) => onChange("reasonForVisit", e.target.value)}
+          onChange={(e) => onChange('reasonForVisit', e.target.value)}
           placeholder="Reason for visit..."
-          rows={4}
           style={styles.textarea}
         />
       </div>
-
-      {/* ── Add Note ── */}
-      <button onClick={onAddNote} style={styles.addNoteBtn}>
-        + Add Note
-      </button>
-
-      {/* ── Previous notes ── */}
-      {previousNotes.map((note, i) => (
-        <div key={i} style={styles.noteCard}>
-          <div style={styles.noteHeader}>
-            <span style={styles.noteDate}>{note.date}</span>
-            <span style={styles.noteDoctor}>{note.doctor}</span>
-            <span style={styles.syncBadge}>Synced</span>
-          </div>
-          <p style={styles.noteType}>{note.type}</p>
-          <p style={styles.noteText}>{note.text}</p>
-        </div>
-      ))}
-    </div>
+    </FormSection>
   );
 }
 
-// ── Reusable Select dropdown ─────────────────────────────────────────────────
-
-function Select({ value, onChange, options, placeholder, style = {} }) {
-  // options can be strings OR { label, value } objects
-  const normalized = options.map((o) =>
-    typeof o === "string" ? { label: o, value: o } : o
-  );
-
-  return (
-    <div style={{ ...styles.selectWrapper, ...style }}>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={styles.select}
-      >
-        {placeholder && <option value="">{placeholder}</option>}
-        {normalized.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
-      </select>
-      <IconChevronDown style={styles.selectArrow} color={theme.colors.paleSky} />
-    </div>
-  );
-}
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 
