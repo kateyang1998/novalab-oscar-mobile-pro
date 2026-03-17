@@ -13,83 +13,37 @@ const InboxScreen = () => {
   const [expandedMessageId, setExpandedMessageId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch messages when component mounts
   useEffect(() => {
-    // TODO: Replace this with actual data
-    const fetchMessages = async () => {
-      setLoading(true);
-
-      // Simulate network delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Sample messages data - will be replaced with dynamic data (API call)
-      const mockMessages = [
-        {
-          id: "1",
-          sender: "Robert Brown",
-          subject: "Consultation Note",
-          preview: "Patient seen for tachycardia. Recommend dosage adjustment. Lorem...",
-          fullContent:
-            "Patient seen for tachycardia. Recommend dosage adjustment. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          time: "10:30 AM",
-          isRead: false,
-        },
-        {
-          id: "2",
-          sender: "Robert Brown",
-          subject: "Consultation Note",
-          preview: "Patient seen for tachycardia. Recommend dosage adjustment.",
-          fullContent:
-            "Patient seen for tachycardia. Recommend dosage adjustment. Complete follow-up examination scheduled for next week.",
-          time: "10:30 AM",
-          isRead: false,
-        },
-        {
-          id: "3",
-          sender: "Robert Brown",
-          subject: "Consultation Note",
-          preview: "Patient seen for tachycardia. Recommend dosage adjustment.",
-          fullContent:
-            "Patient seen for tachycardia. Recommend dosage adjustment. Blood pressure is stable.",
-          time: "10:30 AM",
-          isRead: true,
-        },
-        {
-          id: "4",
-          sender: "Robert Brown",
-          subject: "Consultation Note",
-          preview: "Patient seen for tachycardia. Recommend dosage adjustment.",
-          fullContent:
-            "Patient seen for tachycardia. Recommend dosage adjustment. Patient responded well to treatment.",
-          time: "10:30 AM",
-          isRead: true,
-        },
-      ];
-
-      setMessages(mockMessages);
-      setLoading(false);
-    };
-
-    fetchMessages();
+    setLoading(true);
+    fetch('/api/messages')
+      .then(r => r.json())
+      .then(data => {
+        setMessages(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setMessages([]);
+        setLoading(false);
+      });
   }, []);
 
   const handleMessageClick = (messageId) => {
-    // Toggle expand/collapse
     if (expandedMessageId === messageId) {
       setExpandedMessageId(null);
     } else {
       setExpandedMessageId(messageId);
-      // Mark message as read when expanded
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === messageId ? { ...msg, isRead: true } : msg
-        )
+      // Mark read locally
+      setMessages(prev =>
+        prev.map(msg => msg.id === messageId ? { ...msg, isRead: true } : msg)
       );
+      // Persist to server
+      fetch(`/api/messages/${messageId}/read`, { method: 'PATCH' }).catch(() => {});
     }
   };
 
   const handleMarkAllRead = () => {
-    setMessages((prev) => prev.map((msg) => ({ ...msg, isRead: true })));
+    setMessages(prev => prev.map(msg => ({ ...msg, isRead: true })));
+    fetch('/api/messages/read-all', { method: 'PATCH' }).catch(() => {});
   };
 
   if (loading) {
@@ -104,14 +58,12 @@ const InboxScreen = () => {
 
   return (
     <div style={styles.container}>
-      {/* Header */}
       <TopHeader
         title="Inbox"
         showBack={false}
         right={<button style={styles.markAllReadButton} onClick={handleMarkAllRead}>Mark all read</button>}
       />
 
-      {/* Messages List */}
       <div style={styles.messagesList}>
         {messages.length === 0 ? (
           <div style={styles.emptyContainer}>
@@ -130,8 +82,12 @@ const InboxScreen = () => {
                 onClick={() => handleMessageClick(message.id)}
               >
                 <div style={styles.messageHeader}>
-                  <h3 style={message.isRead ? styles.messageSender : { ...styles.messageSender, color: theme.colors.oscarBlue }}>{message.sender}</h3>
-                  <span style={message.isRead ? styles.messageTime : { ...styles.messageTime, color: theme.colors.oscarBlue }}>{message.time}</span>
+                  <h3 style={message.isRead ? styles.messageSender : { ...styles.messageSender, color: theme.colors.oscarBlue }}>
+                    {message.sender}
+                  </h3>
+                  <span style={message.isRead ? styles.messageTime : { ...styles.messageTime, color: theme.colors.oscarBlue }}>
+                    {message.time}
+                  </span>
                 </div>
                 <p style={styles.messageSubject}>{message.subject}</p>
                 <p style={styles.messageContent}>
@@ -152,20 +108,6 @@ const styles = {
     minHeight: "100vh",
     paddingBottom: "80px",
     fontFamily: theme.font.family,
-  },
-  header: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
-  },
-  title: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: theme.colors.oscarBlack,
-    margin: "0",
   },
   markAllReadButton: {
     background: "none",

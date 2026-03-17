@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import theme from '../styles/theme';
 import UserProfileCard from '../components/profile/UserProfileCard';
 import SecuritySection from '../components/profile/SecuritySection';
@@ -22,6 +22,14 @@ import SyncStatusModal from '../components/profile/SyncStatusModal';
 const ProfileScreen = () => {
   const navigate = useNavigate();
   const [biometricEnabled, setBiometricEnabled] = useState(true);
+  const [clinician, setClinician] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/clinician')
+      .then(r => r.json())
+      .then(data => setClinician(data))
+      .catch(() => {});
+  }, []);
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showSyncStatusModal, setShowSyncStatusModal] = useState(false);
@@ -94,7 +102,12 @@ const ProfileScreen = () => {
       <TopHeader title="Profile" onBack={handleBackClick} />
 
       <div style={styles.content}>
-        <UserProfileCard />
+        <UserProfileCard
+          name={clinician?.name}
+          specialty={clinician?.role}
+          email={clinician?.email}
+          id={clinician ? `CL00${String(clinician.clinicianId).padStart(4, '0')}` : undefined}
+        />
 
         <SecuritySection
           onChangePassword={handleChangePasswordClick}

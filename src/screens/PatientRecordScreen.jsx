@@ -15,44 +15,24 @@ const PatientRecordScreen = () => {
   const location = useLocation();
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchPatient = async () => {
-      setLoading(true);
-      await new Promise((r) => setTimeout(r, 200));
-      const mock = {
-        id,
-        name: "Sarah Johnson",
-        age: 45,
-        gender: "Female",
-        dob: "Jan 14, 1979",
-        phone: "(555) 123-4567",
-        allergies: ["Penicillin", "Shellfish"],
-        emergencyContact: {
-          name: "John Johnson",
-          relationship: "Spouse",
-          phone: "(555) 987-6543",
-        },
-        medicalConditions: [
-          { condition: "Hypertension", diagnosed: "2020" },
-          { condition: "Type 2 Diabetes", diagnosed: "2019" },
-        ],
-        medications: [
-          { name: "Metformin", dosage: "500mg", frequency: "Twice daily" },
-          { name: "Lisinopril", dosage: "10mg", frequency: "Once daily" },
-        ],
-        vitals: {
-          bp: { label: "Blood Pressure", value: "130/85 mmHg" },
-          hr: { label: "Heart Rate", value: "72 bpm" },
-          weight: { label: "Weight", value: "68 kg" },
-          temperature: { label: "Temperature", value: "36.7°C" },
-        },
-      };
-      setPatientData(mock);
-      setLoading(false);
-    };
-
-    fetchPatient();
+    setLoading(true);
+    setError(null);
+    fetch(`/api/patients/${id}`)
+      .then(r => {
+        if (!r.ok) throw new Error('Patient not found');
+        return r.json();
+      })
+      .then(data => {
+        setPatientData(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
   }, [id]);
 
   const handleBackClick = () => {
@@ -77,10 +57,6 @@ const PatientRecordScreen = () => {
   const activeTab = getActiveTabFromPath();
 
   const handleTabClick = (tab) => {
-    // update URL to keep routes deep-linkable
-    // Use replace so switching between summary/notes/history/vitals
-    // doesn't create new history entries. This ensures the Back button
-    // returns to the page the user came from, not to the previous tab.
     navigate(`/patient/${id}/${tab}`, { replace: true });
   };
 
@@ -94,11 +70,11 @@ const PatientRecordScreen = () => {
     );
   }
 
-  if (!patientData) {
+  if (error || !patientData) {
     return (
       <div style={styles.container}>
         <div style={styles.errorContainer}>
-          <p style={styles.errorText}>Patient not found</p>
+          <p style={styles.errorText}>{error || 'Patient not found'}</p>
         </div>
       </div>
     );
@@ -108,18 +84,13 @@ const PatientRecordScreen = () => {
     <div style={styles.container}>
       <TopHeader title="Patient Record" onBack={handleBackClick} />
       <div style={styles.content}>
-        {/* Top always visible */}
         <PatientTopSections patient={patientData} />
-
-        {/* Tab navigation (separate component) */}
         <TabNav activeTab={activeTab} onChange={handleTabClick} />
-
-        {/* Child pages */}
         <div style={{ marginTop: 8 }}>
-          {activeTab === "summary" && <SummaryTab patientId={id} patient={patientData} />}
-          {activeTab === "notes" && <NotesTab patientId={id} />}
-          {activeTab === "history" && <HistoryTab patientId={id} />}
-          {activeTab === "vitals" && <VitalsTab patientId={id} />}
+          {activeTab === "summary"  && <SummaryTab patientId={id} patient={patientData} />}
+          {activeTab === "notes"    && <NotesTab   patientId={id} />}
+          {activeTab === "history"  && <HistoryTab patientId={id} />}
+          {activeTab === "vitals"   && <VitalsTab  patientId={id} />}
         </div>
       </div>
     </div>
@@ -149,4 +120,3 @@ const styles = {
 };
 
 export default PatientRecordScreen;
-
