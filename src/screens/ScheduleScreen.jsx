@@ -1,7 +1,7 @@
 // ─── src/screens/ScheduleScreen.jsx ──────────────────────────────────────────
 
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ViewSwitcher from "../components/schedule/ViewSwitcher";
 import CalendarHeader from "../components/schedule/CalendarHeader";
 import MonthGrid from "../components/schedule/MonthGrid";
@@ -14,35 +14,22 @@ import {
   getWeekDates,
   groupAppointmentsByDate,
 } from "../components/schedule/Scheduleutils";
+import SAMPLE_APPOINTMENTS from '../data/sampleAppointments';
+import theme from '../styles/theme';
 
 // ─── Replace with API fetch when OSCAR backend is ready ──────────────────────
-const SAMPLE_APPOINTMENTS = [
-  { id: 1, patientName: "Robert Brown", type: "New Patient", date: "2026-04-15", startTime: "10:00", endTime: "11:00", status: "Finished" },
-  { id: 2, patientName: "Jane Doe", type: "Follow Up", date: "2026-04-15", startTime: "11:00", endTime: "12:30", status: "Scheduled" },
-  { id: 3, patientName: "Robert Brown", type: "Physical", date: "2026-04-15", startTime: "13:30", endTime: "14:00", status: "Finished" },
-  { id: 4, patientName: "Robert Brown", type: "New Patient", date: "2026-04-15", startTime: "14:00", endTime: "14:30", status: "Cancelled" },
-  { id: 5, patientName: "Robert Brown", type: "Consultation", date: "2026-04-15", startTime: "15:00", endTime: "15:30", status: "Scheduled" },
-  { id: 6, patientName: "Robert Brown", type: "Urgent Care", date: "2026-04-15", startTime: "15:30", endTime: "16:00", status: "Scheduled" },
-  { id: 7, patientName: "Robert Brown", type: "New Patient", date: "2026-04-13", startTime: "10:00", endTime: "11:30", status: "Finished" },
-  { id: 8, patientName: "Robert Brown", type: "Physical", date: "2026-04-13", startTime: "13:30", endTime: "14:30", status: "Scheduled" },
-  { id: 9, patientName: "Jane Doe", type: "Follow Up", date: "2026-04-14", startTime: "11:00", endTime: "12:30", status: "Scheduled" },
-  { id: 10, patientName: "Robert Brown", type: "Consultation", date: "2026-04-16", startTime: "14:00", endTime: "15:00", status: "Scheduled" },
-  { id: 11, patientName: "Robert Brown", type: "New Patient", date: "2026-04-06", startTime: "09:00", endTime: "10:00", status: "Finished" },
-  { id: 12, patientName: "Robert Brown", type: "Follow Up", date: "2026-04-06", startTime: "10:00", endTime: "11:00", status: "Scheduled" },
-  { id: 13, patientName: "Robert Brown", type: "Physical", date: "2026-04-08", startTime: "09:00", endTime: "10:00", status: "Scheduled" },
-  { id: 14, patientName: "Robert Brown", type: "Consultation", date: "2026-04-08", startTime: "11:00", endTime: "12:00", status: "Scheduled" },
-  { id: 15, patientName: "Robert Brown", type: "New Patient", date: "2026-04-20", startTime: "09:00", endTime: "10:00", status: "Scheduled" },
-  { id: 16, patientName: "Robert Brown", type: "Follow Up", date: "2026-04-20", startTime: "10:00", endTime: "11:00", status: "Scheduled" },
-  { id: 17, patientName: "Robert Brown", type: "Physical", date: "2026-04-20", startTime: "11:00", endTime: "12:00", status: "Scheduled" },
-  { id: 18, patientName: "Robert Brown", type: "Consultation", date: "2026-04-20", startTime: "13:00", endTime: "14:00", status: "Scheduled" },
-];
 
 export default function ScheduleScreen({ appointments = SAMPLE_APPOINTMENTS }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const todayStr = getTodayString();
 
-  const [view, setView] = useState("month");
-  const [selectedDate, setSelectedDate] = useState("2026-04-15");
+  // allow navigation to open the schedule in a specific view/date
+  const initialView = location.state?.view ?? "day";
+  const initialSelectedDate = location.state?.date ?? "2026-04-15";
+
+  const [view, setView] = useState(initialView);
+  const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
   const [calYear, setCalYear] = useState(2026);
   const [calMonth, setCalMonth] = useState(3);
 
@@ -168,8 +155,8 @@ const styles = {
   screen: {
     display: "flex",
     flexDirection: "column",
-    height: "calc(100vh - 80px)",
-    background: "#FFFFFF",
+    height: "calc(100vh - 70px)",
+    background: theme.colors.oscarWhite,
     fontFamily: "-apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif",
     overflow: "hidden",
   },

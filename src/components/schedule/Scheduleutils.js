@@ -12,19 +12,23 @@ export const START_HOUR = 8;
 export const TIMELINE_HOURS = Array.from({ length: 10 }, (_, i) => i + START_HOUR);
 
 // Add new appointment types here — color flows everywhere automatically
+import theme from '../../styles/theme';
+
+// Map human-readable appointment type names to theme tokens so the app
+// uses only colors defined in `src/styles/theme.js`.
 export const APPOINTMENT_TYPE_COLORS = {
-  "New Patient": { bg: "#FFF6D6", border: "#F5C842", text: "#7A5500", dot: "#F5C842" },
-  "Follow Up": { bg: "#D6E8FF", border: "#4A90D9", text: "#1A3A6B", dot: "#4A90D9" },
-  "Physical": { bg: "#EDD6FF", border: "#A855D4", text: "#4B0E72", dot: "#A855D4" },
-  "Consultation": { bg: "#FFD6F0", border: "#D455AA", text: "#6B0040", dot: "#D455AA" },
-  "Urgent Care": { bg: "#FFD6D6", border: "#D45555", text: "#6B0000", dot: "#D45555" },
-  "Default": { bg: "#D6F5E8", border: "#55A87A", text: "#0A4A28", dot: "#55A87A" },
+  "New Patient": theme.colors.appointmentTypes.newPatient,
+  "Follow Up": theme.colors.appointmentTypes.followUp,
+  "Physical": theme.colors.appointmentTypes.physical,
+  "Consultation": theme.colors.appointmentTypes.consultation,
+  "Urgent Care": theme.colors.appointmentTypes.urgentCare,
+  "Default": theme.colors.appointmentTypes.Default,
 };
 
 export const APPOINTMENT_STATUS = {
-  Finished: { icon: "✓", color: "#34C759" },
-  Scheduled: { icon: "●", color: "#007AFF" },
-  Cancelled: { icon: "⊘", color: "#8E8E93" },
+  Finished: { color: theme.colors.oscarGreen },
+  Scheduled: { color: theme.colors.paleSky },
+  Cancelled: { color: theme.colors.oscarRed },
 };
 
 export function toDateString(year, month, day) {

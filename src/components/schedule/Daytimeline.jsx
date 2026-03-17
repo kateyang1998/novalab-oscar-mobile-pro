@@ -10,6 +10,7 @@
 
 import AppointmentBlock from "./Appointmentblock";
 import TimeColumn from "./Timecolumn";
+import theme from '../../styles/theme';
 import {
   TIMELINE_HOURS,
   HOUR_HEIGHT,
@@ -28,9 +29,9 @@ export default function DayTimeline({ appointments = [], onAppointmentPress }) {
         <TimeColumn hours={TIMELINE_HOURS} hourHeight={HOUR_HEIGHT} />
 
         <div style={styles.eventsColumn}>
-          {TIMELINE_HOURS.map((h) => (
-            <div key={h} style={{ height: HOUR_HEIGHT, borderBottom: "1px solid #F2F2F7" }} />
-          ))}
+            {TIMELINE_HOURS.map((h) => (
+                <div key={h} style={{ height: HOUR_HEIGHT, borderBottom: `1px solid ${theme.colors.oscarWhite}` }} />
+              ))}
 
           {visibleAppts.map((appt) => {
             const { top, height } = getTimelinePosition(appt.startTime, appt.endTime);
@@ -63,6 +64,6 @@ const styles = {
   eventsColumn: {
     flex: 1,
     position: "relative",
-    borderLeft: "1px solid #E5E5EA",
+    borderLeft: `1px solid ${theme.colors.oscarWhite}`,
   },
 };

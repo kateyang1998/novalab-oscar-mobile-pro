@@ -8,6 +8,7 @@
  */
 
 import { getTypeColors } from "./Scheduleutils";
+import theme from '../../styles/theme';
 
 export default function AppointmentPill({ appointment, onClick }) {
   const colors = getTypeColors(appointment.type);
@@ -25,8 +26,8 @@ export default function AppointmentPill({ appointment, onClick }) {
       title={`${appointment.patientName} — ${appointment.type}`}
       style={{
         ...styles.pill,
-        background: isCancelled ? "#F2F2F7" : colors.bg,
-        color: isCancelled ? "#8E8E93" : colors.text,
+        background: isCancelled ? theme.colors.oscarWhite : colors.bg,
+        color: isCancelled ? theme.colors.paleSky : colors.text,
         textDecoration: isCancelled ? "line-through" : "none",
       }}
     >
@@ -50,6 +51,6 @@ const styles = {
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     lineHeight: 1.4,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
 };

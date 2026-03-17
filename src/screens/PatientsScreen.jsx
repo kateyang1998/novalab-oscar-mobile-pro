@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import TopHeader from "../components/layout/TopHeader";
+import SearchBar from "../components/common/SearchBar";
+import theme from "../styles/theme";
+import PatientGrid from "../components/patient/PatientGrid";
 
 /**
  * Patients Screen Component
@@ -131,37 +135,11 @@ const PatientsScreen = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>Patient List</h1>
-      </div>
+      <TopHeader title="Patient List" showBack={false}/>
 
-      <div style={styles.content}>
+      <div className="container" style={styles.content}>
         {/* Search Bar */}
-        <div style={styles.searchContainer}>
-          <svg
-            style={styles.searchIcon}
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
-              stroke="#8E8E93"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <input
-            type="text"
-            placeholder="Search patients"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={styles.searchInput}
-          />
-        </div>
+        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search patients" />
 
         {/* Loading State */}
         {loading && (
@@ -181,23 +159,7 @@ const PatientsScreen = () => {
 
         {/* Patient Cards Grid */}
         {!loading && filteredPatients.length > 0 && (
-          <div style={styles.patientsGrid}>
-            {filteredPatients.map((patient) => (
-              <div
-                key={patient.id}
-                style={styles.patientCard}
-                onClick={() => handlePatientClick(patient.id)}
-              >
-                <h3 style={styles.patientName}>{patient.name}</h3>
-                <p style={styles.patientId}>ID: {patient.id}</p>
-                <p style={styles.patientInfo}>
-                  {patient.age} years old • {patient.gender}
-                </p>
-                <p style={styles.patientInfo}>DOB: {patient.dob}</p>
-                <p style={styles.lastVisit}>Last Visit: {patient.lastVisit}</p>
-              </div>
-            ))}
-          </div>
+          <PatientGrid patients={filteredPatients} onPatientClick={handlePatientClick} />
         )}
       </div>
     </div>
@@ -206,14 +168,14 @@ const PatientsScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: "#E8E8E8",
+    backgroundColor: theme.colors.oscarGray,
     minHeight: "100vh",
     paddingBottom: "80px",
   },
   header: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     padding: "16px 20px",
-    borderBottom: "1px solid #E0E0E0",
+    borderBottom: `1px solid ${theme.colors.oscarGray}`,
   },
   content: {
     maxWidth: "800px",
@@ -223,13 +185,13 @@ const styles = {
   title: {
     fontSize: "18px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     textAlign: "center",
     margin: "0",
   },
   searchContainer: {
     position: "relative",
-    marginBottom: "24px",
+    marginBottom: theme.spacing.lg,
   },
   searchIcon: {
     position: "absolute",
@@ -241,13 +203,13 @@ const styles = {
   searchInput: {
     width: "100%",
     padding: "14px 16px 14px 48px",
-    fontSize: "16px",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
+    fontSize: theme.font.sizes.md,
+    border: `1px solid ${theme.colors.oscarGray}`,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.oscarWhite,
     boxSizing: "border-box",
     outline: "none",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
   },
   patientsGrid: {
     display: "grid",
@@ -255,32 +217,32 @@ const styles = {
     gap: "16px",
   },
   patientCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: "8px",
+    backgroundColor: theme.colors.oscarWhite,
+    borderRadius: theme.radius.md,
     padding: "16px",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    boxShadow: theme.shadows.sm,
     cursor: "pointer",
     transition: "transform 0.2s, box-shadow 0.2s",
   },
   patientName: {
-    fontSize: "18px",
-    fontWeight: "700",
-    color: "#000000",
+    fontSize: theme.font.sizes.lg,
+    fontWeight: theme.font.weights.bold,
+    color: theme.colors.oscarBlack,
     margin: "0 0 8px 0",
   },
   patientId: {
-    fontSize: "13px",
-    color: "#8E8E93",
+    fontSize: theme.font.sizes.sm,
+    color: theme.colors.paleSky,
     margin: "0 0 4px 0",
   },
   patientInfo: {
-    fontSize: "13px",
-    color: "#8E8E93",
+    fontSize: theme.font.sizes.sm,
+    color: theme.colors.paleSky,
     margin: "0 0 4px 0",
   },
   lastVisit: {
-    fontSize: "13px",
-    color: "#8E8E93",
+    fontSize: theme.font.sizes.sm,
+    color: theme.colors.paleSky,
     margin: "8px 0 0 0",
   },
   loadingContainer: {
@@ -290,8 +252,8 @@ const styles = {
     padding: "60px 20px",
   },
   loadingText: {
-    fontSize: "16px",
-    color: "#8E8E93",
+    fontSize: theme.font.sizes.md,
+    color: theme.colors.paleSky,
   },
   emptyContainer: {
     display: "flex",
@@ -300,8 +262,8 @@ const styles = {
     padding: "60px 20px",
   },
   emptyText: {
-    fontSize: "16px",
-    color: "#8E8E93",
+    fontSize: theme.font.sizes.md,
+    color: theme.colors.paleSky,
   },
 };
 

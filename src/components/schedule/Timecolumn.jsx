@@ -7,6 +7,8 @@
  *   hourHeight {number}    px height per hour row — must match the grid
  */
 
+import theme from '../../styles/theme';
+
 export default function TimeColumn({ hours, hourHeight }) {
   return (
     <div style={{ width: 44, flexShrink: 0 }}>
@@ -30,11 +32,11 @@ export default function TimeColumn({ hours, hourHeight }) {
 const styles = {
   label: {
     fontSize: 10,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     textAlign: "right",
     width: "100%",
     paddingRight: 6,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
     lineHeight: 1,
   },
 };

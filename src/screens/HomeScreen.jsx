@@ -1,4 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { IconUser } from "../components/common/Icons";
+import theme from "../styles/theme";
+import SearchBar from "../components/common/SearchBar";
+import ScheduleToday from "../components/home/ScheduleToday";
+import RecentPatients from "../components/home/RecentPatients";
+import SAMPLE_APPOINTMENTS from "../data/sampleAppointments";
 
 /**
  * Home Screen Component
@@ -21,195 +27,53 @@ const HomeScreen = () => {
     { id: "P-0023", name: "Emily Rodriguez", time: "yesterday" },
   ];
 
-  // Appointment type color mapping
-  const appointmentTypeColors = {
-    "New Patient": "#816300",
-    "Follow-up": "#0056B3",
-    "Physical": "#5F0088",
-    "Consultation": "#930076",
-    "Urgent Care": "#470007",
-  };
+  // (no local helpers required here)
 
-  // Function to get appointment type style
-  const getAppointmentTypeStyle = (type, status) => {
-    const baseStyle = {
-      fontSize: "12px",
-      color: appointmentTypeColors[type] || "#007AFF",
-      margin: "0",
-      lineHeight: "1.2",
-    };
-    
-    // Add strikethrough and transparency for cancelled appointments
-    if (status === "Cancelled") {
-      return {
-        ...baseStyle,
-        textDecoration: "line-through",
-        opacity: 0.6,
-      };
-    }
-    
-    return baseStyle;
-  };
-
-  // Function to get patient name style for cancelled appointments
-  const getPatientNameStyle = (status) => {
-    const baseStyle = {
-      fontSize: "14px",
-      fontWeight: "bold",
-      color: "#000000",
-      margin: "0 0 2px 0",
-      lineHeight: "1.2",
-    };
-    
-    if (status === "Cancelled") {
-      return {
-        ...baseStyle,
-        textDecoration: "line-through",
-        opacity: 0.6,
-      };
-    }
-    
-    return baseStyle;
-  };
-
-  // Function to navigate to patient summary page
-  const handlePatientClick = (patientId) => {
-    navigate(`/patient/${patientId}/summary`);
-  };
+  // derive today's appointments from sample appointments in schedule screen
+  // Use the mock date that matches the sample appointments so the Home preview shows items
+  const todayStr = '2026-04-15';
+  const todayAppointments = (SAMPLE_APPOINTMENTS || []).filter(a => a.date === todayStr).map(a => ({
+    id: a.id,
+    patientName: a.patientName,
+    type: a.type,
+    startTime: a.startTime,
+    status: a.status,
+  }));
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, backgroundColor: theme.colors.oscarGray }}>
       {/* Header */}
       <header style={styles.header}>
         <h1 style={styles.title}>Welcome, Dr. Lee</h1>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          style={styles.profileIcon}
-          onClick={() => navigate("/profile")}
-        >
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-        </svg>
+        <div style={styles.profileIcon} onClick={() => navigate("/profile")}> 
+          <IconUser size={24} color={theme.colors.oscarBlack} />
+        </div>
       </header>
 
       {/* Search Bar */}
-      <div style={styles.searchBarContainer}>
-        <svg
-          style={styles.searchIcon}
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35"
-            stroke="#8E8E93"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <input
-          type="text"
-          placeholder="Search patients"
-          style={styles.searchBar}
-        />
-      </div>
+      <SearchBar />
 
       {/* Today's Schedule */}
       <section style={styles.section}>
         <div style={styles.sectionHeader}>
           <div style={styles.titleWithDate}>
             <h2 style={styles.sectionTitle}>Today's Schedule</h2>
-            <span style={styles.dateText}>Mar 4, 2026</span>
+            <span style={styles.dateText}>Apr 15, 2026</span>
           </div>
-          <span style={styles.viewAll} onClick={() => navigate("/schedule")}>View All</span>
+          <span
+            style={styles.viewAll}
+            onClick={() => navigate("/schedule", { state: { view: 'day', date: todayStr } })}
+          >
+            View All
+          </span>
         </div>
-        <div style={styles.scheduleList}>
-          <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
-            <span style={styles.time}>09:00 AM</span>
-            <div style={styles.scheduleDetails}>
-              <p style={getPatientNameStyle("Finished")}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("Follow-up", "Finished")}>Follow-up</p>
-            </div>
-            <div style={styles.statusContainer}>
-              <span style={styles.checkIcon}>✓</span>
-              <span style={styles.statusFinished}>Finished</span>
-            </div>
-          </div>
-          <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
-            <span style={styles.time}>11:00 AM</span>
-            <div style={styles.scheduleDetails}>
-              <p style={getPatientNameStyle("Scheduled")}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("New Patient", "Scheduled")}>New Patient</p>
-            </div>
-            <div style={styles.statusContainer}>
-              <span style={styles.dot}>•</span>
-              <span style={styles.statusScheduled}>Scheduled</span>
-            </div>
-          </div>
-          <div style={styles.scheduleItem} onClick={() => navigate("/schedule")}>
-            <span style={styles.time}>01:00 PM</span>
-            <div style={styles.scheduleDetails}>
-              <p style={getPatientNameStyle("Scheduled")}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("Physical", "Scheduled")}>Physical</p>
-            </div>
-            <div style={styles.statusContainer}>
-              <span style={styles.dot}>•</span>
-              <span style={styles.statusScheduled}>Scheduled</span>
-            </div>
-          </div>
-          <div style={{...styles.scheduleItem, borderBottom: "none"}} onClick={() => navigate("/schedule")}>
-            <span style={styles.time}>02:10 PM</span>
-            <div style={styles.scheduleDetails}>
-              <p style={getPatientNameStyle("Cancelled")}>Jane Doe</p>
-              <p style={getAppointmentTypeStyle("Follow-up", "Cancelled")}>Follow-up</p>
-            </div>
-            <div style={styles.statusContainer}>
-              <span style={styles.cancelIcon}>✕</span>
-              <span style={styles.statusCancelled}>Cancelled</span>
-            </div>
-          </div>
-        </div>
+        <ScheduleToday items={todayAppointments} />
       </section>
 
       {/* Recent Patients */}
       <section style={styles.section}>
         <h2 style={styles.sectionTitle}>Recent Patients</h2>
-        <div style={styles.patientList}>
-          {recentPatients.map((patient) => (
-            <div
-              key={patient.id}
-              style={styles.patientItem}
-              onClick={() => handlePatientClick(patient.id)}
-            >
-              <div style={styles.patientInfo}>
-                <p style={styles.patientName}>{patient.name}</p>
-                <p style={styles.patientDetails}>
-                  ID: {patient.id} • {patient.time}
-                </p>
-              </div>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={styles.arrowIcon}
-              >
-                <path
-                  d="M7.5 15L12.5 10L7.5 5"
-                  stroke="#8E8E93"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          ))}
-        </div>
+        <RecentPatients patients={recentPatients} />
       </section>
     </div>
   );
@@ -221,7 +85,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: theme.colors.oscarGray,
   },
   header: {
     display: "flex",
@@ -232,12 +96,12 @@ const styles = {
   title: {
     fontSize: "24px",
     fontWeight: "bold",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
   },
   profileIcon: {
     width: "24px",
     height: "24px",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     cursor: "pointer",
   },
   searchBarContainer: {
@@ -247,13 +111,13 @@ const styles = {
   searchBar: {
     width: "100%",
     padding: "14px 16px 14px 48px",
-    fontSize: "16px",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
+    fontSize: theme.font.sizes.md,
+    border: `1px solid ${theme.colors.oscarWhite}`,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.oscarWhite,
     boxSizing: "border-box",
     outline: "none",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
   },
   searchIcon: {
     position: "absolute",
@@ -263,7 +127,7 @@ const styles = {
     pointerEvents: "none",
   },
   section: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     borderRadius: "8px",
     padding: "20px",
     marginBottom: "20px",
@@ -277,7 +141,7 @@ const styles = {
   sectionTitle: {
     fontSize: "18px",
     fontWeight: "bold",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0",
     display: "inline",
   },
@@ -288,18 +152,18 @@ const styles = {
   },
   dateText: {
     fontSize: "14px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     fontWeight: "normal",
   },
   viewAll: {
     fontSize: "14px",
-    color: "#007AFF",
+    color: theme.colors.oscarBlue,
     cursor: "pointer",
   },
   scheduleList: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#F9F9F9",
+    backgroundColor: theme.colors.oscarGray,
     borderRadius: "8px",
     overflow: "hidden",
   },
@@ -308,15 +172,15 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "12px 16px",
-    backgroundColor: "#F9F9F9",
+    backgroundColor: theme.colors.oscarGray,
     cursor: "pointer",
     minHeight: "60px",
-    borderBottom: "1px solid #E0E0E0",
+    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
   },
   time: {
     fontSize: "14px",
     fontWeight: "bold",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     minWidth: "70px",
     textAlign: "left",
   },
@@ -331,7 +195,7 @@ const styles = {
   patientName: {
     fontSize: "14px",
     fontWeight: "bold",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0 0 2px 0",
     lineHeight: "1.3",
   },
@@ -344,27 +208,27 @@ const styles = {
   },
   statusFinished: {
     fontSize: "12px",
-    color: "#28A745",
+    color: theme.colors.oscarGreen,
   },
   statusScheduled: {
     fontSize: "12px",
-    color: "#6C757D",
+    color: theme.colors.paleSky,
   },
   statusCancelled: {
     fontSize: "12px",
-    color: "#DC3545",
+    color: theme.colors.oscarRed,
   },
   checkIcon: {
     fontSize: "14px",
-    color: "#28A745",
+    color: theme.colors.oscarGreen,
   },
   dot: {
     fontSize: "16px",
-    color: "#6C757D",
+    color: theme.colors.paleSky,
   },
   cancelIcon: {
     fontSize: "14px",
-    color: "#DC3545",
+    color: theme.colors.oscarRed,
   },
   patientList: {
     display: "flex",
@@ -373,9 +237,9 @@ const styles = {
   },
   patientItem: {
     padding: "12px 16px",
-    border: "1px solid #E0E0E0",
-    borderRadius: "8px",
-    backgroundColor: "#F9F9F9",
+    border: `1px solid ${theme.colors.oscarWhite}`,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.oscarWhite,
     cursor: "pointer",
     display: "flex",
     flexDirection: "row",
@@ -391,7 +255,7 @@ const styles = {
   },
   patientDetails: {
     fontSize: "12px",
-    color: "#666666",
+    color: theme.colors.paleSky,
     margin: "0",
     lineHeight: "1.3",
   },

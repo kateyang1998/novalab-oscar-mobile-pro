@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoBlue from "../assets/logoBlue.png";
+import TextInput from "../components/common/TextInput";
 
 /**
  * Sign In Screen Component
@@ -24,37 +25,18 @@ const SignInScreen = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, backgroundColor: 'var(--oscar-gray)' }}>
       <div style={styles.content}>
-        <img src={logoBlue} alt="OSCAR Mobile Pro Logo" style={styles.logo} />
+        <img src={logoBlue} alt="OSCAR Mobile Pro Logo" style={{ ...styles.logo, filter: 'none' }} />
 
         <h1 style={styles.title}>OSCAR Mobile Pro</h1>
         <p style={styles.subtitle}>Electronic Medical Records</p>
 
         <form onSubmit={handleSignIn} style={styles.form}>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>User ID</label>
-            <input
-              type="text"
-              placeholder="Enter your ID"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              style={styles.input}
-            />
-          </div>
+          <TextInput label="User ID" value={userId} onChange={setUserId} placeholder="Enter your ID" />
+          <TextInput label="Password" type="password" value={password} onChange={setPassword} placeholder="Enter your password" />
 
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-            />
-          </div>
-
-          <button type="submit" style={styles.signInButton}>
+          <button type="submit" className="btn btn-primary">
             SIGN IN
           </button>
 
@@ -86,7 +68,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
-    backgroundColor: "#E8E8E8",
+    backgroundColor: "var(--oscar-gray)",
     padding: "20px",
     overflow: "hidden",
   },
@@ -106,12 +88,12 @@ const styles = {
   title: {
     fontSize: "28px",
     fontWeight: "700",
-    color: "#000000",
+    color: "var(--oscar-black)",
     margin: "0 0 5px 0",
   },
   subtitle: {
     fontSize: "14px",
-    color: "#666666",
+    color: "var(--pale-sky)",
     margin: "0 0 40px 0",
   },
   form: {
@@ -126,16 +108,16 @@ const styles = {
     display: "block",
     fontSize: "14px",
     fontWeight: "600",
-    color: "#000000",
+    color: "var(--oscar-black)",
     marginBottom: "8px",
   },
   input: {
     width: "100%",
     padding: "14px 16px",
     fontSize: "15px",
-    border: "1px solid #D1D1D6",
+    border: "1px solid var(--color-neutral-2)",
     borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "var(--oscar-white)",
     boxSizing: "border-box",
     outline: "none",
   },
@@ -144,8 +126,8 @@ const styles = {
     padding: "16px",
     fontSize: "16px",
     fontWeight: "600",
-    color: "#FFFFFF",
-    backgroundColor: "#007AFF",
+    color: "var(--oscar-white)",
+    backgroundColor: "var(--oscar-blue)",
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
@@ -165,12 +147,12 @@ const styles = {
   },
   rememberMeLabel: {
     fontSize: "14px",
-    color: "#000000",
+    color: "var(--oscar-black)",
     cursor: "pointer",
   },
   forgotPassword: {
     fontSize: "14px",
-    color: "#666666",
+    color: "var(--pale-sky)",
     textAlign: "center",
     textDecoration: "none",
     marginTop: "8px",

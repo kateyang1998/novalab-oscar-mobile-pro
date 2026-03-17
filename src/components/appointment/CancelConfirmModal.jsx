@@ -8,7 +8,9 @@
  *   onDismiss   {function} called when user taps "Cancel"
  */
 
-import { formatTime12h, MONTHS } from "./Scheduleutils";
+import { formatTime12h, MONTHS } from "../schedule/Scheduleutils.js";
+import theme from '../../styles/theme';
+import Modal from '../common/Modal';
 
 export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }) {
   if (!appointment) return null;
@@ -18,10 +20,8 @@ export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }
   const formattedTime = formatTime12h(appointment.startTime);
 
   return (
-    // Backdrop
-    <div style={styles.backdrop} onClick={onDismiss}>
-      {/* Modal box — stop click from closing when clicking inside */}
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <Modal onDismiss={onDismiss}>
+      <div style={styles.content}>
         <p style={styles.title}>Are you sure you want to cancel an appointment?</p>
 
         <p style={styles.detail}>ID: {appointment.patientId ?? "P-0021"} {appointment.patientName}</p>
@@ -33,71 +33,55 @@ export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }
           <button onClick={onDismiss} style={styles.cancelBtn}>Cancel</button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
 const styles = {
-  backdrop: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.4)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-    padding: "0 24px",
-  },
-  modal: {
-    background: "#FFFFFF",
-    borderRadius: 14,
-    padding: "24px 20px 20px",
-    width: "100%",
-    maxWidth: 340,
-    boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
-    textAlign: "center",
+  content: {
+    textAlign: 'center',
   },
   title: {
     fontSize: 16,
     fontWeight: 700,
-    color: "#1C1C1E",
+    color: theme.colors.oscarBlack,
     marginBottom: 16,
     lineHeight: 1.4,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   detail: {
     fontSize: 14,
-    color: "#3C3C43",
-    margin: "2px 0",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    color: theme.colors.shark,
+    margin: '2px 0',
+    fontFamily: theme.font.family,
   },
   actions: {
-    display: "flex",
+    display: 'flex',
     gap: 12,
     marginTop: 20,
   },
   yesBtn: {
     flex: 1,
-    padding: "12px 0",
-    background: "#D9534F",
-    color: "#FFFFFF",
-    border: "none",
-    borderRadius: 10,
+    padding: '12px 0',
+    background: theme.colors.oscarRed,
+    color: theme.colors.oscarWhite,
+    border: 'none',
+    borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 700,
-    cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    cursor: 'pointer',
+    fontFamily: theme.font.family,
   },
   cancelBtn: {
     flex: 1,
-    padding: "12px 0",
-    background: "#FFFFFF",
-    color: "#1C1C1E",
-    border: "1.5px solid #C7C7CC",
-    borderRadius: 10,
+    padding: '12px 0',
+    background: theme.colors.oscarWhite,
+    color: theme.colors.paleSky,
+    border: `1.5px solid ${theme.colors.oscarGray}`,
+    borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 600,
-    cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    cursor: 'pointer',
+    fontFamily: theme.font.family,
   },
 };
