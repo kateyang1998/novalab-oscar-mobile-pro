@@ -16,6 +16,7 @@ import PatientRecordVitalsScreen from "./screens/PatientRecordVitalsScreen";
 import ClinicalNoteScreen from "./screens/ClinicalNoteScreen";
 import BottomTab from "./components/BottomTab";
 import ScrollToTop from "./components/ScrollToTop";
+import theme from './styles/theme';
 
 function App() {
   const location = useLocation();
@@ -65,7 +66,7 @@ function App() {
 const styles = {
   appContainer: {
     width: "100%",
-    background: "#f5f5f5",
+    background: theme.colors.oscarGray,
     minHeight: "100vh",
     position: "relative",
   },

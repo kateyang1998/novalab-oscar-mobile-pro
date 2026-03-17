@@ -13,9 +13,10 @@
 
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import AppointmentForm from "../components/schedule/AppointmentForm";
-import CancelConfirmModal from "../components/schedule/CancelConfirmModal";
+import AppointmentForm from "../components/appointment/AppointmentForm.jsx";
+import CancelConfirmModal from "../components/appointment/CancelConfirmModal.jsx";
 import TopHeader from "../components/layout/TopHeader";
+import theme from '../styles/theme';
 
 // ─── Sample previous notes — replace with API data later ─────────────────────
 const SAMPLE_NOTES = [
@@ -139,8 +140,8 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     height: "100vh",
-    background: "#F2F2F7",
-    fontFamily: "-apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif",
+    background: theme.colors.oscarGray,
+    fontFamily: theme.font.family,
     overflow: "hidden",
   },
   header: {
@@ -148,25 +149,25 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "14px 16px",
-    background: "#FFFFFF",
-    borderBottom: "1px solid #E5E5EA",
+    background: theme.colors.oscarWhite,
+    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
     flexShrink: 0,
   },
   backBtn: {
     background: "none",
     border: "none",
     fontSize: 20,
-    color: "#007AFF",
+    color: theme.colors.oscarBlue,
     cursor: "pointer",
     padding: 0,
     width: 32,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: 700,
-    color: "#1C1C1E",
-    fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
+    color: theme.colors.oscarBlack,
+    fontFamily: theme.font.family,
   },
   body: {
     flex: 1,
@@ -177,8 +178,8 @@ const styles = {
     gap: 16,
   },
   patientCard: {
-    background: "#FFFFFF",
-    borderRadius: 12,
+    background: theme.colors.oscarWhite,
+    borderRadius: theme.radius.md,
     padding: "14px 16px",
     display: "flex",
     flexDirection: "column",
@@ -187,39 +188,39 @@ const styles = {
   patientName: {
     fontSize: 16,
     fontWeight: 700,
-    color: "#1C1C1E",
+    color: theme.colors.oscarBlack,
     margin: 0,
-    fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
+    fontFamily: theme.font.family,
   },
   patientMeta: {
     fontSize: 13,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     margin: 0,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   saveBtn: {
     width: "100%",
     padding: "15px 0",
-    background: "#007AFF",
-    color: "#FFFFFF",
+    background: theme.colors.oscarBlue,
+    color: theme.colors.oscarWhite,
     border: "none",
-    borderRadius: 12,
+    borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 700,
     cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   cancelApptBtn: {
     width: "100%",
     padding: "15px 0",
-    background: "#D9534F",
-    color: "#FFFFFF",
+    background: theme.colors.oscarRed,
+    color: theme.colors.oscarWhite,
     border: "none",
-    borderRadius: 12,
+    borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 700,
     cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
     marginBottom: 8,
   },
 };

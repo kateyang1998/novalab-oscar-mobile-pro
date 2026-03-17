@@ -5,6 +5,8 @@
  *   onChange   {function} (view: string) => void
  */
 
+import theme from '../../styles/theme';
+
 const VIEWS = ["month", "week", "day"];
 
 export default function ViewSwitcher({ activeView, onChange }) {
@@ -18,8 +20,8 @@ export default function ViewSwitcher({ activeView, onChange }) {
             onClick={() => onChange(view)}
             style={{
               ...styles.btn,
-              background: isActive ? "#FFFFFF" : "transparent",
-              color: isActive ? "#007AFF" : "#8E8E93",
+              background: isActive ? theme.colors.oscarWhite : "transparent",
+              color: isActive ? theme.colors.oscarBlue : theme.colors.paleSky,
               fontWeight: isActive ? 700 : 400,
               boxShadow: isActive ? "0 1px 4px rgba(0,0,0,0.12)" : "none",
             }}
@@ -35,7 +37,7 @@ export default function ViewSwitcher({ activeView, onChange }) {
 const styles = {
   wrapper: {
     display: "flex",
-    background: "#F2F2F7",
+    background: theme.colors.oscarWhite,
     borderRadius: 10,
     padding: 3,
     margin: "8px 16px",

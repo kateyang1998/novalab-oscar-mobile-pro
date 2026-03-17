@@ -12,6 +12,7 @@
  */
 
 import AppointmentBlock from "./Appointmentblock";
+import theme from '../../styles/theme';
 import TimeColumn from "./Timecolumn";
 import {
   DAYS_SHORT,
@@ -38,16 +39,16 @@ export default function WeekGrid({
             <div
               key={d}
               onClick={() => onSelectDate(d)}
-              style={{
-                ...styles.dayHeader,
-                borderBottom: isSelected ? "2px solid #007AFF" : "2px solid transparent",
-              }}
+                style={{
+                    ...styles.dayHeader,
+                    borderBottom: isSelected ? `2px solid ${theme.colors.oscarBlue}` : "2px solid transparent",
+                  }}
             >
               <span style={styles.dayLabel}>{DAYS_SHORT[i]}</span>
               <div style={{
                 ...styles.dayNum,
-                background: isToday ? "#007AFF" : "transparent",
-                color: isToday ? "#fff" : "#1C1C1E",
+                background: isToday ? theme.colors.oscarBlue : "transparent",
+                color: isToday ? theme.colors.oscarWhite : theme.colors.oscarBlack,
                 fontWeight: isToday ? 700 : 400,
               }}>
                 {dayNum}
@@ -69,7 +70,7 @@ export default function WeekGrid({
             return (
               <div key={d} style={styles.dayColumn}>
                 {TIMELINE_HOURS.map((h) => (
-                  <div key={h} style={{ height: HOUR_HEIGHT, borderBottom: "1px solid #F2F2F7" }} />
+                  <div key={h} style={{ height: HOUR_HEIGHT, borderBottom: `1px solid ${theme.colors.oscarWhite}` }} />
                 ))}
                 {appts.map((appt) => {
                   const { top, height } = getTimelinePosition(appt.startTime, appt.endTime);
@@ -102,7 +103,7 @@ const styles = {
   },
   headerRow: {
     display: "flex",
-    borderBottom: "1px solid #E5E5EA",
+    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
     flexShrink: 0,
   },
   dayHeader: {
@@ -116,7 +117,7 @@ const styles = {
   },
   dayLabel: {
     fontSize: 10,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     fontWeight: 600,
     fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
@@ -141,6 +142,6 @@ const styles = {
   dayColumn: {
     flex: 1,
     position: "relative",
-    borderLeft: "1px solid #F2F2F7",
+    borderLeft: `1px solid ${theme.colors.oscarWhite}`,
   },
 };

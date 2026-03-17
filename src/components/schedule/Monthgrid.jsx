@@ -13,6 +13,7 @@
  */
 
 import AppointmentPill from "./Appointmentpill";
+import theme from '../../styles/theme';
 import {
   DAYS_SHORT,
   getDaysInMonth,
@@ -64,16 +65,16 @@ export default function MonthGrid({
             <div
               key={i}
               onClick={() => cell.isCurrent && cell.dateStr && onSelectDate(cell.dateStr)}
-              style={{
-                ...styles.cell,
-                cursor: cell.isCurrent ? "pointer" : "default",
-                background: isSelected && cell.isCurrent ? "#EEF4FF" : "transparent",
-              }}
+                style={{
+                    ...styles.cell,
+                    cursor: cell.isCurrent ? "pointer" : "default",
+                    background: isSelected && cell.isCurrent ? theme.colors.oscarWhite : "transparent",
+                  }}
             >
               <div style={{
                 ...styles.dayNum,
-                background: isToday ? "#007AFF" : "transparent",
-                color: isToday ? "#fff" : cell.isCurrent ? "#1C1C1E" : "#C7C7CC",
+                background: isToday ? theme.colors.oscarBlue : "transparent",
+                color: isToday ? theme.colors.oscarWhite : cell.isCurrent ? theme.colors.oscarBlack : theme.colors.paleSky,
                 fontWeight: isToday ? 700 : 400,
               }}>
                 {cell.day}
@@ -117,7 +118,7 @@ const styles = {
     textAlign: "center",
     fontSize: 11,
     fontWeight: 600,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     padding: "4px 0",
     fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
@@ -153,7 +154,7 @@ const styles = {
   },
   overflow: {
     fontSize: 7.5,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     paddingLeft: 3,
     fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },

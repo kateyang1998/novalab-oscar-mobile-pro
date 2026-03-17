@@ -7,17 +7,24 @@
  *   onTitlePress {function} called when title tapped (e.g. open date picker)
  */
 
+import theme from '../../styles/theme';
+import { IconChevronLeft, IconChevronRight, IconChevronDown } from '../common/Icons';
+
 export default function CalendarHeader({ title, onPrev, onNext, onTitlePress }) {
   return (
     <div style={styles.wrapper}>
-      <button onClick={onPrev} style={styles.arrow} aria-label="Previous">‹</button>
+      <button onClick={onPrev} style={styles.arrow} aria-label="Previous">
+        <IconChevronLeft size={20} color={theme.colors.oscarBlue} />
+      </button>
 
       <button onClick={onTitlePress} style={styles.title} aria-label="Select date">
         {title}
-        <span style={styles.caret}>▼</span>
+        <IconChevronDown style={styles.caret} color={theme.colors.paleSky} />
       </button>
 
-      <button onClick={onNext} style={styles.arrow} aria-label="Next">›</button>
+      <button onClick={onNext} style={styles.arrow} aria-label="Next">
+        <IconChevronRight size={20} color={theme.colors.oscarBlue} />
+      </button>
     </div>
   );
 }
@@ -34,7 +41,7 @@ const styles = {
     background: "none",
     border: "none",
     fontSize: 26,
-    color: "#007AFF",
+    color: theme.colors.oscarBlue,
     cursor: "pointer",
     padding: "0 8px",
     lineHeight: 1,
@@ -45,7 +52,7 @@ const styles = {
     border: "none",
     fontSize: 18,
     fontWeight: 700,
-    color: "#1C1C1E",
+    color: theme.colors.oscarBlack,
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -55,7 +62,7 @@ const styles = {
   },
   caret: {
     fontSize: 10,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     marginTop: 2,
   },
 };

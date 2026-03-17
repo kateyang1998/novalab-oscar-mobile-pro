@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import theme from '../../styles/theme';
-import { IconCheck, IconX, IconChevronRight } from '../common/Icons';
+import { IconCheck, IconX, IconChevronRight, IconCircle } from '../common/Icons';
+import { getTypeColors } from '../schedule/Scheduleutils';
 
 // ScheduleToday: Displays list of today's appointments. Props:
 // - items: array of appointments { id, patientName, type, startTime, status }
@@ -29,7 +30,8 @@ const ScheduleToday = ({ items = [], emptyText = 'No schedule for today yet' }) 
                   const isCancelled = it.status && it.status.toLowerCase() === 'cancelled';
                   const itemStyle = { ...styles.item, ...(isCancelled ? styles.itemCancelled : {}) };
                   const nameStyle = { ...styles.patientName, ...(isCancelled ? styles.textCancelled : {}) };
-                  const typeStyle = { ...styles.type, color: getTypeColor(it.type), ...(isCancelled ? styles.textCancelled : {}) };
+                  const typeColors = getTypeColors(it.type) || {};
+                  const typeStyle = { ...styles.type, color: typeColors.text || theme.colors.oscarBlue, ...(isCancelled ? styles.textCancelled : {}) };
 
                   return (
                     <div key={it.id} style={itemStyle} onClick={() => handleItemClick(it)}>
@@ -46,7 +48,7 @@ const ScheduleToday = ({ items = [], emptyText = 'No schedule for today yet' }) 
                           <IconX size={16} color={theme.colors.oscarRed} />
                         )}
                         {it.status && it.status.toLowerCase() !== 'finished' && it.status.toLowerCase() !== 'cancelled' && (
-                          <span style={styles.dot}>•</span>
+                          <IconCircle size={12} color={theme.colors.paleSky} />
                         )}
 
                         <span style={getStatusTextStyle(it.status)}>{it.status}</span>
@@ -60,28 +62,8 @@ const ScheduleToday = ({ items = [], emptyText = 'No schedule for today yet' }) 
   );
 };
 
-        function getTypeColor(type) {
-  const map = theme.colors.appointment || {};
-  switch ((type || '').toLowerCase()) {
-    case 'new patient':
-    case 'new':
-    case 'newpatient':
-      return map.newPatient;
-    case 'follow up':
-    case 'follow-up':
-    case 'followup':
-      return map.followUp;
-    case 'physical':
-      return map.physical;
-    case 'consultation':
-      return map.consultation;
-    case 'urgent care':
-    case 'urgentcare':
-      return map.urgentCare;
-    default:
-      return theme.colors.oscarBlue;
-  }
-}
+                // No-op: types are mapped via getTypeColors in scheduleUtils which returns
+                // the token object { bg, border, text, dot } from the central theme.
 function getStatusTextStyle(status) {
   if (!status) return {};
   if (status.toLowerCase() === 'finished') return { fontSize: 12, color: theme.colors.oscarGreen };
@@ -113,8 +95,9 @@ const styles = {
     backgroundColor: theme.colors.oscarGray,
   },
   itemCancelled: {
-    opacity: 0.5,
-    backgroundColor: theme.colors.oscarGray,
+    opacity: 0.9,
+    backgroundColor: 'transparent',
+    borderBottom: `1px dashed ${theme.colors.paleSky}`,
   },
   textCancelled: {
     textDecoration: 'line-through',

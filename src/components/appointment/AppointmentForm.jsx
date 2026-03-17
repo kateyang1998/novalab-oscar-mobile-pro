@@ -1,6 +1,8 @@
 // ─── src/components/schedule/AppointmentForm.jsx ─────────────────────────────
 
-import { APPOINTMENT_TYPE_COLORS, APPOINTMENT_STATUS } from "./Scheduleutils";
+import { APPOINTMENT_TYPE_COLORS, APPOINTMENT_STATUS } from "../schedule/Scheduleutils.js";
+import theme from '../../styles/theme';
+import { IconChevronDown } from '../common/Icons';
 
 const APPOINTMENT_TYPES = Object.keys(APPOINTMENT_TYPE_COLORS);
 const STATUSES = Object.keys(APPOINTMENT_STATUS);
@@ -207,7 +209,7 @@ function Select({ value, onChange, options, placeholder, style = {} }) {
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
-      <span style={styles.selectArrow}>▼</span>
+      <IconChevronDown style={styles.selectArrow} color={theme.colors.paleSky} />
     </div>
   );
 }
@@ -219,20 +221,20 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: 14,
-    background: "#FFFFFF",
-    borderRadius: 12,
+    background: theme.colors.oscarWhite,
+    borderRadius: theme.radius.md,
     padding: 16,
+    fontFamily: theme.font.family,
   },
   sectionTitle: {
     fontSize: 15,
     fontWeight: 700,
-    color: "#007AFF",
+    color: theme.colors.oscarBlue,
     margin: 0,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
   divider: {
     height: 1,
-    background: "#007AFF",
+    background: theme.colors.oscarBlue,
     marginTop: -10,
   },
   row: {
@@ -253,8 +255,7 @@ const styles = {
   label: {
     fontSize: 12,
     fontWeight: 600,
-    color: "#3C3C43",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    color: theme.colors.shark,
   },
   selectWrapper: {
     position: "relative",
@@ -264,52 +265,49 @@ const styles = {
   },
   select: {
     width: "100%",
-    padding: "9px 24px 9px 10px",
-    border: "1.5px solid #E5E5EA",
+    padding: "9px 28px 9px 10px",
+    border: `1.5px solid ${theme.colors.oscarGray}`,
     borderRadius: 8,
     fontSize: 13,
-    color: "#1C1C1E",
-    background: "#FFFFFF",
+    color: theme.colors.oscarBlack,
+    background: theme.colors.oscarWhite,
     appearance: "none",
     WebkitAppearance: "none",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
     cursor: "pointer",
     outline: "none",
   },
   selectArrow: {
     position: "absolute",
-    right: 7,
-    fontSize: 8,
-    color: "#8E8E93",
+    right: 8,
     pointerEvents: "none",
+    display: 'flex',
+    alignItems: 'center',
   },
   textarea: {
     width: "100%",
     padding: "10px 12px",
-    border: "1.5px solid #E5E5EA",
+    border: `1.5px solid ${theme.colors.oscarGray}`,
     borderRadius: 8,
     fontSize: 13,
-    color: "#1C1C1E",
+    color: theme.colors.oscarBlack,
     resize: "none",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
     boxSizing: "border-box",
     outline: "none",
   },
   addNoteBtn: {
     width: "100%",
     padding: "12px 0",
-    border: "1.5px solid #E5E5EA",
-    borderRadius: 10,
-    background: "#FFFFFF",
+    border: `1.5px solid ${theme.colors.oscarGray}`,
+    borderRadius: theme.radius.md,
+    background: theme.colors.oscarWhite,
     fontSize: 14,
     fontWeight: 600,
-    color: "#1C1C1E",
+    color: theme.colors.oscarBlack,
     cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
   noteCard: {
-    background: "#F9F9F9",
-    borderRadius: 10,
+    background: theme.colors.oscarGray,
+    borderRadius: theme.radius.md,
     padding: "12px 14px",
     display: "flex",
     flexDirection: "column",
@@ -322,34 +320,29 @@ const styles = {
   },
   noteDate: {
     fontSize: 12,
-    color: "#3C3C43",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    color: theme.colors.shark,
   },
   noteDoctor: {
     fontSize: 12,
-    color: "#3C3C43",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    color: theme.colors.shark,
   },
   syncBadge: {
     fontSize: 10,
     fontWeight: 700,
-    color: "#FFFFFF",
-    background: "#34C759",
+    color: theme.colors.oscarWhite,
+    background: theme.colors.oscarGreen,
     borderRadius: 4,
     padding: "2px 6px",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
   noteType: {
     fontSize: 12,
     fontWeight: 600,
-    color: "#007AFF",
+    color: theme.colors.oscarBlue,
     margin: 0,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
   noteText: {
     fontSize: 12,
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     margin: 0,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
   },
 };

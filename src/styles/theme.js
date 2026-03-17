@@ -13,13 +13,46 @@ export const theme = {
     shark: '#212529',
     barleyWhite: '#FFF3CD',
     yukonGold: '#856404',
-    // Appointment type colors
-    appointment: {
-      newPatient: '#816300',
-      followUp: '#0056B3',
-      physical: '#5F0088',
-      consultation: '#930076',
-      urgentCare: '#470007',
+    // Appointment type colors (detailed tokens used across the app)
+    // Each type exposes bg, border, text and dot so components can use
+    // consistent shades from the central theme only.
+    appointmentTypes: {
+      newPatient: {
+        bg: '#FFF6D6',
+        border: '#F5C842',
+        text: '#816300',
+        dot: '#F5C842',
+      },
+      followUp: {
+        bg: '#D6E8FF',
+        border: '#4A90D9',
+        text: '#0056B3',
+        dot: '#4A90D9',
+      },
+      physical: {
+        bg: '#EDD6FF',
+        border: '#A855D4',
+        text: '#5F0088',
+        dot: '#A855D4',
+      },
+      consultation: {
+        bg: '#FFD6F0',
+        border: '#D455AA',
+        text: '#930076',
+        dot: '#D455AA',
+      },
+      urgentCare: {
+        bg: '#FFD6D6',
+        border: '#D45555',
+        text: '#470007',
+        dot: '#D45555',
+      },
+      Default: {
+        bg: '#D6F5E8',
+        border: '#55A87A',
+        text: '#0A4A28',
+        dot: '#55A87A',
+      },
     },
   },
   // typography

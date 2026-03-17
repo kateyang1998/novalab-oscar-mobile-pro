@@ -8,7 +8,8 @@
  *   onDismiss   {function} called when user taps "Cancel"
  */
 
-import { formatTime12h, MONTHS } from "./Scheduleutils";
+import { formatTime12h, MONTHS } from "../schedule/Scheduleutils.js";
+import theme from '../../styles/theme';
 
 export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }) {
   if (!appointment) return null;
@@ -41,7 +42,7 @@ const styles = {
   backdrop: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.4)",
+    background: theme.colors.overlay,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -49,27 +50,27 @@ const styles = {
     padding: "0 24px",
   },
   modal: {
-    background: "#FFFFFF",
-    borderRadius: 14,
+    background: theme.colors.oscarWhite,
+    borderRadius: theme.radius.lg,
     padding: "24px 20px 20px",
     width: "100%",
     maxWidth: 340,
-    boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+    boxShadow: theme.shadows.lg,
     textAlign: "center",
   },
   title: {
     fontSize: 16,
     fontWeight: 700,
-    color: "#1C1C1E",
+    color: theme.colors.oscarBlack,
     marginBottom: 16,
     lineHeight: 1.4,
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   detail: {
     fontSize: 14,
-    color: "#3C3C43",
+    color: theme.colors.shark,
     margin: "2px 0",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   actions: {
     display: "flex",
@@ -79,25 +80,25 @@ const styles = {
   yesBtn: {
     flex: 1,
     padding: "12px 0",
-    background: "#D9534F",
-    color: "#FFFFFF",
+    background: theme.colors.oscarRed,
+    color: theme.colors.oscarWhite,
     border: "none",
-    borderRadius: 10,
+    borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 700,
     cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
   cancelBtn: {
     flex: 1,
     padding: "12px 0",
-    background: "#FFFFFF",
-    color: "#1C1C1E",
-    border: "1.5px solid #C7C7CC",
-    borderRadius: 10,
+    background: theme.colors.oscarWhite,
+    color: theme.colors.oscarBlack,
+    border: `1.5px solid ${theme.colors.paleSky}`,
+    borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 600,
     cursor: "pointer",
-    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+    fontFamily: theme.font.family,
   },
 };

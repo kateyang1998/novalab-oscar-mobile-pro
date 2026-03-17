@@ -11,6 +11,8 @@
  */
 
 import { getTypeColors, formatTime12h, APPOINTMENT_STATUS } from "./Scheduleutils";
+import theme from '../../styles/theme';
+import { IconCheck, IconX, IconCircle } from '../common/Icons';
 
 export default function AppointmentBlock({ appointment, top, height, compact = false, onClick }) {
   const colors = getTypeColors(appointment.type);
@@ -32,22 +34,22 @@ export default function AppointmentBlock({ appointment, top, height, compact = f
         ...styles.block,
         top,
         height,
-        background: isCancelled ? "#F2F2F7" : colors.bg,
-        borderLeft: `3px solid ${isCancelled ? "#C7C7CC" : colors.border}`,
-        opacity: isCancelled ? 0.65 : 1,
+        background: isCancelled ? 'transparent' : colors.bg,
+        borderLeft: isCancelled ? `3px dashed ${theme.colors.paleSky}` : `3px solid ${colors.border}`,
+        opacity: isCancelled ? 0.6 : 1,
       }}
     >
       {/* Time — shown only in day view */}
       {!compact && (
-        <span style={{ ...styles.time, color: isCancelled ? "#8E8E93" : colors.text }}>
+        <span style={{ ...styles.time, color: isCancelled ? theme.colors.paleSky : colors.text }}>
           {formatTime12h(appointment.startTime)}
         </span>
       )}
 
       {/* Patient name */}
-      <span style={{
+        <span style={{
         ...styles.name,
-        color: isCancelled ? "#8E8E93" : colors.text,
+        color: isCancelled ? theme.colors.paleSky : theme.colors.oscarBlack,
         fontSize: compact ? 9 : 12,
       }}>
         {compact ? shortName : appointment.patientName}
@@ -55,9 +57,9 @@ export default function AppointmentBlock({ appointment, top, height, compact = f
 
       {/* Appointment type — only if tall enough */}
       {height > 36 && (
-        <span style={{
+          <span style={{
           ...styles.type,
-          color: isCancelled ? "#8E8E93" : colors.text,
+          color: isCancelled ? theme.colors.paleSky : colors.text,
           fontSize: compact ? 8 : 10,
         }}>
           {appointment.type}
@@ -66,15 +68,33 @@ export default function AppointmentBlock({ appointment, top, height, compact = f
 
       {/* Status — day view only, tall enough */}
       {!compact && height > 52 && (
-        <span style={{ ...styles.status, color: statusCfg.color }}>
-          {statusCfg.icon} {appointment.status}
+        <span style={{ ...styles.status, color: statusCfg.color, display: 'flex', alignItems: 'center', gap: 6 }}>
+          {appointment.status && appointment.status.toLowerCase() === 'finished' && (
+            <IconCheck size={14} color={statusCfg.color} />
+          )}
+          {appointment.status && appointment.status.toLowerCase() === 'cancelled' && (
+            <IconX size={14} color={statusCfg.color} />
+          )}
+          {appointment.status && appointment.status.toLowerCase() !== 'finished' && appointment.status.toLowerCase() !== 'cancelled' && (
+            <IconCircle size={10} color={statusCfg.color} />
+          )}
+
+          <span>{appointment.status}</span>
         </span>
       )}
 
       {/* Status dot — compact (week) view */}
       {compact && height > 44 && (
-        <span style={{ fontSize: 8, color: statusCfg.color, lineHeight: 1 }}>
-          {statusCfg.icon}
+        <span style={{ lineHeight: 1 }}>
+          {appointment.status && appointment.status.toLowerCase() === 'finished' && (
+            <IconCheck size={10} color={statusCfg.color} />
+          )}
+          {appointment.status && appointment.status.toLowerCase() === 'cancelled' && (
+            <IconX size={10} color={statusCfg.color} />
+          )}
+          {appointment.status && appointment.status.toLowerCase() !== 'finished' && appointment.status.toLowerCase() !== 'cancelled' && (
+            <IconCircle size={8} color={statusCfg.color} />
+          )}
         </span>
       )}
     </button>

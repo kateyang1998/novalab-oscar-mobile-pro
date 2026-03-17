@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import TopHeader from "../components/layout/TopHeader";
+import theme from '../styles/theme';
 
 /**
  * Inbox Screen Component
@@ -147,29 +148,30 @@ const InboxScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: "#E8E8E8",
+    backgroundColor: theme.colors.oscarGray,
     minHeight: "100vh",
     paddingBottom: "80px",
+    fontFamily: theme.font.family,
   },
   header: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.oscarWhite,
     padding: "16px 20px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    borderBottom: "1px solid #E0E0E0",
+    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
   },
   title: {
     fontSize: "18px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0",
   },
   markAllReadButton: {
     background: "none",
     border: "none",
     fontSize: "14px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
     cursor: "pointer",
     padding: "0",
   },
@@ -180,8 +182,8 @@ const styles = {
     gap: "12px",
   },
   messageCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: "8px",
+    backgroundColor: theme.colors.oscarWhite,
+    borderRadius: theme.radius.md,
     padding: "16px",
     cursor: "pointer",
     transition: "all 0.2s",
@@ -189,7 +191,7 @@ const styles = {
     borderLeft: "4px solid transparent",
   },
   unreadMessage: {
-    borderLeft: "4px solid #007AFF",
+    borderLeft: `4px solid ${theme.colors.oscarBlue}`,
   },
   messageHeader: {
     display: "flex",
@@ -200,22 +202,22 @@ const styles = {
   messageSender: {
     fontSize: "16px",
     fontWeight: "700",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0",
   },
   messageTime: {
     fontSize: "13px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
   },
   messageSubject: {
     fontSize: "14px",
     fontWeight: "600",
-    color: "#000000",
+    color: theme.colors.oscarBlack,
     margin: "0 0 8px 0",
   },
   messageContent: {
     fontSize: "13px",
-    color: "#666666",
+    color: theme.colors.paleSky,
     margin: "0",
     lineHeight: "1.5",
   },
@@ -227,7 +229,7 @@ const styles = {
   },
   loadingText: {
     fontSize: "16px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
   },
   emptyContainer: {
     display: "flex",
@@ -237,7 +239,7 @@ const styles = {
   },
   emptyText: {
     fontSize: "16px",
-    color: "#8E8E93",
+    color: theme.colors.paleSky,
   },
 };
 

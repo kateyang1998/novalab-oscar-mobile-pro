@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Search, ChevronRight, ChevronLeft, Check, X, Menu, Bell, Home, Users, Calendar, Inbox, RefreshCw, AlertTriangle, Thermometer, Plus } from 'lucide-react';
+import { User, Search, ChevronRight, ChevronLeft, ChevronDown, Check, X, Circle, Menu, Bell, Home, Users, Calendar, Inbox, RefreshCw, AlertTriangle, Thermometer, Plus } from 'lucide-react';
 
 export const IconUser = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
   <User size={size} color={color} className={className} style={style} {...rest} />
@@ -17,12 +17,20 @@ export const IconChevronLeft = ({ size = 20, color = 'currentColor', className, 
   <ChevronLeft size={size} color={color} className={className} style={style} {...rest} />
 );
 
+export const IconChevronDown = ({ size = 14, color = 'currentColor', className, style, ...rest }) => (
+  <ChevronDown size={size} color={color} className={className} style={style} {...rest} />
+);
+
 export const IconCheck = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
   <Check size={size} color={color} className={className} style={style} {...rest} />
 );
 
 export const IconX = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
   <X size={size} color={color} className={className} style={style} {...rest} />
+);
+
+export const IconCircle = ({ size = 10, color = 'currentColor', className, style, ...rest }) => (
+  <Circle size={size} color={color} className={className} style={style} {...rest} />
 );
 
 export const IconMenu = ({ size = 20, color = 'currentColor', className, style, ...rest }) => (
