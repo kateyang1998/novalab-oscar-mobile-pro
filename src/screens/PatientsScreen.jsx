@@ -135,7 +135,7 @@ const PatientsScreen = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <TopHeader title="Patient List" showBack={false} />
+      <TopHeader title="Patient List" showBack={false}/>
 
       <div className="container" style={styles.content}>
         {/* Search Bar */}

@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import { useState } from "react";
-import BottomTab from "../components/BottomTab";
 import theme from '../styles/theme';
 import UserProfileCard from '../components/profile/UserProfileCard';
 import SecuritySection from '../components/profile/SecuritySection';
@@ -111,9 +110,6 @@ const ProfileScreen = () => {
         <LogoutButton onLogout={handleLogout} />
       </div>
 
-      {/* Bottom Navigation */}
-      <BottomTab />
-
       {/* Logout Confirmation Modal */}
       {showLogoutConfirmation && (
         <LogoutConfirmModal onConfirm={confirmLogout} onDismiss={cancelLogout} />
@@ -135,7 +131,7 @@ const ProfileScreen = () => {
 const styles = {
   container: {
     backgroundColor: theme.colors.oscarGray,
-    minHeight: "100vh",
+    height: "100vh",
     display: "flex",
     flexDirection: "column",
     fontFamily: theme.font.family,

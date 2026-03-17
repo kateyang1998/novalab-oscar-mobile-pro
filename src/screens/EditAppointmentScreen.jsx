@@ -31,15 +31,6 @@ import UnsavedChangesModal from '../components/common/UnsavedChangesModal';
     - clinical_notes: id, patient_id, appointment_id (nullable), author_id, title, body (SOAP sections), created_at, updated_at
     - audit / sync queue: records for offline edits, sync status, last_sync_at
 
-  - API endpoints (examples):
-    - GET /api/patients/:id
-    - GET /api/patients/:id/notes
-    - POST /api/patients/:id/notes
-    - GET /api/appointments/:id
-    - POST /api/appointments
-    - PUT /api/appointments/:id
-    - POST /api/appointments/:id/cancel
-
   - Client-side responsibilities:
     - Fetch patient and note lists on screen load (useEffect)
     - Validate form (no past dates, reasonable duration) before save

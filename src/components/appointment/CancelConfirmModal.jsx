@@ -10,6 +10,7 @@
 
 import { formatTime12h, MONTHS } from "../schedule/Scheduleutils.js";
 import theme from '../../styles/theme';
+import Modal from '../common/Modal';
 
 export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }) {
   if (!appointment) return null;
@@ -19,10 +20,8 @@ export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }
   const formattedTime = formatTime12h(appointment.startTime);
 
   return (
-    // Backdrop
-    <div style={styles.backdrop} onClick={onDismiss}>
-      {/* Modal box — stop click from closing when clicking inside */}
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <Modal onDismiss={onDismiss}>
+      <div style={styles.content}>
         <p style={styles.title}>Are you sure you want to cancel an appointment?</p>
 
         <p style={styles.detail}>ID: {appointment.patientId ?? "P-0021"} {appointment.patientName}</p>
@@ -34,29 +33,13 @@ export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }
           <button onClick={onDismiss} style={styles.cancelBtn}>Cancel</button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
 const styles = {
-  backdrop: {
-    position: "fixed",
-    inset: 0,
-    background: theme.colors.overlay,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-    padding: "0 24px",
-  },
-  modal: {
-    background: theme.colors.oscarWhite,
-    borderRadius: theme.radius.lg,
-    padding: "24px 20px 20px",
-    width: "100%",
-    maxWidth: 340,
-    boxShadow: theme.shadows.lg,
-    textAlign: "center",
+  content: {
+    textAlign: 'center',
   },
   title: {
     fontSize: 16,
@@ -69,36 +52,36 @@ const styles = {
   detail: {
     fontSize: 14,
     color: theme.colors.shark,
-    margin: "2px 0",
+    margin: '2px 0',
     fontFamily: theme.font.family,
   },
   actions: {
-    display: "flex",
+    display: 'flex',
     gap: 12,
     marginTop: 20,
   },
   yesBtn: {
     flex: 1,
-    padding: "12px 0",
+    padding: '12px 0',
     background: theme.colors.oscarRed,
     color: theme.colors.oscarWhite,
-    border: "none",
+    border: 'none',
     borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 700,
-    cursor: "pointer",
+    cursor: 'pointer',
     fontFamily: theme.font.family,
   },
   cancelBtn: {
     flex: 1,
-    padding: "12px 0",
+    padding: '12px 0',
     background: theme.colors.oscarWhite,
-    color: theme.colors.oscarBlack,
-    border: `1.5px solid ${theme.colors.paleSky}`,
+    color: theme.colors.paleSky,
+    border: `1.5px solid ${theme.colors.oscarGray}`,
     borderRadius: theme.radius.md,
     fontSize: 15,
     fontWeight: 600,
-    cursor: "pointer",
+    cursor: 'pointer',
     fontFamily: theme.font.family,
   },
 };

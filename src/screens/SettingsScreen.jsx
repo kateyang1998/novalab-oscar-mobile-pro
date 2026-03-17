@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import { useState } from "react";
-import BottomTab from "../components/BottomTab";
 import theme from '../styles/theme';
 import SettingSection from '../components/settings/SettingSection';
 import SettingRow from '../components/settings/SettingRow';
-import { IconChevronRight } from '../components/common/Icons';
 
 /**
  * Settings Screen Component
@@ -68,9 +66,6 @@ const SettingsScreen = () => {
           <SettingRow label="Privacy Policy" description="View our privacy policy" onClick={handlePrivacyPolicy} last />
         </SettingSection>
       </div>
-
-      {/* Bottom Navigation */}
-      <BottomTab />
     </div>
   );
 };
@@ -78,7 +73,7 @@ const SettingsScreen = () => {
 const styles = {
   container: {
     backgroundColor: theme.colors.oscarGray,
-    minHeight: "100vh",
+    height: "100vh",
     display: "flex",
     flexDirection: "column",
   },

@@ -130,8 +130,8 @@ const InboxScreen = () => {
                 onClick={() => handleMessageClick(message.id)}
               >
                 <div style={styles.messageHeader}>
-                  <h3 style={styles.messageSender}>{message.sender}</h3>
-                  <span style={styles.messageTime}>{message.time}</span>
+                  <h3 style={message.isRead ? styles.messageSender : { ...styles.messageSender, color: theme.colors.oscarBlue }}>{message.sender}</h3>
+                  <span style={message.isRead ? styles.messageTime : { ...styles.messageTime, color: theme.colors.oscarBlue }}>{message.time}</span>
                 </div>
                 <p style={styles.messageSubject}>{message.subject}</p>
                 <p style={styles.messageContent}>

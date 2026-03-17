@@ -1,14 +1,41 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IconChevronLeft } from '../common/Icons';
 
 const TopHeader = ({ title, onBack, showBack = true, right = null }) => {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    // If a custom onBack handler is provided, call it.
+    if (typeof onBack === 'function') {
+      try {
+        onBack();
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    // Prefer navigating back in history to preserve user's flow and scroll position.
+    try {
+      if (window.history && window.history.length > 1) {
+        navigate(-1);
+      } else {
+        // Fallback target when there is no history available (deep link/opened directly)
+        navigate('/home');
+      }
+    } catch {
+      navigate('/home');
+    }
+  };
+
   return (
     <div style={styles.header} className="top-bar">
       {/* inner container aligns header content with page content width */}
       <div className="container" style={styles.innerContainer}>
         <div style={styles.left}>
           {showBack ? (
-            <button aria-label="Back" onClick={onBack} style={styles.backButton}>
+            <button aria-label="Back" onClick={handleBack} style={styles.backButton}>
               <IconChevronLeft size={24} color="var(--color-text)" />
             </button>
           ) : (
@@ -31,10 +58,15 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '12px 14px',
+    height: '56px',
+    padding: '0 14px',
     background: 'var(--oscar-white)',
     borderBottom: '1px solid var(--color-neutral-2)',
+    boxSizing: 'border-box',
     flexShrink: 0,
+    position: 'sticky',
+    top: 0,
+    zIndex: 1100,
   },
   innerContainer: {
     display: 'flex',
@@ -66,4 +98,5 @@ const styles = {
 };
 
 export default TopHeader;
+
 

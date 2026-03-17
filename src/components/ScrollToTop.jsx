@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigationType } from "react-router-dom";
 
 /**
  * ScrollToTop Component
@@ -8,8 +8,12 @@ import { useLocation } from "react-router-dom";
  */
 const ScrollToTop = () => {
   const { pathname } = useLocation();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
+    // If navigation was via browser Back/Forward (POP), do not auto-scroll.
+    // This preserves the user's scroll position when they go back to a previous page.
+    if (navigationType === 'POP') return;
     // Try to scroll the window/document and also the app's scrollable container.
     // Run on next animation frame and again after a short timeout in case layout updates after route change.
     const doScroll = () => {
@@ -35,7 +39,7 @@ const ScrollToTop = () => {
       if (rafId) cancelAnimationFrame(rafId);
       timeoutIds.forEach((id) => clearTimeout(id));
     };
-  }, [pathname]);
+  }, [pathname, navigationType]);
 
   return null;
 };

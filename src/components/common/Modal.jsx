@@ -22,7 +22,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000,
+    zIndex: 2000, // raised so overlay covers fixed header (which uses zIndex 1100)
     padding: 20,
   },
   container: {
@@ -36,5 +36,3 @@ const styles = {
 };
 
 export default Modal;
-
-

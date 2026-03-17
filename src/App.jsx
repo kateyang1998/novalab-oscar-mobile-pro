@@ -21,8 +21,8 @@ import theme from './styles/theme';
 function App() {
   const location = useLocation();
 
-  const routesWithoutBottomTab = ["/splash", "/signin", "/appointment/edit"];
-  const shouldShowBottomTab = !routesWithoutBottomTab.includes(location.pathname);
+  const routesWithoutBottomTab = ["/splash", "/signin", "/appointment/edit", "/profile", "/settings", "/patient/", "/clinical-note"];
+  const shouldShowBottomTab = !routesWithoutBottomTab.some((p) => location.pathname === p || location.pathname.startsWith(p));
 
   const noScrollRoutes = ["/splash", "/signin", "/schedule", "/appointment/edit"];
   const shouldDisableScroll = noScrollRoutes.includes(location.pathname);

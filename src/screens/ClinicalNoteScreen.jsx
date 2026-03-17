@@ -311,7 +311,7 @@ const ClinicalNoteScreen = () => {
 const styles = {
   container: {
     backgroundColor: theme.colors.oscarGray,
-    minHeight: '100vh',
+    height: "100vh",
     paddingBottom: '80px',
   },
   content: { padding: 20, maxWidth: 800, margin: '0 auto' },

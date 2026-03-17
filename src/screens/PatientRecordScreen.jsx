@@ -55,7 +55,15 @@ const PatientRecordScreen = () => {
   }, [id]);
 
   const handleBackClick = () => {
-    navigate("/patients");
+    try {
+      if (window.history && window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate("/patients");
+      }
+    } catch {
+      navigate("/patients");
+    }
   };
 
   const getActiveTabFromPath = () => {
@@ -69,7 +77,10 @@ const PatientRecordScreen = () => {
 
   const handleTabClick = (tab) => {
     // update URL to keep routes deep-linkable
-    navigate(`/patient/${id}/${tab}`);
+    // Use replace so switching between summary/notes/history/vitals
+    // doesn't create new history entries. This ensures the Back button
+    // returns to the page the user came from, not to the previous tab.
+    navigate(`/patient/${id}/${tab}`, { replace: true });
   };
 
   if (loading) {
@@ -117,7 +128,7 @@ const PatientRecordScreen = () => {
 const styles = {
   container: {
     backgroundColor: "var(--color-background)",
-    minHeight: "100vh",
+    height: "100vh",
     paddingBottom: "80px",
   },
   content: { padding: 20, maxWidth: 800, margin: "0 auto" },
