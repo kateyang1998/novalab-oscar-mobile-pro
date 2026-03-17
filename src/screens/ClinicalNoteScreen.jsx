@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import PatientInfoCard from "../components/patient/PatientInfoCard";
 import FormSection from "../components/common/FormSection.jsx";
-import { IconAlert } from "../components/common/Icons";
 import { TextInput, SelectInput, TextAreaInput, CheckboxInput, FormLabel } from "../components/common/FormControls";
 import UnsavedChangesModal from "../components/common/UnsavedChangesModal";
 import theme from "../styles/theme";
