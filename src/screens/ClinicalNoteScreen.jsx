@@ -310,11 +310,20 @@ const ClinicalNoteScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: theme.colors.oscarGray,
+    display: "flex",
+    flexDirection: "column",
     height: "100vh",
-    paddingBottom: '80px',
+    background: theme.colors.oscarGray,
+    fontFamily: theme.font.family,
+    overflow: "hidden",
   },
-  content: { padding: 20, maxWidth: 800, margin: '0 auto' },
+  content: {
+    flex: 1,
+    overflowY: "auto",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+  },
   draftBadge: {
     fontSize: 12,
     fontWeight: 600,

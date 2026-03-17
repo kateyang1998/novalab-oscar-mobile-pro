@@ -7,6 +7,7 @@ import SummaryTab from "../components/patient/tabs/SummaryTab";
 import NotesTab from "../components/patient/tabs/NotesTab";
 import HistoryTab from "../components/patient/tabs/HistoryTab";
 import VitalsTab from "../components/patient/tabs/VitalsTab";
+import theme from "../styles/index.js";
 
 const PatientRecordScreen = () => {
   const { id } = useParams();
@@ -127,11 +128,20 @@ const PatientRecordScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: "var(--color-background)",
+    display: "flex",
+    flexDirection: "column",
     height: "100vh",
-    paddingBottom: "80px",
+    background: theme.colors.oscarGray,
+    fontFamily: theme.font.family,
+    overflow: "hidden",
   },
-  content: { padding: 20, maxWidth: 800, margin: "0 auto" },
+  content: {
+    flex: 1,
+    overflowY: "auto",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+  },
   loadingContainer: { display: "flex", justifyContent: "center", alignItems: "center", padding: "60px 20px" },
   loadingText: { fontSize: 16, color: "var(--color-neutral-7)" },
   errorContainer: { display: "flex", justifyContent: "center", alignItems: "center", padding: "60px 20px" },

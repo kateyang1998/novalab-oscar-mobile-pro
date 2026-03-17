@@ -9,13 +9,9 @@ import SignInScreen from "./screens/SignInScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import PatientRecordScreen from "./screens/PatientRecordScreen";
-import PatientRecordSummaryScreen from "./screens/PatientRecordSummaryScreen";
-import PatientRecordNotesScreen from "./screens/PatientRecordNotesScreen";
-import PatientRecordHistoryScreen from "./screens/PatientRecordHistoryScreen";
-import PatientRecordVitalsScreen from "./screens/PatientRecordVitalsScreen";
 import ClinicalNoteScreen from "./screens/ClinicalNoteScreen";
-import BottomTab from "./components/BottomTab";
-import ScrollToTop from "./components/ScrollToTop";
+import BottomTab from "./components/layout/BottomTab";
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 import theme from './styles/theme';
 
 function App() {
@@ -51,10 +47,10 @@ function App() {
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/patient/:id" element={<PatientRecordScreen />} />
-        <Route path="/patient/:id/summary" element={<PatientRecordSummaryScreen />} />
-        <Route path="/patient/:id/notes" element={<PatientRecordNotesScreen />} />
-        <Route path="/patient/:id/history" element={<PatientRecordHistoryScreen />} />
-        <Route path="/patient/:id/vitals" element={<PatientRecordVitalsScreen />} />
+        <Route path="/patient/:id/summary" element={<PatientRecordScreen />} />
+        <Route path="/patient/:id/notes" element={<PatientRecordScreen />} />
+        <Route path="/patient/:id/history" element={<PatientRecordScreen />} />
+        <Route path="/patient/:id/vitals" element={<PatientRecordScreen />} />
         <Route path="/clinical-note" element={<ClinicalNoteScreen />} />
       </Routes>
 

@@ -72,10 +72,12 @@ const SettingsScreen = () => {
 
 const styles = {
   container: {
-    backgroundColor: theme.colors.oscarGray,
-    height: "100vh",
     display: "flex",
     flexDirection: "column",
+    height: "100vh",
+    background: theme.colors.oscarGray,
+    fontFamily: theme.font.family,
+    overflow: "hidden",
   },
   header: {
     backgroundColor: theme.colors.oscarWhite,
@@ -106,11 +108,10 @@ const styles = {
   },
   content: {
     flex: 1,
-    padding: "20px",
-    maxWidth: "600px",
-    margin: "0 auto",
-    width: "100%",
-    boxSizing: "border-box",
+    overflowY: "auto",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
   },
   section: {
     marginBottom: "24px",

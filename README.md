@@ -35,24 +35,20 @@ OSCAR Mobile Pro is a capstone project inspired by the existing OSCAR EMR web ap
 
 ```
 src/
-├── assets/          # Images and static assets
-├── components/      # Reusable components (BottomTab, etc.)
-├── screens/         # Screen components
-│   ├── SplashScreen.jsx
-│   ├── SignInScreen.jsx
-│   ├── HomeScreen.jsx
-│   ├── PatientsScreen.jsx
-│   ├── ScheduleScreen.jsx
-│   ├── ChatScreen.jsx
-│   ├── NotificationsScreen.jsx
-│   ├── ProfileScreen.jsx
-│   ├── PatientRecordSummaryScreen.jsx
-│   ├── PatientRecordNotesScreen.jsx
-│   ├── PatientRecordHistoryScreen.jsx
-│   ├── PatientRecordVitalsScreen.jsx
-│   └── ClinicalNoteScreen.jsx
-├── App.jsx          # Main application component
-└── main.jsx         # Application entry point
+├── assets/                # Images and static assets
+├── components/            # Reusable components organized by feature
+│   ├── appointment/       # Appointment form and related components
+│   ├── clinical_note/     # Clinical note UI components
+│   ├── common/            # Shared inputs, modals, icons
+│   ├── home/              # Home dashboard widgets
+│   ├── layout/            # BottomTab, TopHeader, navigation
+│   ├── patient/           # Patient cards, grids, top sections, tabs
+│   ├── profile/           # Profile and settings UI
+│   └── schedule/          # Calendar and timeline components
+│   ```
+├── data/                  # Sample data and fixtures
+├── screens/               # High-level screen components (pages)
+└── styles/                # CSS and theme utilities
 ```
 
 ## Getting Started
@@ -135,3 +131,4 @@ This project is developed as part of a capstone project at Conestoga College.
 **Institution**: Conestoga College
 **Program**: Winter 2026
 **Team**: Nova Lab
+
