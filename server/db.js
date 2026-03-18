@@ -167,6 +167,20 @@ function initDb(db) {
       FOREIGN KEY (receiverId) REFERENCES Clinician(clinicianId),
       FOREIGN KEY (statusId)   REFERENCES MessageStatus(statusId)
     );
+
+    CREATE TABLE IF NOT EXISTS ClinicianAuth (
+      clinicianId INTEGER PRIMARY KEY,
+      password    TEXT NOT NULL DEFAULT 'oscar123',
+      FOREIGN KEY (clinicianId) REFERENCES Clinician(clinicianId)
+    );
+
+    CREATE TABLE IF NOT EXISTS ClinicianSettings (
+      clinicianId  INTEGER NOT NULL,
+      settingKey   TEXT NOT NULL,
+      settingValue TEXT NOT NULL DEFAULT '1',
+      PRIMARY KEY (clinicianId, settingKey),
+      FOREIGN KEY (clinicianId) REFERENCES Clinician(clinicianId)
+    );
   `);
 
   // Seed static data only on first run
@@ -176,8 +190,8 @@ function initDb(db) {
     console.log('Database seeded with test data.');
   } else {
     console.log('Database already populated, skipping static seed.');
-    // Always ensure today's appointments exist (re-insert if missing)
     ensureTodayAppointments(db);
+    ensureNewTableData(db);
   }
 }
 
@@ -317,6 +331,14 @@ function seedData(db) {
       ('2026-01-15', '2026-01-15 15:00:00', '2026-01-15 15:30:00', 4, 1, 'General consultation',   'Room 101', 2, 1);
   `);
 
+  // Auth — default password oscar123 for all clinicians
+  db.exec(`
+    INSERT INTO ClinicianAuth (clinicianId, password) VALUES (1,'oscar123'),(2,'oscar123'),(3,'oscar123'),(4,'oscar123');
+  `);
+
+  // Default settings for Dr. Lee
+  seedDefaultSettings(db, 1);
+
   ensureTodayAppointments(db);
 }
 
@@ -336,4 +358,27 @@ function ensureTodayAppointments(db) {
   insertAppt.run(today, `${today} 10:00:00`, `${today} 10:30:00`, 1, 2, 'Follow-up for blood pressure',      'Room 102', 2, 1);
   insertAppt.run(today, `${today} 11:00:00`, `${today} 11:30:00`, 1, 3, 'Annual physical examination',       'Room 103', 3, 2);
   insertAppt.run(today, `${today} 14:00:00`, `${today} 14:30:00`, 1, 2, 'Medication review',                 'Room 101', 5, 1);
+}
+
+// Called for existing DBs that were created before ClinicianAuth/ClinicianSettings were added
+function ensureNewTableData(db) {
+  // Ensure "New Patient" type exists
+  db.prepare(`INSERT OR IGNORE INTO AppointmentType (typeName) VALUES ('New Patient')`).run();
+
+  // Seed auth if table is empty
+  const { authCount } = db.prepare('SELECT COUNT(*) as authCount FROM ClinicianAuth').get();
+  if (authCount === 0) {
+    const stmt = db.prepare('INSERT OR IGNORE INTO ClinicianAuth (clinicianId, password) VALUES (?, ?)');
+    [1, 2, 3, 4].forEach(id => stmt.run(id, 'oscar123'));
+  }
+
+  // Seed default settings for clinician 1 if missing
+  const { sc } = db.prepare('SELECT COUNT(*) as sc FROM ClinicianSettings WHERE clinicianId = 1').get();
+  if (sc === 0) seedDefaultSettings(db, 1);
+}
+
+function seedDefaultSettings(db, clinicianId) {
+  const stmt = db.prepare('INSERT OR IGNORE INTO ClinicianSettings (clinicianId, settingKey, settingValue) VALUES (?, ?, ?)');
+  const defaults = { biometricLogin:'1', autoLock:'1', pushNotifications:'1', appointmentReminders:'1', autoSync:'1', offlineMode:'1' };
+  for (const [key, val] of Object.entries(defaults)) stmt.run(clinicianId, key, val);
 }

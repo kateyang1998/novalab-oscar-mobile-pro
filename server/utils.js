@@ -62,3 +62,38 @@ export function mapStatus(dbStatus) {
   };
   return map[dbStatus] || dbStatus;
 }
+
+/** Map frontend type name → DB type name */
+export function reverseMapType(frontendType) {
+  const map = {
+    'Consultation': 'Consultation',
+    'Follow Up': 'Follow-up',
+    'Physical': 'Routine Check',
+    'Urgent Care': 'Emergency',
+    'New Patient': 'New Patient',
+  };
+  return map[frontendType] || frontendType;
+}
+
+/** Map frontend status name → DB status name */
+export function reverseMapStatus(frontendStatus) {
+  const map = {
+    'Scheduled': 'Booked',
+    'Finished': 'Completed',
+    'Cancelled': 'Cancelled',
+  };
+  return map[frontendStatus] || frontendStatus;
+}
+
+/** "09:00" + 30 → "09:30" */
+export function addMinutesToTime(timeStr, minutes) {
+  const [h, m] = timeStr.split(':').map(Number);
+  const total = h * 60 + m + minutes;
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+/** "30 min" → 30 */
+export function parseDurationMinutes(durationStr) {
+  const match = String(durationStr).match(/\d+/);
+  return match ? parseInt(match[0]) : 30;
+}

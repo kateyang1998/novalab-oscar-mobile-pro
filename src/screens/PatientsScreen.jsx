@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
 import SearchBar from "../components/common/SearchBar";
 import theme from "../styles/theme";
@@ -12,7 +12,8 @@ import PatientGrid from "../components/patient/PatientGrid";
  */
 const PatientsScreen = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState(location.state?.searchQuery ?? "");
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 

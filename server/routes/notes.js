@@ -121,4 +121,11 @@ router.put('/:noteId', (req, res) => {
   res.json({ success: true });
 });
 
+// DELETE /api/notes/:noteId — delete a note
+router.delete('/:noteId', (req, res) => {
+  const db = getDb();
+  db.prepare('DELETE FROM ClinicalNote WHERE noteId = ?').run(req.params.noteId);
+  res.json({ success: true });
+});
+
 export default router;

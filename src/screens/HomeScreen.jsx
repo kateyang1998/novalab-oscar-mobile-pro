@@ -19,6 +19,7 @@ const HomeScreen = () => {
   const [todayAppointments, setTodayAppointments] = useState([]);
   const [recentPatients, setRecentPatients] = useState([]);
   const [clinician, setClinician] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Compute today's date string and display label
   const todayDate = new Date();
@@ -79,7 +80,11 @@ const HomeScreen = () => {
       </header>
 
       {/* Search Bar */}
-      <SearchBar />
+      <SearchBar
+        value={searchQuery}
+        onChange={setSearchQuery}
+        onSubmit={(q) => navigate('/patients', { state: { searchQuery: q } })}
+      />
 
       {/* Today's Schedule */}
       <section style={styles.section}>

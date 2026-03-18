@@ -3,7 +3,11 @@ import theme from '../../styles/theme';
 import { IconSearch } from './Icons';
 
 // Reusable search bar used across screens (matches PatientsScreen behavior)
-const SearchBar = ({ value, onChange, placeholder = 'Search patients' }) => {
+const SearchBar = ({ value, onChange, onSubmit, placeholder = 'Search patients' }) => {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && onSubmit) onSubmit(value);
+  };
+
   return (
     <div style={styles.container}>
       <IconSearch size={20} color={theme.colors.paleSky} style={styles.icon} />
@@ -12,6 +16,7 @@ const SearchBar = ({ value, onChange, placeholder = 'Search patients' }) => {
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange && onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
         style={styles.input}
       />
     </div>
