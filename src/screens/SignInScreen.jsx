@@ -18,6 +18,13 @@ const SignInScreen = () => {
   const [error, setError]         = useState("");
   const [loading, setLoading]     = useState(false);
 
+  // Forgot password modal state
+  const [showForgotModal, setShowForgotModal]       = useState(false);
+  const [forgotUserId, setForgotUserId]             = useState("");
+  const [forgotStatus, setForgotStatus]             = useState(""); // "success" | "error" | ""
+  const [forgotMessage, setForgotMessage]           = useState("");
+  const [forgotLoading, setForgotLoading]           = useState(false);
+
   const handleSignIn = async (e) => {
     e.preventDefault();
     setError("");
@@ -48,6 +55,49 @@ const SignInScreen = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    setForgotStatus("");
+    setForgotMessage("");
+
+    if (!forgotUserId.trim()) {
+      setForgotStatus("error");
+      setForgotMessage("Please enter your User ID.");
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: forgotUserId.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setForgotStatus("error");
+        setForgotMessage(data.error || 'User ID not found.');
+      } else {
+        setForgotStatus("success");
+        setForgotMessage("Your password has been reset to: oscar123");
+      }
+    } catch {
+      setForgotStatus("error");
+      setForgotMessage("Could not connect to server. Please try again.");
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const closeForgotModal = () => {
+    setShowForgotModal(false);
+    setForgotUserId("");
+    setForgotStatus("");
+    setForgotMessage("");
   };
 
   return (
@@ -81,9 +131,67 @@ const SignInScreen = () => {
             </label>
           </div>
 
-          <p style={styles.hint}>Demo credentials: CL000001 / oscar123</p>
+          <button
+            type="button"
+            onClick={() => setShowForgotModal(true)}
+            style={styles.forgotPassword}
+          >
+            Forgot Password?
+          </button>
         </form>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotModal && (
+        <div style={styles.overlay}>
+          <div style={styles.modal}>
+            <h2 style={styles.modalTitle}>Reset Password</h2>
+            <p style={styles.modalSubtitle}>
+              Enter your User ID and your password will be reset to the default.
+            </p>
+
+            {forgotStatus === "" && (
+              <form onSubmit={handleForgotSubmit}>
+                <TextInput
+                  label="User ID"
+                  value={forgotUserId}
+                  onChange={setForgotUserId}
+                  placeholder="e.g. CL000001"
+                />
+                {forgotMessage && (
+                  <p style={styles.errorText}>{forgotMessage}</p>
+                )}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={forgotLoading}
+                  style={{ marginTop: 8 }}
+                >
+                  {forgotLoading ? 'Resetting…' : 'Reset Password'}
+                </button>
+              </form>
+            )}
+
+            {forgotStatus === "success" && (
+              <div style={styles.successBox}>
+                <p style={styles.successText}>{forgotMessage}</p>
+              </div>
+            )}
+
+            {forgotStatus === "error" && (
+              <p style={styles.errorText}>{forgotMessage}</p>
+            )}
+
+            <button
+              type="button"
+              onClick={closeForgotModal}
+              style={styles.cancelBtn}
+            >
+              {forgotStatus === "success" ? "Done" : "Cancel"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -149,11 +257,68 @@ const styles = {
     color: "var(--oscar-black)",
     cursor: "pointer",
   },
-  hint: {
-    fontSize: "12px",
+  forgotPassword: {
+    background: "none",
+    border: "none",
+    fontSize: "14px",
     color: "var(--pale-sky)",
     textAlign: "center",
-    margin: "4px 0 0 0",
+    cursor: "pointer",
+    padding: "0",
+    marginBottom: "8px",
+  },
+  // Modal styles
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "20px",
+    zIndex: 1000,
+  },
+  modal: {
+    backgroundColor: "var(--oscar-white, #fff)",
+    borderRadius: "12px",
+    padding: "24px",
+    width: "100%",
+    maxWidth: "340px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  modalTitle: {
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "var(--oscar-black)",
+    margin: 0,
+  },
+  modalSubtitle: {
+    fontSize: "14px",
+    color: "var(--pale-sky)",
+    margin: 0,
+  },
+  successBox: {
+    backgroundColor: "#e8f5e9",
+    borderRadius: "8px",
+    padding: "12px",
+  },
+  successText: {
+    fontSize: "14px",
+    color: "#2e7d32",
+    margin: 0,
+    textAlign: "center",
+  },
+  cancelBtn: {
+    background: "none",
+    border: "1px solid var(--pale-sky, #aaa)",
+    borderRadius: "8px",
+    padding: "10px",
+    fontSize: "14px",
+    color: "var(--pale-sky)",
+    cursor: "pointer",
+    marginTop: "4px",
   },
 };
 

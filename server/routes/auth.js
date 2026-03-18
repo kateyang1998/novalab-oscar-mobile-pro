@@ -39,4 +39,26 @@ router.post('/login', (req, res) => {
   });
 });
 
+// POST /api/auth/forgot-password
+// Body: { userId }
+// Resets the password back to the default "oscar123"
+router.post('/forgot-password', (req, res) => {
+  const db = getDb();
+  const { userId } = req.body;
+
+  if (!userId) return res.status(400).json({ error: 'userId is required' });
+
+  const match = String(userId).match(/(\d+)$/);
+  const clinicianId = match ? parseInt(match[1], 10) : null;
+
+  if (!clinicianId) return res.status(404).json({ error: 'User ID not found' });
+
+  const clinician = db.prepare('SELECT * FROM Clinician WHERE clinicianId = ?').get(clinicianId);
+  if (!clinician) return res.status(404).json({ error: 'User ID not found' });
+
+  db.prepare('UPDATE ClinicianAuth SET password = ? WHERE clinicianId = ?').run('oscar123', clinicianId);
+
+  res.json({ success: true, message: 'Password has been reset to the default.' });
+});
+
 export default router;
