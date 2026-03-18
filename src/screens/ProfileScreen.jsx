@@ -23,6 +23,7 @@ const ProfileScreen = () => {
   const navigate = useNavigate();
   const [biometricEnabled, setBiometricEnabled] = useState(true);
   const [clinician, setClinician] = useState(null);
+  const [lastSyncedAt, setLastSyncedAt] = useState(null);
 
   useEffect(() => {
     fetch('/api/clinician')
@@ -30,41 +31,27 @@ const ProfileScreen = () => {
       .then(data => setClinician(data))
       .catch(() => {});
   }, []);
-  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+
+  const [showLogoutConfirmation, setShowLogoutConfirmation]   = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-  const [showSyncStatusModal, setShowSyncStatusModal] = useState(false);
+  const [showSyncStatusModal, setShowSyncStatusModal]         = useState(false);
 
-  // (Change password modal manages its own form state)
+  const handleBackClick = () => navigate(-1);
 
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const handleLogout = () => {
-    setShowLogoutConfirmation(true);
-  };
+  const handleLogout = () => setShowLogoutConfirmation(true);
 
   const confirmLogout = () => {
-    console.log("Logout confirmed");
     setShowLogoutConfirmation(false);
-    // For now, just navigate to sign in or home
     navigate("/signin");
   };
 
-  const cancelLogout = () => {
-    setShowLogoutConfirmation(false);
-  };
+  const cancelLogout = () => setShowLogoutConfirmation(false);
 
-  const handleSettingsClick = () => {
-    navigate("/settings");
-  };
+  const handleSettingsClick = () => navigate("/settings");
 
-  const handleChangePasswordClick = () => {
-    setShowChangePasswordModal(true);
-  };
+  const handleChangePasswordClick = () => setShowChangePasswordModal(true);
 
-  const handleChangePasswordSubmit = ({ current, next, confirm }) => {
+  const handleChangePasswordSubmit = async ({ current, next, confirm }) => {
     if (next !== confirm) {
       alert("New passwords don't match!");
       return;
@@ -74,31 +61,43 @@ const ProfileScreen = () => {
       return;
     }
 
-    // TODO: call change password API
-    console.log('Change password', { current, next });
-    setShowChangePasswordModal(false);
-    alert('Password changed successfully!');
+    try {
+      const res = await fetch('/api/clinician/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: current, newPassword: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Failed to change password');
+        return;
+      }
+      setShowChangePasswordModal(false);
+      alert('Password changed successfully!');
+    } catch {
+      alert('Network error — could not change password');
+    }
   };
 
-  const handleSyncStatusClick = () => {
-    setShowSyncStatusModal(true);
-  };
+  const handleSyncStatusClick = () => setShowSyncStatusModal(true);
 
-  const closeSyncStatusModal = () => {
+  const closeSyncStatusModal = () => setShowSyncStatusModal(false);
+
+  const handleSyncNow = async () => {
+    try {
+      const res  = await fetch('/api/clinician/sync', { method: 'POST' });
+      const data = await res.json();
+      if (data.syncedAt) {
+        const d = new Date(data.syncedAt);
+        setLastSyncedAt(d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      }
+    } catch { /* best effort */ }
     setShowSyncStatusModal(false);
+    alert('Sync completed successfully!');
   };
-
-  const handleSyncNow = () => {
-    // TODO: Implement sync functionality
-    console.log("Sync now clicked");
-    alert("Sync completed successfully!");
-    setShowSyncStatusModal(false);
-  };
-
 
   return (
     <div style={styles.container}>
-      {/* Header */}
       <TopHeader title="Profile" onBack={handleBackClick} />
 
       <div style={styles.content}>
@@ -118,24 +117,22 @@ const ProfileScreen = () => {
         <SystemSection
           onSettings={handleSettingsClick}
           onSyncStatus={handleSyncStatusClick}
+          lastSyncedAt={lastSyncedAt}
         />
 
         <LogoutButton onLogout={handleLogout} />
       </div>
 
-      {/* Logout Confirmation Modal */}
       {showLogoutConfirmation && (
         <LogoutConfirmModal onConfirm={confirmLogout} onDismiss={cancelLogout} />
       )}
 
-      {/* Change Password Modal */}
       {showChangePasswordModal && (
         <ChangePasswordModal onSubmit={handleChangePasswordSubmit} onDismiss={() => setShowChangePasswordModal(false)} />
       )}
 
-      {/* Sync Status Modal */}
       {showSyncStatusModal && (
-        <SyncStatusModal onClose={closeSyncStatusModal} onSync={() => { handleSyncNow(); }} />
+        <SyncStatusModal onClose={closeSyncStatusModal} onSync={handleSyncNow} lastSyncedAt={lastSyncedAt} />
       )}
     </div>
   );

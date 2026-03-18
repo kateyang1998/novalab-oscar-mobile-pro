@@ -9,6 +9,8 @@ import appointmentsRouter from './routes/appointments.js';
 import messagesRouter     from './routes/messages.js';
 import clinicianRouter    from './routes/clinician.js';
 import notesRouter        from './routes/notes.js';
+import authRouter         from './routes/auth.js';
+import settingsRouter     from './routes/settings.js';
 
 const app = express();
 const PORT = 3001;
@@ -24,6 +26,8 @@ app.use('/api/appointments', appointmentsRouter);
 app.use('/api/messages',     messagesRouter);
 app.use('/api/clinician',    clinicianRouter);
 app.use('/api/notes',        notesRouter);
+app.use('/api/auth',         authRouter);
+app.use('/api/settings',     settingsRouter);
 
 app.listen(PORT, () => {
   console.log(`OSCAR API server running on http://localhost:${PORT}`);

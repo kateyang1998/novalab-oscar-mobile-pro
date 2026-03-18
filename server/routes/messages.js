@@ -48,4 +48,24 @@ router.patch('/read-all', (req, res) => {
   res.json({ success: true });
 });
 
+// POST /api/messages — send a new message
+// Body: { receiverId, subject, content }
+router.post('/', (req, res) => {
+  const db = getDb();
+  const { receiverId, subject, content } = req.body;
+
+  if (!receiverId || !content) {
+    return res.status(400).json({ error: 'receiverId and content are required' });
+  }
+
+  const sentStatus = db.prepare("SELECT statusId FROM MessageStatus WHERE statusName = 'Sent'").get();
+
+  const result = db.prepare(`
+    INSERT INTO Message (senderId, receiverId, subject, content, statusId, isRead)
+    VALUES (?, ?, ?, ?, ?, 0)
+  `).run(CURRENT_CLINICIAN_ID, receiverId, subject || null, content, sentStatus.statusId);
+
+  res.json({ success: true, messageId: result.lastInsertRowid });
+});
+
 export default router;

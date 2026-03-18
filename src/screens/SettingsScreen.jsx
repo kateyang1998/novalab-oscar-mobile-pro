@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import TopHeader from "../components/layout/TopHeader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import theme from '../styles/theme';
 import SettingSection from '../components/settings/SettingSection';
 import SettingRow from '../components/settings/SettingRow';
@@ -18,52 +18,59 @@ import SettingRow from '../components/settings/SettingRow';
 const SettingsScreen = () => {
   const navigate = useNavigate();
 
-  // Settings state management
-  const [biometricLogin, setBiometricLogin] = useState(true);
-  const [autoLock, setAutoLock] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const [appointmentReminders, setAppointmentReminders] = useState(true);
-  const [autoSync, setAutoSync] = useState(true);
-  const [offlineMode, setOfflineMode] = useState(true);
+  const [settings, setSettings] = useState({
+    biometricLogin:       true,
+    autoLock:             true,
+    pushNotifications:    true,
+    appointmentReminders: true,
+    autoSync:             true,
+    offlineMode:          true,
+  });
 
-  const handleBackClick = () => {
-    navigate(-1);
+  // Load persisted settings on mount
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(data => setSettings(prev => ({ ...prev, ...data })))
+      .catch(() => {});
+  }, []);
+
+  const handleToggle = (key) => {
+    const newValue = !settings[key];
+    setSettings(prev => ({ ...prev, [key]: newValue }));
+    // Persist the change
+    fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [key]: newValue }),
+    }).catch(() => {});
   };
 
-  const handleHelpSupport = () => {
-    // TODO: Navigate to help & support page
-    console.log("Navigate to help & support");
-  };
-
-  const handlePrivacyPolicy = () => {
-    // TODO: Navigate to privacy policy page
-    console.log("Navigate to privacy policy");
-  };
+  const handleBackClick = () => navigate(-1);
 
   return (
     <div style={styles.container}>
-      {/* Header */}
       <TopHeader title="Settings" onBack={handleBackClick} />
 
       <div style={styles.content}>
         <SettingSection title="Security">
-          <SettingRow label="Biometric Login" description="Lock app after inactivity" showToggle toggleOn={biometricLogin} onToggle={() => setBiometricLogin(!biometricLogin)} first />
-          <SettingRow label="Auto-Lock" description="Lock app after inactivity" showToggle toggleOn={autoLock} onToggle={() => setAutoLock(!autoLock)} last />
+          <SettingRow label="Biometric Login" description="Use Face ID or fingerprint to sign in" showToggle toggleOn={settings.biometricLogin} onToggle={() => handleToggle('biometricLogin')} first />
+          <SettingRow label="Auto-Lock" description="Lock app after inactivity" showToggle toggleOn={settings.autoLock} onToggle={() => handleToggle('autoLock')} last />
         </SettingSection>
 
         <SettingSection title="Notifications">
-          <SettingRow label="Push Notifications" description="Receive app notifications" showToggle toggleOn={pushNotifications} onToggle={() => setPushNotifications(!pushNotifications)} first />
-          <SettingRow label="Appointment Reminders" description="Get notified about upcoming appointments" showToggle toggleOn={appointmentReminders} onToggle={() => setAppointmentReminders(!appointmentReminders)} last />
+          <SettingRow label="Push Notifications" description="Receive app notifications" showToggle toggleOn={settings.pushNotifications} onToggle={() => handleToggle('pushNotifications')} first />
+          <SettingRow label="Appointment Reminders" description="Get notified about upcoming appointments" showToggle toggleOn={settings.appointmentReminders} onToggle={() => handleToggle('appointmentReminders')} last />
         </SettingSection>
 
         <SettingSection title="Data & Sync">
-          <SettingRow label="Auto-sync" description="Automatically sync when connected" showToggle toggleOn={autoSync} onToggle={() => setAutoSync(!autoSync)} first />
-          <SettingRow label="Offline Mode" description="Allow offline data access" showToggle toggleOn={offlineMode} onToggle={() => setOfflineMode(!offlineMode)} last />
+          <SettingRow label="Auto-sync" description="Automatically sync when connected" showToggle toggleOn={settings.autoSync} onToggle={() => handleToggle('autoSync')} first />
+          <SettingRow label="Offline Mode" description="Allow offline data access" showToggle toggleOn={settings.offlineMode} onToggle={() => handleToggle('offlineMode')} last />
         </SettingSection>
 
         <SettingSection title="System">
-          <SettingRow label="Help & Support" description="Get help and contact support" onClick={handleHelpSupport} first />
-          <SettingRow label="Privacy Policy" description="View our privacy policy" onClick={handlePrivacyPolicy} last />
+          <SettingRow label="Help & Support" description="Get help and contact support" onClick={() => navigate('/help')} first />
+          <SettingRow label="Privacy Policy" description="View our privacy policy" onClick={() => navigate('/privacy')} last />
         </SettingSection>
       </div>
     </div>
@@ -79,150 +86,12 @@ const styles = {
     fontFamily: theme.font.family,
     overflow: "hidden",
   },
-  header: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: `1px solid ${theme.colors.oscarGray}`,
-  },
-  backButton: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: "0",
-    display: "flex",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: theme.colors.oscarBlack,
-    margin: "0",
-    flex: 1,
-    textAlign: "center",
-  },
-  spacer: {
-    width: "24px",
-  },
   content: {
     flex: 1,
     overflowY: "auto",
     padding: "16px",
     display: "flex",
     flexDirection: "column",
-  },
-  section: {
-    marginBottom: "24px",
-  },
-  sectionTitle: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: theme.colors.oscarBlack,
-    margin: "0",
-  },
-  sectionTitleContainer: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px 12px 20px",
-  },
-  sectionContainer: {
-    backgroundColor: theme.colors.oscarWhite,
-    borderRadius: "12px",
-    overflow: "hidden",
-  },
-  settingItemFirst: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
-  },
-  settingItemLast: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  menuItemFirst: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
-    cursor: "pointer",
-  },
-  menuItemLast: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    cursor: "pointer",
-  },
-  settingItem: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
-    borderRadius: "8px 8px 0 0",
-  },
-  settingInfo: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-  },
-  settingLabel: {
-    fontSize: "16px",
-    color: theme.colors.oscarBlack,
-    fontWeight: "400",
-    marginBottom: "2px",
-  },
-  settingDescription: {
-    fontSize: "14px",
-    color: theme.colors.paleSky,
-  },
-  toggleSwitch: {
-    width: "44px",
-    height: "26px",
-    borderRadius: "13px",
-    position: "relative",
-    cursor: "pointer",
-    transition: "background-color 0.2s",
-  },
-  toggleKnob: {
-    width: "22px",
-    height: "22px",
-    backgroundColor: theme.colors.oscarWhite,
-    borderRadius: "11px",
-    position: "absolute",
-    top: "2px",
-    transition: "transform 0.2s",
-    boxShadow: theme.shadows.sm,
-  },
-  menuItem: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottom: `1px solid ${theme.colors.oscarWhite}`,
-    cursor: "pointer",
-    borderRadius: "8px 8px 0 0",
-  },
-  menuItemNoBorder: {
-    backgroundColor: theme.colors.oscarWhite,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    cursor: "pointer",
-    borderRadius: "0 0 8px 8px",
   },
 };
 

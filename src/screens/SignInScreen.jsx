@@ -5,23 +5,49 @@ import TextInput from "../components/common/TextInput";
 
 /**
  * Sign In Screen Component
- * Allows users to authenticate with User ID and Password
- * Contains "Remember Me" checkbox and "Forgot Password" link
+ * Authenticates against POST /api/auth/login
+ * User ID format: CL000001 (shown on Profile screen)
+ * Default credentials: CL000001 / oscar123
  */
 const SignInScreen = () => {
   const navigate = useNavigate();
 
-  // Form state
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [userId, setUserId]       = useState("");
+  const [password, setPassword]   = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError]         = useState("");
+  const [loading, setLoading]     = useState(false);
 
-  // Handle sign-in form submission
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    // TODO: Implement actual authentication logic
-    // TODO: Apply validation rules (required fields, format validation)
-    navigate("/home");
+    setError("");
+
+    if (!userId.trim() || !password.trim()) {
+      setError("Please enter your User ID and password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId.trim(), password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Invalid credentials. Please try again.');
+        return;
+      }
+
+      navigate("/home");
+    } catch {
+      setError("Could not connect to server. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,11 +59,13 @@ const SignInScreen = () => {
         <p style={styles.subtitle}>Electronic Medical Records</p>
 
         <form onSubmit={handleSignIn} style={styles.form}>
-          <TextInput label="User ID" value={userId} onChange={setUserId} placeholder="Enter your ID" />
+          <TextInput label="User ID" value={userId} onChange={setUserId} placeholder="e.g. CL000001" />
           <TextInput label="Password" type="password" value={password} onChange={setPassword} placeholder="Enter your password" />
 
-          <button type="submit" className="btn btn-primary">
-            SIGN IN
+          {error && <p style={styles.errorText}>{error}</p>}
+
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'SIGNING IN…' : 'SIGN IN'}
           </button>
 
           <div style={styles.rememberMeContainer}>
@@ -53,9 +81,7 @@ const SignInScreen = () => {
             </label>
           </div>
 
-          <a href="#" style={styles.forgotPassword}>
-            Forgot Password?
-          </a>
+          <p style={styles.hint}>Demo credentials: CL000001 / oscar123</p>
         </form>
       </div>
     </div>
@@ -101,38 +127,11 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   },
-  inputGroup: {
-    marginBottom: "20px",
-  },
-  label: {
-    display: "block",
-    fontSize: "14px",
-    fontWeight: "600",
-    color: "var(--oscar-black)",
-    marginBottom: "8px",
-  },
-  input: {
-    width: "100%",
-    padding: "14px 16px",
-    fontSize: "15px",
-    border: "1px solid var(--color-neutral-2)",
-    borderRadius: "8px",
-    backgroundColor: "var(--oscar-white)",
-    boxSizing: "border-box",
-    outline: "none",
-  },
-  signInButton: {
-    width: "100%",
-    padding: "16px",
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "var(--oscar-white)",
-    backgroundColor: "var(--oscar-blue)",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    marginTop: "10px",
-    marginBottom: "16px",
+  errorText: {
+    fontSize: "13px",
+    color: "var(--oscar-red, #e53935)",
+    margin: "0 0 12px 0",
+    textAlign: "center",
   },
   rememberMeContainer: {
     display: "flex",
@@ -150,12 +149,11 @@ const styles = {
     color: "var(--oscar-black)",
     cursor: "pointer",
   },
-  forgotPassword: {
-    fontSize: "14px",
+  hint: {
+    fontSize: "12px",
     color: "var(--pale-sky)",
     textAlign: "center",
-    textDecoration: "none",
-    marginTop: "8px",
+    margin: "4px 0 0 0",
   },
 };
 
