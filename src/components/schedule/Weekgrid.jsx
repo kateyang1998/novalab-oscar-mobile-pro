@@ -34,14 +34,12 @@ export default function WeekGrid({
         {weekDates.map((d, i) => {
           const dayNum = new Date(d + "T00:00:00").getDate();
           const isToday = d === todayStr;
-          const isSelected = d === selectedDate;
           return (
             <div
               key={d}
               onClick={() => onSelectDate(d)}
                 style={{
                     ...styles.dayHeader,
-                    borderBottom: isSelected ? `2px solid ${theme.colors.oscarBlue}` : "2px solid transparent",
                   }}
             >
               <span style={styles.dayLabel}>{DAYS_SHORT[i]}</span>
