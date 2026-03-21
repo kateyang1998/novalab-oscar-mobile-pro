@@ -23,7 +23,7 @@ import {
 } from "./Scheduleutils";
 
 export default function WeekGrid({
-  weekDates, selectedDate, todayStr,
+  weekDates, todayStr,
   appointmentsByDate, onSelectDate, onAppointmentPress,
 }) {
   return (
