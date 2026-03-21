@@ -17,6 +17,6 @@ export default function NoteCard({ note = {}, onClick }) {
 
 const styles = {
   noteCard: { backgroundColor: 'var(--color-surface)', padding: 16, borderRadius: 8, cursor: 'pointer' },
-  statusBadge: { marginLeft: 'auto', backgroundColor: 'var(--oscar-green)', color: '#ffffff', padding: '4px 8px', borderRadius: 8, fontSize: 12, fontWeight: 600 },
+  statusBadge: { marginLeft: 'auto', backgroundColor: 'var(--oscar-green)', color: 'var(--oscar-white)', padding: '4px 8px', borderRadius: 8, fontSize: 12, fontWeight: 600 },
 };
 

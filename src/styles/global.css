@@ -115,10 +115,16 @@ button { font-family: inherit; }
   border: 1px solid var(--oscar-blue);
 }
 
-.btn-cancel {
+.btn-caution {
   background: var(--oscar-red);
   color: var(--oscar-white);
   border: 1px solid var(--oscar-red);
+}
+
+.btn-cancel {
+  background: var(--oscar-white);
+  color: var(--pale-sky);
+  border: 1px solid var(--pale-sky);
 }
 
 /* Small helpers */

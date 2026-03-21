@@ -159,45 +159,40 @@ const SignInScreen = () => {
               Enter your User ID and your password will be reset to the default.
             </p>
 
-            {forgotStatus === "" && (
-              <form onSubmit={handleForgotSubmit}>
+            {forgotStatus !== "success" && (
+              <form onSubmit={handleForgotSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <TextInput
+                  id="forgot-userid"
                   label="User ID"
                   value={forgotUserId}
-                  onChange={setForgotUserId}
+                  onChange={(v) => { setForgotUserId(v); if (forgotStatus) { setForgotStatus(''); setForgotMessage(''); } }}
                   placeholder="e.g. CL000001"
+                  error={forgotStatus === 'error' ? forgotMessage : ''}
                 />
-                {forgotMessage && (
-                  <p style={styles.errorText}>{forgotMessage}</p>
-                )}
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={forgotLoading}
-                  style={{ marginTop: 8 }}
-                >
-                  {forgotLoading ? 'Resetting…' : 'Reset Password'}
-                </button>
+                <div style={styles.modalButtons}>
+                  <button
+                    type="submit"
+                    className="btn btn-caution"
+                    disabled={forgotLoading}
+                    style={{ flex: 1 }}
+                  >
+                    {forgotLoading ? 'Resetting…' : 'Reset'}
+                  </button>
+                  <button type="button" className="btn btn-cancel" style={{ flex: 1 }} onClick={closeForgotModal}>Cancel</button>
+                </div>
               </form>
             )}
 
             {forgotStatus === "success" && (
-              <div style={styles.successBox}>
-                <p style={styles.successText}>{forgotMessage}</p>
-              </div>
+              <>
+                <div style={styles.successBox}>
+                  <p style={styles.successText}>{forgotMessage}</p>
+                </div>
+                <div style={styles.modalButtons}>
+                  <button type="button" className="btn btn-primary" style={{ flex: 1 }} onClick={closeForgotModal}>Done</button>
+                </div>
+              </>
             )}
-
-            {forgotStatus === "error" && (
-              <p style={styles.errorText}>{forgotMessage}</p>
-            )}
-
-            <button
-              type="button"
-              onClick={closeForgotModal}
-              style={styles.cancelBtn}
-            >
-              {forgotStatus === "success" ? "Done" : "Cancel"}
-            </button>
           </div>
         </div>
       )}
@@ -309,25 +304,20 @@ const styles = {
     margin: 0,
   },
   successBox: {
-    backgroundColor: "#e8f5e9",
+    backgroundColor: "var(--oscar-white)",
     borderRadius: "8px",
     padding: "12px",
   },
   successText: {
     fontSize: "14px",
-    color: "#2e7d32",
+    color: "var(--oscar-green, #43a047)",
     margin: 0,
     textAlign: "center",
   },
-  cancelBtn: {
-    background: "none",
-    border: "1px solid var(--pale-sky, #aaa)",
-    borderRadius: "8px",
-    padding: "10px",
-    fontSize: "14px",
-    color: "var(--pale-sky)",
-    cursor: "pointer",
-    marginTop: "4px",
+  modalButtons: {
+    display: 'flex',
+    gap: 8,
+    marginTop: 8,
   },
 };
 
