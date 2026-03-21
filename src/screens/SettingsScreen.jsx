@@ -70,7 +70,6 @@ const SettingsScreen = () => {
 
         <SettingSection title="System">
           <SettingRow label="Help & Support" description="Get help and contact support" onClick={() => navigate('/help')} first />
-          <SettingRow label="Privacy Policy" description="View our privacy policy" onClick={() => navigate('/privacy')} last />
         </SettingSection>
       </div>
     </div>

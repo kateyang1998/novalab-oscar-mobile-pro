@@ -39,7 +39,7 @@ export const FormLabel = ({ children, htmlFor, style = {} }) => (
   </label>
 );
 
-export const TextInput = ({ style, ...props }) => {
+export const TextInput = ({ style, error, id, ...props }) => {
   const base = {
     width: '100%',
     padding: 12,
@@ -47,23 +47,31 @@ export const TextInput = ({ style, ...props }) => {
     fontSize: theme.font.sizes.sm,
     fontFamily: theme.font.family,
     fontWeight: theme.font.weights.regular,
-    border: `1px solid ${theme.colors.oscarGray}`,
+    border: `1px solid ${error ? theme.colors.oscarRed : theme.colors.oscarGray}`,
     borderRadius: 8,
     backgroundColor: theme.colors.oscarWhite,
     boxSizing: 'border-box',
     outline: 'none',
   };
-  return <input {...props} style={{ ...base, ...style }} />;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <input id={id} aria-invalid={!!error} aria-describedby={error && id ? `${id}-error` : undefined} {...props} style={{ ...base, ...style }} />
+      {error && (
+        <div id={`${id}-error`} style={{ color: theme.colors.oscarRed, fontSize: theme.font.sizes.xs, marginTop: 4 }} role="alert">{error}</div>
+      )}
+    </div>
+  );
 };
 
-export const SelectInput = ({ style, children, ...props }) => {
+export const SelectInput = ({ style, children, error, id, ...props }) => {
   const base = {
     width: '100%',
     padding: 12,
     fontSize: theme.font.sizes.sm,
     fontFamily: theme.font.family,
     fontWeight: theme.font.weights.regular,
-    border: `1px solid ${theme.colors.oscarGray}`,
+    border: `1px solid ${error ? theme.colors.oscarRed : theme.colors.oscarGray}`,
     borderRadius: 8,
     backgroundColor: theme.colors.oscarWhite,
     boxSizing: 'border-box',
@@ -71,20 +79,25 @@ export const SelectInput = ({ style, children, ...props }) => {
     cursor: 'pointer',
   };
   return (
-    <select {...props} style={{ ...base, ...style }}>
-      {children}
-    </select>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <select id={id} aria-invalid={!!error} aria-describedby={error && id ? `${id}-error` : undefined} {...props} style={{ ...base, ...style }}>
+        {children}
+      </select>
+      {error && (
+        <div id={`${id}-error`} style={{ color: theme.colors.oscarRed, fontSize: theme.font.sizes.xs, marginTop: 4 }} role="alert">{error}</div>
+      )}
+    </div>
   );
 };
 
-export const TextAreaInput = ({ style, ...props }) => {
+export const TextAreaInput = ({ style, error, id, ...props }) => {
   const base = {
     width: '100%',
     padding: 12,
     fontSize: theme.font.sizes.sm,
     fontFamily: theme.font.family,
     fontWeight: theme.font.weights.regular,
-    border: `1px solid ${theme.colors.oscarGray}`,
+    border: `1px solid ${error ? theme.colors.oscarRed : theme.colors.oscarGray}`,
     borderRadius: 8,
     backgroundColor: theme.colors.oscarWhite,
     boxSizing: 'border-box',
@@ -92,7 +105,14 @@ export const TextAreaInput = ({ style, ...props }) => {
     minHeight: '100px',
     resize: 'vertical',
   };
-  return <textarea {...props} style={{ ...base, ...style }} />;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <textarea id={id} aria-invalid={!!error} aria-describedby={error && id ? `${id}-error` : undefined} {...props} style={{ ...base, ...style }} />
+      {error && (
+        <div id={`${id}-error`} style={{ color: theme.colors.oscarRed, fontSize: theme.font.sizes.xs, marginTop: 4 }} role="alert">{error}</div>
+      )}
+    </div>
+  );
 };
 
 export const CheckboxInput = ({ style, ...props }) => {

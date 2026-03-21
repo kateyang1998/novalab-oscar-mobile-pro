@@ -14,6 +14,7 @@ const SignInScreen = () => {
 
   const [userId, setUserId]       = useState("");
   const [password, setPassword]   = useState("");
+  const [fieldErrors, setFieldErrors] = useState({ userId: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError]         = useState("");
   const [loading, setLoading]     = useState(false);
@@ -29,8 +30,14 @@ const SignInScreen = () => {
     e.preventDefault();
     setError("");
 
-    if (!userId.trim() || !password.trim()) {
-      setError("Please enter your User ID and password.");
+    // Client-side validation: ensure both fields are non-empty
+    const newFieldErrors = { userId: '', password: '' };
+    if (!userId.trim()) newFieldErrors.userId = 'Please enter your User ID.';
+    if (!password.trim()) newFieldErrors.password = 'Please enter your password.';
+    setFieldErrors(newFieldErrors);
+
+    if (newFieldErrors.userId || newFieldErrors.password) {
+      // Do not attempt network request if client-side validation fails
       return;
     }
 
@@ -45,7 +52,9 @@ const SignInScreen = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Invalid credentials. Please try again.');
+        // Show server error as a general message (do not mark fields red for authentication failure)
+        setFieldErrors({ userId: '', password: '' });
+        setError(data.error || "Invalid user id or password.");
         return;
       }
 
@@ -109,8 +118,8 @@ const SignInScreen = () => {
         <p style={styles.subtitle}>Electronic Medical Records</p>
 
         <form onSubmit={handleSignIn} style={styles.form}>
-          <TextInput label="User ID" value={userId} onChange={setUserId} placeholder="e.g. CL000001" />
-          <TextInput label="Password" type="password" value={password} onChange={setPassword} placeholder="Enter your password" />
+          <TextInput id="signin-userid" label="User ID" value={userId} onChange={(v) => { setUserId(v); if (fieldErrors.userId) setFieldErrors(fe => ({ ...fe, userId: '' })); setError(''); }} placeholder="e.g. CL000001" error={fieldErrors.userId} />
+          <TextInput id="signin-password" label="Password" type="password" value={password} onChange={(v) => { setPassword(v); if (fieldErrors.password) setFieldErrors(fe => ({ ...fe, password: '' })); setError(''); }} placeholder="Enter your password" error={fieldErrors.password} />
 
           {error && <p style={styles.errorText}>{error}</p>}
 

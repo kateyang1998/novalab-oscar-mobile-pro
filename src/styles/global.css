@@ -144,5 +144,11 @@ button { font-family: inherit; }
 .form-input:focus { border-color: var(--oscar-blue); box-shadow: 0 0 0 3px rgba(0,86,179,0.08); }
 .form-input::placeholder { color: var(--pale-sky); }
 
-.form-subtle { color: var(--pale-sky); font-size: 14px; }
+/* Error state for inputs — apply a red border and a subtle red ring */
+.form-input--error {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(200,40,51,0.06);
+}
+
+.form-subtle { color: var(--pale-sky); font-size: var(--font-size-xs); }
 

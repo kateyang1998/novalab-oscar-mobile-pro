@@ -8,6 +8,7 @@ import SystemSection from '../components/profile/SystemSection';
 import LogoutButton from '../components/profile/LogoutButton';
 import LogoutConfirmModal from '../components/profile/LogoutConfirmModal';
 import ChangePasswordModal from '../components/profile/ChangePasswordModal';
+import { useToast } from '../components/common/toastContext';
 import SyncStatusModal from '../components/profile/SyncStatusModal';
 
 /**
@@ -35,6 +36,8 @@ const ProfileScreen = () => {
   const [showLogoutConfirmation, setShowLogoutConfirmation]   = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showSyncStatusModal, setShowSyncStatusModal]         = useState(false);
+  const [serverPasswordError, setServerPasswordError] = useState('');
+  const toast = useToast();
 
   const handleBackClick = () => navigate(-1);
 
@@ -53,11 +56,11 @@ const ProfileScreen = () => {
 
   const handleChangePasswordSubmit = async ({ current, next, confirm }) => {
     if (next !== confirm) {
-      alert("New passwords don't match!");
+      toast.showToast({ message: "New passwords don't match!", variant: 'warning' });
       return;
     }
     if (next.length < 8) {
-      alert("Password must be at least 8 characters long!");
+      toast.showToast({ message: "Password must be at least 8 characters long!", variant: 'warning' });
       return;
     }
 
@@ -69,13 +72,24 @@ const ProfileScreen = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'Failed to change password');
+        // If server indicates current password incorrect, show it inside the modal
+        if (data && data.error && data.error.toLowerCase().includes('current')) {
+          // show server error in modal under current password
+          setServerPasswordError(data.error || 'Current password is incorrect');
+          // keep modal open
+          setShowChangePasswordModal(true);
+          // also show a toast
+          toast.showToast({ message: data.error || 'Current password is incorrect', variant: 'error' });
+          return;
+        }
+        toast.showToast({ message: data.error || 'Failed to change password', variant: 'error' });
         return;
       }
       setShowChangePasswordModal(false);
-      alert('Password changed successfully!');
+      setServerPasswordError('');
+      toast.showToast({ message: 'Password changed successfully!', variant: 'success' });
     } catch {
-      alert('Network error — could not change password');
+      toast.showToast({ message: 'Network error — could not change password', variant: 'error' });
     }
   };
 
@@ -87,13 +101,18 @@ const ProfileScreen = () => {
     try {
       const res  = await fetch('/api/clinician/sync', { method: 'POST' });
       const data = await res.json();
-      if (data.syncedAt) {
+      if (data && data.syncedAt) {
         const d = new Date(data.syncedAt);
         setLastSyncedAt(d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        toast.showToast({ message: 'Sync completed successfully!', variant: 'success' });
+      } else {
+        // If server didn't return syncedAt, still treat as success but show a generic message
+        toast.showToast({ message: 'Sync completed.', variant: 'success' });
       }
-    } catch { /* best effort */ }
+    } catch {
+      toast.showToast({ message: 'Sync failed — network error', variant: 'error' });
+    }
     setShowSyncStatusModal(false);
-    alert('Sync completed successfully!');
   };
 
   return (
@@ -128,7 +147,12 @@ const ProfileScreen = () => {
       )}
 
       {showChangePasswordModal && (
-        <ChangePasswordModal onSubmit={handleChangePasswordSubmit} onDismiss={() => setShowChangePasswordModal(false)} />
+        <ChangePasswordModal
+          onSubmit={handleChangePasswordSubmit}
+          onDismiss={() => { setShowChangePasswordModal(false); setServerPasswordError(''); }}
+          serverError={serverPasswordError}
+          clearServerError={() => setServerPasswordError('')}
+        />
       )}
 
       {showSyncStatusModal && (
