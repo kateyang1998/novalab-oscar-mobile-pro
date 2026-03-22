@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import AppointmentForm from "../components/appointment/AppointmentForm.jsx";
 import CancelConfirmModal from "../components/appointment/CancelConfirmModal.jsx";
 import TopHeader from "../components/layout/TopHeader";
+import { useToast } from '../components/common/toastContext';
 import theme from '../styles/theme';
 import AddNoteButton from '../components/clinical_note/AddNoteButton';
 import NoteCard from '../components/clinical_note/NoteCard';
@@ -28,9 +29,11 @@ export default function EditAppointmentScreen() {
   const [patient, setPatient]       = useState(null);
   const [notes, setNotes]           = useState([]);
   const [saving, setSaving]         = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [showCancelModal, setShowCancelModal]   = useState(false);
   const [isDirty, setIsDirty]                   = useState(false);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+  const toast = useToast();
 
   // Fetch patient info and notes when we have a patientId
   useEffect(() => {
@@ -55,6 +58,21 @@ export default function EditAppointmentScreen() {
 
   async function handleSaveAndSync() {
     if (!incoming?.id) return;
+    // Validate all fields are filled
+    const errors = {};
+    if (!formData.type) errors.type = 'Please select an appointment type.';
+    if (!formData.status) errors.status = 'Please select a status.';
+    if (!formData.date) errors.date = 'Please select a date.';
+    if (!formData.startTime) errors.startTime = 'Please select a time.';
+    if (!formData.duration) errors.duration = 'Please select a duration.';
+    if (!formData.reasonForVisit || !formData.reasonForVisit.trim()) errors.reasonForVisit = 'Please enter the reason for visit.';
+
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      toast.showToast({ message: 'Please fix the highlighted fields before saving.', variant: 'warning' });
+      return;
+    }
+
     setSaving(true);
     try {
       const res = await fetch(`/api/appointments/${incoming.id}`, {
@@ -71,13 +89,14 @@ export default function EditAppointmentScreen() {
       });
       if (!res.ok) {
         const err = await res.json();
-        alert(err.error || 'Failed to save appointment');
+        toast.showToast({ message: err.error || 'Failed to save appointment', variant: 'error' });
         return;
       }
       setIsDirty(false);
+      toast.showToast({ message: 'Appointment saved successfully.', variant: 'success' });
       navigate(-1);
     } catch {
-      alert('Network error — could not save appointment');
+      toast.showToast({ message: 'Network error — could not save appointment', variant: 'error' });
     } finally {
       setSaving(false);
     }
@@ -117,7 +136,7 @@ export default function EditAppointmentScreen() {
       <div style={styles.body}>
         <PatientInfoCard patient={displayPatient} style={{ marginBottom: 0 }} />
 
-        <AppointmentForm formData={formData} onChange={handleFieldChange} />
+        <AppointmentForm formData={formData} onChange={(field, value) => { handleFieldChange(field, value); setFieldErrors(fe => ({ ...fe, [field]: '' })); }} errors={fieldErrors} />
 
         {/* Notes section */}
         <div style={{ marginBottom: 8 }}>

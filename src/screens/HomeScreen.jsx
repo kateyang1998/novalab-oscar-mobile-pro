@@ -5,6 +5,7 @@ import theme from "../styles/theme";
 import SearchBar from "../components/common/SearchBar";
 import ScheduleToday from "../components/home/ScheduleToday";
 import RecentPatients from "../components/home/RecentPatients";
+import PatientGrid from "../components/patient/PatientGrid";
 
 /**
  * Home Screen Component
@@ -18,6 +19,8 @@ const HomeScreen = () => {
   const navigate = useNavigate();
   const [todayAppointments, setTodayAppointments] = useState([]);
   const [recentPatients, setRecentPatients] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [patientsLoading, setPatientsLoading] = useState(true);
   const [clinician, setClinician] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -52,15 +55,18 @@ const HomeScreen = () => {
     fetch('/api/patients')
       .then(r => r.json())
       .then(data => {
-        if (!Array.isArray(data)) return;
-        const recent = data
+        const list = Array.isArray(data) ? data : [];
+        setPatients(list);
+        setPatientsLoading(false);
+
+        const recent = list
           .filter(p => p.lastVisitDate)
           .sort((a, b) => b.lastVisitDate.localeCompare(a.lastVisitDate))
           .slice(0, 3)
-          .map(p => ({ id: p.id, name: p.name, time: relativeTime(p.lastVisitDate) }));
+          .map(p => ({ id: p.id ?? p.patientId ?? p.patientNumber, name: p.name ?? p.fullName ?? p.patientNumber, time: relativeTime(p.lastVisitDate) }));
         setRecentPatients(recent);
       })
-      .catch(() => setRecentPatients([]));
+      .catch(() => { setRecentPatients([]); setPatients([]); setPatientsLoading(false); });
 
     // Fetch current clinician
     fetch('/api/clinician')
@@ -85,6 +91,26 @@ const HomeScreen = () => {
         onChange={setSearchQuery}
         onSubmit={(q) => navigate('/patients', { state: { searchQuery: q } })}
       />
+
+      {/* Live search results (show when user types) */}
+      {searchQuery ? (
+        <section style={{ marginBottom: 16 }}>
+          {patientsLoading ? (
+            <div style={styles.loadingContainer}><p style={styles.loadingText}>Searching patients…</p></div>
+          ) : (
+            (() => {
+              const q = searchQuery.toLowerCase();
+              const filtered = patients.filter(p => {
+                const name = (p.name || p.fullName || '').toString().toLowerCase();
+                const id = (p.id || p.patientId || p.patientNumber || '').toString().toLowerCase();
+                return name.includes(q) || id.includes(q);
+              });
+              if (filtered.length === 0) return <div style={styles.emptyContainer}><p style={styles.emptyText}>No patients found</p></div>;
+              return <PatientGrid patients={filtered.map(p => ({ id: p.id ?? p.patientId ?? p.patientNumber, name: p.name ?? p.fullName ?? p.patientNumber }))} onPatientClick={(id) => navigate(`/patient/${id}/summary`)} />;
+            })()
+          )}
+        </section>
+      ) : null}
 
       {/* Today's Schedule */}
       <section style={styles.section}>
@@ -170,6 +196,15 @@ const styles = {
     fontSize: "14px",
     color: theme.colors.oscarBlue,
     cursor: "pointer",
+  },
+  emptyContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: theme.font.sizes.md,
+    color: theme.colors.paleSky,
   },
 };
 

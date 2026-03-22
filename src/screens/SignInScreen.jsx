@@ -14,6 +14,7 @@ const SignInScreen = () => {
 
   const [userId, setUserId]       = useState("");
   const [password, setPassword]   = useState("");
+  const [fieldErrors, setFieldErrors] = useState({ userId: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError]         = useState("");
   const [loading, setLoading]     = useState(false);
@@ -29,8 +30,14 @@ const SignInScreen = () => {
     e.preventDefault();
     setError("");
 
-    if (!userId.trim() || !password.trim()) {
-      setError("Please enter your User ID and password.");
+    // Client-side validation: ensure both fields are non-empty
+    const newFieldErrors = { userId: '', password: '' };
+    if (!userId.trim()) newFieldErrors.userId = 'Please enter your User ID.';
+    if (!password.trim()) newFieldErrors.password = 'Please enter your password.';
+    setFieldErrors(newFieldErrors);
+
+    if (newFieldErrors.userId || newFieldErrors.password) {
+      // Do not attempt network request if client-side validation fails
       return;
     }
 
@@ -45,7 +52,9 @@ const SignInScreen = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Invalid credentials. Please try again.');
+        // Show server error as a general message (do not mark fields red for authentication failure)
+        setFieldErrors({ userId: '', password: '' });
+        setError(data.error || "Invalid user id or password.");
         return;
       }
 
@@ -109,8 +118,8 @@ const SignInScreen = () => {
         <p style={styles.subtitle}>Electronic Medical Records</p>
 
         <form onSubmit={handleSignIn} style={styles.form}>
-          <TextInput label="User ID" value={userId} onChange={setUserId} placeholder="e.g. CL000001" />
-          <TextInput label="Password" type="password" value={password} onChange={setPassword} placeholder="Enter your password" />
+          <TextInput id="signin-userid" label="User ID" value={userId} onChange={(v) => { setUserId(v); if (fieldErrors.userId) setFieldErrors(fe => ({ ...fe, userId: '' })); setError(''); }} placeholder="e.g. CL000001" error={fieldErrors.userId} />
+          <TextInput id="signin-password" label="Password" type="password" value={password} onChange={(v) => { setPassword(v); if (fieldErrors.password) setFieldErrors(fe => ({ ...fe, password: '' })); setError(''); }} placeholder="Enter your password" error={fieldErrors.password} />
 
           {error && <p style={styles.errorText}>{error}</p>}
 
@@ -150,45 +159,40 @@ const SignInScreen = () => {
               Enter your User ID and your password will be reset to the default.
             </p>
 
-            {forgotStatus === "" && (
-              <form onSubmit={handleForgotSubmit}>
+            {forgotStatus !== "success" && (
+              <form onSubmit={handleForgotSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <TextInput
+                  id="forgot-userid"
                   label="User ID"
                   value={forgotUserId}
-                  onChange={setForgotUserId}
+                  onChange={(v) => { setForgotUserId(v); if (forgotStatus) { setForgotStatus(''); setForgotMessage(''); } }}
                   placeholder="e.g. CL000001"
+                  error={forgotStatus === 'error' ? forgotMessage : ''}
                 />
-                {forgotMessage && (
-                  <p style={styles.errorText}>{forgotMessage}</p>
-                )}
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={forgotLoading}
-                  style={{ marginTop: 8 }}
-                >
-                  {forgotLoading ? 'Resetting…' : 'Reset Password'}
-                </button>
+                <div style={styles.modalButtons}>
+                  <button
+                    type="submit"
+                    className="btn btn-caution"
+                    disabled={forgotLoading}
+                    style={{ flex: 1 }}
+                  >
+                    {forgotLoading ? 'Resetting…' : 'Reset'}
+                  </button>
+                  <button type="button" className="btn btn-cancel" style={{ flex: 1 }} onClick={closeForgotModal}>Cancel</button>
+                </div>
               </form>
             )}
 
             {forgotStatus === "success" && (
-              <div style={styles.successBox}>
-                <p style={styles.successText}>{forgotMessage}</p>
-              </div>
+              <>
+                <div style={styles.successBox}>
+                  <p style={styles.successText}>{forgotMessage}</p>
+                </div>
+                <div style={styles.modalButtons}>
+                  <button type="button" className="btn btn-primary" style={{ flex: 1 }} onClick={closeForgotModal}>Done</button>
+                </div>
+              </>
             )}
-
-            {forgotStatus === "error" && (
-              <p style={styles.errorText}>{forgotMessage}</p>
-            )}
-
-            <button
-              type="button"
-              onClick={closeForgotModal}
-              style={styles.cancelBtn}
-            >
-              {forgotStatus === "success" ? "Done" : "Cancel"}
-            </button>
           </div>
         </div>
       )}
@@ -300,25 +304,20 @@ const styles = {
     margin: 0,
   },
   successBox: {
-    backgroundColor: "#e8f5e9",
+    backgroundColor: "var(--oscar-white)",
     borderRadius: "8px",
     padding: "12px",
   },
   successText: {
     fontSize: "14px",
-    color: "#2e7d32",
+    color: "var(--oscar-green, #43a047)",
     margin: 0,
     textAlign: "center",
   },
-  cancelBtn: {
-    background: "none",
-    border: "1px solid var(--pale-sky, #aaa)",
-    borderRadius: "8px",
-    padding: "10px",
-    fontSize: "14px",
-    color: "var(--pale-sky)",
-    cursor: "pointer",
-    marginTop: "4px",
+  modalButtons: {
+    display: 'flex',
+    gap: 8,
+    marginTop: 8,
   },
 };
 

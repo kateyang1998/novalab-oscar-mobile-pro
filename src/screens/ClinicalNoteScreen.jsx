@@ -5,6 +5,7 @@ import PatientInfoCard from "../components/patient/PatientInfoCard";
 import FormSection from "../components/common/FormSection.jsx";
 import { TextInput, SelectInput, TextAreaInput, CheckboxInput, FormLabel } from "../components/common/FormControls";
 import UnsavedChangesModal from "../components/common/UnsavedChangesModal";
+import { useToast } from '../components/common/toastContext';
 import theme from "../styles/theme";
 
 /**
@@ -27,6 +28,8 @@ const ClinicalNoteScreen = () => {
   const [patientData, setPatientData] = useState(null);
   const [isDirty, setIsDirty] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const toast = useToast();
 
   // Form state — Subjective
   const [chiefComplaint,        setChiefComplaint]        = useState("");
@@ -50,7 +53,7 @@ const ClinicalNoteScreen = () => {
   const [referralMade,         setReferralMade]         = useState(false);
   const [followUpRequired,     setFollowUpRequired]     = useState(false);
 
-  const onChangeVal     = (setter) => (e) => { setter(e.target.value);   setIsDirty(true); };
+  const onChangeVal     = (setter, field) => (e) => { setter(e.target.value);   setIsDirty(true); if (field) setFieldErrors(fe => ({ ...fe, [field]: '' })); };
   const onChangeChecked = (setter) => (e) => { setter(e.target.checked); setIsDirty(true); };
 
   useEffect(() => {
@@ -104,6 +107,31 @@ const ClinicalNoteScreen = () => {
   };
 
   const handleSaveAndSync = async () => {
+    // Client-side validation according to requirements
+    const errors = {};
+    // Subjective: all fields required
+    if (!chiefComplaint || !String(chiefComplaint).trim()) errors.chiefComplaint = 'Please select a chief complaint category.';
+    if (!subjectiveDescription || !String(subjectiveDescription).trim()) errors.subjectiveDescription = 'Please enter the patient description.';
+
+    // Objective: BP, HR, Temp, Weight required. description optional
+    if (!bloodPressure || !String(bloodPressure).trim()) errors.bloodPressure = 'Please enter blood pressure.';
+    if (!heartRate || !String(heartRate).trim()) errors.heartRate = 'Please enter heart rate.';
+    if (!temperature || !String(temperature).trim()) errors.temperature = 'Please enter temperature.';
+    if (!weight || !String(weight).trim()) errors.weight = 'Please enter weight.';
+
+    // Assessment: all fields required
+    if (!diagnosisCategory || !String(diagnosisCategory).trim()) errors.diagnosisCategory = 'Please select a diagnosis category.';
+    if (!clinicalAssessment || !String(clinicalAssessment).trim()) errors.clinicalAssessment = 'Please enter clinical assessment.';
+
+    // Plan: treatmentPlan required; checkboxes optional
+    if (!treatmentPlan || !String(treatmentPlan).trim()) errors.treatmentPlan = 'Please enter a treatment plan.';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.showToast({ message: 'Please fix the highlighted fields before saving.', variant: 'warning' });
+      return;
+    }
+
     const noteData = {
       patientId,
       chiefComplaint,
@@ -156,7 +184,6 @@ const ClinicalNoteScreen = () => {
       <TopHeader
         title="Clinical Note"
         onBack={handleBackClick}
-        right={<span style={styles.draftBadge}>Draft</span>}
       />
 
       <div style={styles.content}>
@@ -167,7 +194,7 @@ const ClinicalNoteScreen = () => {
         <FormSection title="S - Subjective">
           <div style={{ marginBottom: 8 }}>
             <FormLabel>Chief Complaint Category</FormLabel>
-            <SelectInput value={chiefComplaint} onChange={onChangeVal(setChiefComplaint)}>
+            <SelectInput id="cn-chiefComplaint" value={chiefComplaint} onChange={onChangeVal(setChiefComplaint, 'chiefComplaint')} error={fieldErrors.chiefComplaint}>
               <option value="">Select Category</option>
               <option value="Diabetes Management">Diabetes Management</option>
               <option value="Hypertension">Hypertension</option>
@@ -178,7 +205,7 @@ const ClinicalNoteScreen = () => {
           </div>
           <div>
             <FormLabel>Patient's Description</FormLabel>
-            <TextAreaInput value={subjectiveDescription} onChange={onChangeVal(setSubjectiveDescription)} placeholder="Patient reports..." />
+            <TextAreaInput id="cn-subjectiveDescription" value={subjectiveDescription} onChange={onChangeVal(setSubjectiveDescription, 'subjectiveDescription')} placeholder="Patient reports..." error={fieldErrors.subjectiveDescription} />
           </div>
         </FormSection>
 
@@ -186,29 +213,29 @@ const ClinicalNoteScreen = () => {
           <div style={styles.vitalsGrid}>
             <div style={styles.inputGroup}>
               <FormLabel>Blood Pressure</FormLabel>
-              <TextInput value={bloodPressure} onChange={onChangeVal(setBloodPressure)} placeholder="120/80" />
+              <TextInput id="cn-bloodPressure" value={bloodPressure} onChange={onChangeVal(setBloodPressure, 'bloodPressure')} placeholder="120/80" error={fieldErrors.bloodPressure} />
             </div>
             <div style={styles.inputGroup}>
               <FormLabel>Heart Rate</FormLabel>
-              <TextInput value={heartRate} onChange={onChangeVal(setHeartRate)} placeholder="72" />
+              <TextInput id="cn-heartRate" value={heartRate} onChange={onChangeVal(setHeartRate, 'heartRate')} placeholder="72" error={fieldErrors.heartRate} />
             </div>
             <div style={styles.inputGroup}>
               <FormLabel>Temperature (°C)</FormLabel>
-              <TextInput value={temperature} onChange={onChangeVal(setTemperature)} placeholder="36.7" />
+              <TextInput id="cn-temperature" value={temperature} onChange={onChangeVal(setTemperature, 'temperature')} placeholder="36.7" error={fieldErrors.temperature} />
             </div>
             <div style={styles.inputGroup}>
               <FormLabel>Weight (kg)</FormLabel>
-              <TextInput value={weight} onChange={onChangeVal(setWeight)} placeholder="68" />
+              <TextInput id="cn-weight" value={weight} onChange={onChangeVal(setWeight, 'weight')} placeholder="68" error={fieldErrors.weight} />
             </div>
           </div>
           <FormLabel>Patient's Description</FormLabel>
-          <TextAreaInput value={objectiveDescription} onChange={onChangeVal(setObjectiveDescription)} placeholder="Patient reports..." />
+          <TextAreaInput id="cn-objectiveDescription" value={objectiveDescription} onChange={onChangeVal(setObjectiveDescription)} placeholder="Patient reports..." error={fieldErrors.objectiveDescription} />
         </FormSection>
 
         <FormSection title="A - Assessment">
           <div style={{ marginBottom: 8 }}>
             <FormLabel>Diagnosis Category</FormLabel>
-            <SelectInput value={diagnosisCategory} onChange={onChangeVal(setDiagnosisCategory)}>
+            <SelectInput id="cn-diagnosisCategory" value={diagnosisCategory} onChange={onChangeVal(setDiagnosisCategory, 'diagnosisCategory')} error={fieldErrors.diagnosisCategory}>
               <option value="">Select Category</option>
               <option value="Type 2 Diabetes">Type 2 Diabetes</option>
               <option value="Hypertension">Hypertension</option>
@@ -219,13 +246,13 @@ const ClinicalNoteScreen = () => {
           </div>
           <div>
             <FormLabel>Clinical Assessment</FormLabel>
-            <TextAreaInput value={clinicalAssessment} onChange={onChangeVal(setClinicalAssessment)} placeholder="Clinical impression and diagnosis..." />
+            <TextAreaInput id="cn-clinicalAssessment" value={clinicalAssessment} onChange={onChangeVal(setClinicalAssessment, 'clinicalAssessment')} placeholder="Clinical impression and diagnosis..." error={fieldErrors.clinicalAssessment} />
           </div>
         </FormSection>
 
         <FormSection title="P - Plan">
           <FormLabel>Treatment Plan</FormLabel>
-          <TextAreaInput value={treatmentPlan} onChange={onChangeVal(setTreatmentPlan)} placeholder="Treatment Plan Details..." />
+          <TextAreaInput id="cn-treatmentPlan" value={treatmentPlan} onChange={onChangeVal(setTreatmentPlan, 'treatmentPlan')} placeholder="Treatment Plan Details..." error={fieldErrors.treatmentPlan} />
           <div style={styles.checkboxGroup}>
             <label style={styles.checkboxLabel}>
               <CheckboxInput checked={medicationPrescribed} onChange={onChangeChecked(setMedicationPrescribed)} />

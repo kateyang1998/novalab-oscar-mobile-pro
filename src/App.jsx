@@ -8,6 +8,7 @@ import SplashScreen from "./screens/SplashScreen";
 import SignInScreen from "./screens/SignInScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import HelpScreen from "./screens/HelpScreen";
 import PatientRecordScreen from "./screens/PatientRecordScreen";
 import ClinicalNoteScreen from "./screens/ClinicalNoteScreen";
 import BottomTab from "./components/layout/BottomTab";
@@ -17,7 +18,7 @@ import theme from './styles/theme';
 function App() {
   const location = useLocation();
 
-  const routesWithoutBottomTab = ["/splash", "/signin", "/appointment/edit", "/profile", "/settings", "/patient/", "/clinical-note"];
+  const routesWithoutBottomTab = ["/splash", "/signin", "/appointment/edit", "/profile", "/settings", "/patient/", "/clinical-note", "/help"];
   const shouldShowBottomTab = !routesWithoutBottomTab.some((p) => location.pathname === p || location.pathname.startsWith(p));
 
   const noScrollRoutes = ["/splash", "/signin", "/schedule", "/appointment/edit"];
@@ -46,6 +47,7 @@ function App() {
         <Route path="/inbox" element={<InboxScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/settings" element={<SettingsScreen />} />
+        <Route path="/help" element={<HelpScreen />} />
         <Route path="/patient/:id" element={<PatientRecordScreen />} />
         <Route path="/patient/:id/summary" element={<PatientRecordScreen />} />
         <Route path="/patient/:id/notes" element={<PatientRecordScreen />} />

@@ -4,9 +4,12 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import "./styles/global.css";
 import "./index.css";
+import ToastProvider from './components/common/Toast';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <App />
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   </BrowserRouter>
 );
