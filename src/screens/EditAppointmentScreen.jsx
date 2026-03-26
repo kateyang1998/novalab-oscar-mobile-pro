@@ -18,20 +18,20 @@ export default function EditAppointmentScreen() {
   const incoming = location.state?.appointment;
 
   const [formData, setFormData] = useState({
-    type:          incoming?.type          ?? "",
-    status:        incoming?.status        ?? "Scheduled",
-    date:          incoming?.date          ?? "",
-    startTime:     incoming?.startTime     ?? "12:00",
-    duration:      incoming?.duration      ?? "30 min",
+    type: incoming?.type ?? "",
+    status: incoming?.status ?? "Scheduled",
+    date: incoming?.date ?? "",
+    startTime: incoming?.startTime ?? "12:00",
+    duration: incoming?.duration ?? "30 min",
     reasonForVisit: incoming?.reasonForVisit ?? incoming?.reason ?? "",
   });
 
-  const [patient, setPatient]       = useState(null);
-  const [notes, setNotes]           = useState([]);
-  const [saving, setSaving]         = useState(false);
+  const [patient, setPatient] = useState(null);
+  const [notes, setNotes] = useState([]);
+  const [saving, setSaving] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
-  const [showCancelModal, setShowCancelModal]   = useState(false);
-  const [isDirty, setIsDirty]                   = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   const toast = useToast();
 
@@ -43,12 +43,12 @@ export default function EditAppointmentScreen() {
     fetch(`/api/patients/${pid}`)
       .then(r => r.json())
       .then(data => setPatient(data))
-      .catch(() => {});
+      .catch(() => { });
 
     fetch(`/api/patients/${pid}/notes`)
       .then(r => r.json())
       .then(data => setNotes(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .catch(() => { });
   }, [incoming?.patientId]);
 
   function handleFieldChange(field, value) {
@@ -79,12 +79,12 @@ export default function EditAppointmentScreen() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type:     formData.type,
-          status:   formData.status,
-          date:     formData.date,
+          type: formData.type,
+          status: formData.status,
+          date: formData.date,
           startTime: formData.startTime,
           duration: formData.duration,
-          reason:   formData.reasonForVisit,
+          reason: formData.reasonForVisit,
         }),
       });
       if (!res.ok) {
@@ -118,12 +118,12 @@ export default function EditAppointmentScreen() {
 
   // Use fetched patient or fall back to data from appointment
   const displayPatient = patient ?? {
-    id:        incoming?.patientId  ?? '—',
-    name:      incoming?.patientName ?? 'Unknown',
-    age:       incoming?.age,
-    gender:    incoming?.gender,
-    dob:       incoming?.dob,
-    phone:     incoming?.phone,
+    id: incoming?.patientId ?? '—',
+    name: incoming?.patientName ?? 'Unknown',
+    age: incoming?.age,
+    gender: incoming?.gender,
+    dob: incoming?.dob,
+    phone: incoming?.phone,
     lastVisit: incoming?.lastVisit,
   };
 

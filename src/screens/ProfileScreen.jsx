@@ -30,12 +30,12 @@ const ProfileScreen = () => {
     fetch('/api/clinician')
       .then(r => r.json())
       .then(data => setClinician(data))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
-  const [showLogoutConfirmation, setShowLogoutConfirmation]   = useState(false);
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-  const [showSyncStatusModal, setShowSyncStatusModal]         = useState(false);
+  const [showSyncStatusModal, setShowSyncStatusModal] = useState(false);
   const [serverPasswordError, setServerPasswordError] = useState('');
   const toast = useToast();
 
@@ -99,7 +99,7 @@ const ProfileScreen = () => {
 
   const handleSyncNow = async () => {
     try {
-      const res  = await fetch('/api/clinician/sync', { method: 'POST' });
+      const res = await fetch('/api/clinician/sync', { method: 'POST' });
       const data = await res.json();
       if (data && data.syncedAt) {
         const d = new Date(data.syncedAt);
