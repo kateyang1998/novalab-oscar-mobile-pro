@@ -33,7 +33,7 @@ const SignInScreen = () => {
     // Client-side validation: ensure both fields are non-empty
     const newFieldErrors = { userId: '', password: '' };
     if (!userId.trim()) newFieldErrors.userId = 'Please enter your User ID.';
-    if (!password.trim()) newFieldErrors.password = 'Please enter your password.';
+    if (!password.trim()) newFieldErrors.password = 'Please enter your Password.';
     setFieldErrors(newFieldErrors);
 
     if (newFieldErrors.userId || newFieldErrors.password) {

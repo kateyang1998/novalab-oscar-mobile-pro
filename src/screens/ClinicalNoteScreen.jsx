@@ -153,12 +153,27 @@ const ClinicalNoteScreen = () => {
     try {
       const url    = isEditMode ? `/api/notes/${noteId}` : '/api/notes';
       const method = isEditMode ? 'PUT' : 'POST';
-      await fetch(url, {
+      const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(noteData),
       });
-    } catch { /* ignore network errors in demo */ }
+
+      if (!res.ok) {
+        // try to parse error message from server
+        let errText = 'Failed to save clinical note';
+        try { const err = await res.json(); errText = err.error || err.message || errText; } catch { /* ignore parse errors */ }
+        toast.showToast({ message: errText, variant: 'error' });
+        return;
+      }
+
+      // Success
+      toast.showToast({ message: 'Clinical note saved successfully.', variant: 'success' });
+    } catch {
+      // Network or unexpected error
+      toast.showToast({ message: 'Network error — could not save clinical note', variant: 'error' });
+      return;
+    }
 
     setIsDirty(false);
     navigate(-1);
