@@ -65,7 +65,8 @@ vi.mock('../../components/profile/LogoutConfirmModal', () => ({
 vi.mock('../../components/profile/ChangePasswordModal', () => ({
   default: ({ onSubmit, onDismiss }) => (
     <div data-testid="change-password-modal">
-      <button data-testid="submit-password" onClick={() => onSubmit({ current: 'old', next: 'new', confirm: 'new' })}>Submit</button>
+      {/* submit a strong-enough password to bypass client-side validation */}
+      <button data-testid="submit-password" onClick={() => onSubmit({ current: 'old', next: 'newpassword', confirm: 'newpassword' })}>Submit</button>
       <button data-testid="cancel-password" onClick={onDismiss}>Cancel</button>
     </div>
   ),
@@ -172,6 +173,66 @@ describe('ProfileScreen', () => {
 
     await user.click(screen.getByTestId('change-password-btn'));
     expect(screen.getByTestId('change-password-modal')).toBeInTheDocument();
+  });
+
+  it('submits change password successfully and shows toast', async () => {
+    const user = userEvent.setup();
+    // mock clinician fetch and successful password change
+    global.fetch.mockImplementation((url, opts) => {
+      if (url === '/api/clinician') return Promise.resolve({ ok: true, json: () => Promise.resolve(mockClinician) });
+      if (url === '/api/clinician/password') return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    renderComponent();
+
+    await user.click(screen.getByTestId('change-password-btn'));
+    await user.click(screen.getByTestId('submit-password'));
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({ message: 'Password changed successfully!', variant: 'success' }));
+    });
+  });
+
+  it('shows server error for incorrect current password and keeps modal open', async () => {
+    const user = userEvent.setup();
+    // mock clinician fetch and server error for password change
+    global.fetch.mockImplementation((url, opts) => {
+      if (url === '/api/clinician') return Promise.resolve({ ok: true, json: () => Promise.resolve(mockClinician) });
+      if (url === '/api/clinician/password') return Promise.resolve({ ok: false, json: () => Promise.resolve({ error: 'Current password incorrect' }) });
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    renderComponent();
+
+    await user.click(screen.getByTestId('change-password-btn'));
+    await user.click(screen.getByTestId('submit-password'));
+
+    await waitFor(() => {
+      // toast should be called with error
+      expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({ variant: 'error' }));
+      // modal remains present (since ProfileScreen keeps it open when server error mentions current)
+      expect(screen.getByTestId('change-password-modal')).toBeInTheDocument();
+    });
+  });
+
+  it('shows network error toast when change password fetch fails', async () => {
+    const user = userEvent.setup();
+    // mock clinician fetch and then network failure when calling password endpoint
+    global.fetch.mockImplementation((url, opts) => {
+      if (url === '/api/clinician') return Promise.resolve({ ok: true, json: () => Promise.resolve(mockClinician) });
+      if (url === '/api/clinician/password') return Promise.reject(new Error('network'));
+      return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    renderComponent();
+
+    await user.click(screen.getByTestId('change-password-btn'));
+    await user.click(screen.getByTestId('submit-password'));
+
+    await waitFor(() => {
+      expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({ variant: 'error' }));
+    });
   });
 
   it('navigates to settings', async () => {
