@@ -1,61 +1,130 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoBlue from "../assets/logoBlue.png";
+import TextInput from "../components/common/TextInput";
 
 /**
  * Sign In Screen Component
- * Allows users to authenticate with User ID and Password
- * Contains "Remember Me" checkbox and "Forgot Password" link
+ * Authenticates against POST /api/auth/login
+ * User ID format: CL000001 (shown on Profile screen)
+ * Default credentials: CL000001 / oscar123
  */
 const SignInScreen = () => {
   const navigate = useNavigate();
 
-  // Form state
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [userId, setUserId]       = useState("");
+  const [password, setPassword]   = useState("");
+  const [fieldErrors, setFieldErrors] = useState({ userId: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError]         = useState("");
+  const [loading, setLoading]     = useState(false);
 
-  // Handle sign-in form submission
-  const handleSignIn = (e) => {
+  // Forgot password modal state
+  const [showForgotModal, setShowForgotModal]       = useState(false);
+  const [forgotUserId, setForgotUserId]             = useState("");
+  const [forgotStatus, setForgotStatus]             = useState(""); // "success" | "error" | ""
+  const [forgotMessage, setForgotMessage]           = useState("");
+  const [forgotLoading, setForgotLoading]           = useState(false);
+
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    // TODO: Implement actual authentication logic
-    // TODO: Apply validation rules (required fields, format validation)
-    navigate("/home");
+    setError("");
+
+    // Client-side validation: ensure both fields are non-empty
+    const newFieldErrors = { userId: '', password: '' };
+    if (!userId.trim()) newFieldErrors.userId = 'Please enter your User ID.';
+    if (!password.trim()) newFieldErrors.password = 'Please enter your Password.';
+    setFieldErrors(newFieldErrors);
+
+    if (newFieldErrors.userId || newFieldErrors.password) {
+      // Do not attempt network request if client-side validation fails
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId.trim(), password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Show server error as a general message (do not mark fields red for authentication failure)
+        setFieldErrors({ userId: '', password: '' });
+        setError(data.error || "Invalid user id or password.");
+        return;
+      }
+
+      navigate("/home");
+    } catch {
+      setError("Could not connect to server. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    setForgotStatus("");
+    setForgotMessage("");
+
+    if (!forgotUserId.trim()) {
+      setForgotStatus("error");
+      setForgotMessage("Please enter your User ID.");
+      return;
+    }
+
+    setForgotLoading(true);
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: forgotUserId.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setForgotStatus("error");
+        setForgotMessage(data.error || 'User ID not found.');
+      } else {
+        setForgotStatus("success");
+        setForgotMessage("Your password has been reset to: oscar123");
+      }
+    } catch {
+      setForgotStatus("error");
+      setForgotMessage("Could not connect to server. Please try again.");
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const closeForgotModal = () => {
+    setShowForgotModal(false);
+    setForgotUserId("");
+    setForgotStatus("");
+    setForgotMessage("");
   };
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, backgroundColor: 'var(--oscar-gray)' }}>
       <div style={styles.content}>
-        <img src={logoBlue} alt="OSCAR Mobile Pro Logo" style={styles.logo} />
+        <img src={logoBlue} alt="OSCAR Mobile Pro Logo" style={{ ...styles.logo, filter: 'none' }} />
 
         <h1 style={styles.title}>OSCAR Mobile Pro</h1>
         <p style={styles.subtitle}>Electronic Medical Records</p>
 
         <form onSubmit={handleSignIn} style={styles.form}>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>User ID</label>
-            <input
-              type="text"
-              placeholder="Enter your ID"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              style={styles.input}
-            />
-          </div>
+          <TextInput id="signin-userid" label="User ID" value={userId} onChange={(v) => { setUserId(v); if (fieldErrors.userId) setFieldErrors(fe => ({ ...fe, userId: '' })); setError(''); }} placeholder="e.g. CL000001" error={fieldErrors.userId} />
+          <TextInput id="signin-password" label="Password" type="password" value={password} onChange={(v) => { setPassword(v); if (fieldErrors.password) setFieldErrors(fe => ({ ...fe, password: '' })); setError(''); }} placeholder="Enter your password" error={fieldErrors.password} />
 
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-            />
-          </div>
+          {error && <p style={styles.errorText}>{error}</p>}
 
-          <button type="submit" style={styles.signInButton}>
-            SIGN IN
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'SIGNING IN…' : 'SIGN IN'}
           </button>
 
           <div style={styles.rememberMeContainer}>
@@ -71,11 +140,62 @@ const SignInScreen = () => {
             </label>
           </div>
 
-          <a href="#" style={styles.forgotPassword}>
+          <button
+            type="button"
+            onClick={() => setShowForgotModal(true)}
+            style={styles.forgotPassword}
+          >
             Forgot Password?
-          </a>
+          </button>
         </form>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotModal && (
+        <div style={styles.overlay}>
+          <div style={styles.modal}>
+            <h2 style={styles.modalTitle}>Reset Password</h2>
+            <p style={styles.modalSubtitle}>
+              Enter your User ID and your password will be reset to the default.
+            </p>
+
+            {forgotStatus !== "success" && (
+              <form onSubmit={handleForgotSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <TextInput
+                  id="forgot-userid"
+                  label="User ID"
+                  value={forgotUserId}
+                  onChange={(v) => { setForgotUserId(v); if (forgotStatus) { setForgotStatus(''); setForgotMessage(''); } }}
+                  placeholder="e.g. CL000001"
+                  error={forgotStatus === 'error' ? forgotMessage : ''}
+                />
+                <div style={styles.modalButtons}>
+                  <button
+                    type="submit"
+                    className="btn btn-caution"
+                    disabled={forgotLoading}
+                    style={{ flex: 1 }}
+                  >
+                    {forgotLoading ? 'Resetting…' : 'Reset'}
+                  </button>
+                  <button type="button" className="btn btn-cancel" style={{ flex: 1 }} onClick={closeForgotModal}>Cancel</button>
+                </div>
+              </form>
+            )}
+
+            {forgotStatus === "success" && (
+              <>
+                <div style={styles.successBox}>
+                  <p style={styles.successText}>{forgotMessage}</p>
+                </div>
+                <div style={styles.modalButtons}>
+                  <button type="button" className="btn btn-primary" style={{ flex: 1 }} onClick={closeForgotModal}>Done</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -86,7 +206,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
-    backgroundColor: "#E8E8E8",
+    backgroundColor: "var(--oscar-gray)",
     padding: "20px",
     overflow: "hidden",
   },
@@ -106,12 +226,12 @@ const styles = {
   title: {
     fontSize: "28px",
     fontWeight: "700",
-    color: "#000000",
+    color: "var(--oscar-black)",
     margin: "0 0 5px 0",
   },
   subtitle: {
     fontSize: "14px",
-    color: "#666666",
+    color: "var(--pale-sky)",
     margin: "0 0 40px 0",
   },
   form: {
@@ -119,38 +239,11 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   },
-  inputGroup: {
-    marginBottom: "20px",
-  },
-  label: {
-    display: "block",
-    fontSize: "14px",
-    fontWeight: "600",
-    color: "#000000",
-    marginBottom: "8px",
-  },
-  input: {
-    width: "100%",
-    padding: "14px 16px",
-    fontSize: "15px",
-    border: "1px solid #D1D1D6",
-    borderRadius: "8px",
-    backgroundColor: "#FFFFFF",
-    boxSizing: "border-box",
-    outline: "none",
-  },
-  signInButton: {
-    width: "100%",
-    padding: "16px",
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#FFFFFF",
-    backgroundColor: "#007AFF",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    marginTop: "10px",
-    marginBottom: "16px",
+  errorText: {
+    fontSize: "13px",
+    color: "var(--oscar-red, #e53935)",
+    margin: "0 0 12px 0",
+    textAlign: "center",
   },
   rememberMeContainer: {
     display: "flex",
@@ -165,15 +258,66 @@ const styles = {
   },
   rememberMeLabel: {
     fontSize: "14px",
-    color: "#000000",
+    color: "var(--oscar-black)",
     cursor: "pointer",
   },
   forgotPassword: {
+    background: "none",
+    border: "none",
     fontSize: "14px",
-    color: "#666666",
+    color: "var(--pale-sky)",
     textAlign: "center",
-    textDecoration: "none",
-    marginTop: "8px",
+    cursor: "pointer",
+    padding: "0",
+    marginBottom: "8px",
+  },
+  // Modal styles
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "20px",
+    zIndex: 1000,
+  },
+  modal: {
+    backgroundColor: "var(--oscar-white, #fff)",
+    borderRadius: "12px",
+    padding: "24px",
+    width: "100%",
+    maxWidth: "340px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  modalTitle: {
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "var(--oscar-black)",
+    margin: 0,
+  },
+  modalSubtitle: {
+    fontSize: "14px",
+    color: "var(--pale-sky)",
+    margin: 0,
+  },
+  successBox: {
+    backgroundColor: "var(--oscar-white)",
+    borderRadius: "8px",
+    padding: "12px",
+  },
+  successText: {
+    fontSize: "14px",
+    color: "var(--oscar-green, #43a047)",
+    margin: 0,
+    textAlign: "center",
+  },
+  modalButtons: {
+    display: 'flex',
+    gap: 8,
+    marginTop: 8,
   },
 };
 

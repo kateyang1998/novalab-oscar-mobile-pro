@@ -1,137 +1,216 @@
 # OSCAR Mobile Pro
 
-A mobile-optimized Electronic Medical Records (EMR) application designed to provide clinicians with convenient access to essential patient information on the go.
+A mobile-first Electronic Medical Records (EMR) application designed to provide clinicians with convenient access to essential patient information on the go. Built as a capstone project inspired by the OSCAR EMR system.
 
-## About the Project
-
-OSCAR Mobile Pro is a capstone project inspired by the existing OSCAR EMR web application. This project aims to create an essential mobile version with enhanced UI design, offering improved convenience and accessibility for clinicians who use OSCAR EMR in their daily practice.
-
-### Team Nova Lab
+### Team Nova Lab — Conestoga College, Winter 2026
 
 - **Jiwoo Lee**
 - **Kate Yang**
 - **Kyle Essien**
 - **Rohit Talwar**
 
-## Features
-
-- **User Authentication**: Secure sign-in with User ID and Password
-- **Bottom Tab Navigation**: Easy access to key sections (Home, Patients, Schedule, Chat)
-- **Patient Management**: View and manage patient records
-- **Schedule Management**: Track appointments and schedules
-- **Clinical Notes**: Create and view clinical documentation
-- **Patient Records**: Access patient summaries, notes, history, and vitals
-- **Notifications**: Stay updated with important alerts
-- **User Profile**: Manage account settings and preferences
+---
 
 ## Tech Stack
 
-- **React 19** - UI framework
-- **React Router DOM** - Client-side routing
-- **Vite** - Build tool and development server
-- **ESLint** - Code quality and consistency
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, React Router 7, Vite 7 |
+| Backend | Express 4 (Node.js) |
+| Database | SQLite via Node's built-in `node:sqlite` module |
+| Styling | Inline styles with a centralized theme (`src/styles/theme.js`) |
 
-## Project Structure
+> **Node.js requirement:** v22.5 or higher (`node:sqlite` is stable since Node v23.4). **Node v25 is recommended.**
 
-```
-src/
-├── assets/          # Images and static assets
-├── components/      # Reusable components (BottomTab, etc.)
-├── screens/         # Screen components
-│   ├── SplashScreen.jsx
-│   ├── SignInScreen.jsx
-│   ├── HomeScreen.jsx
-│   ├── PatientsScreen.jsx
-│   ├── ScheduleScreen.jsx
-│   ├── ChatScreen.jsx
-│   ├── NotificationsScreen.jsx
-│   ├── ProfileScreen.jsx
-│   ├── PatientRecordSummaryScreen.jsx
-│   ├── PatientRecordNotesScreen.jsx
-│   ├── PatientRecordHistoryScreen.jsx
-│   ├── PatientRecordVitalsScreen.jsx
-│   └── ClinicalNoteScreen.jsx
-├── App.jsx          # Main application component
-└── main.jsx         # Application entry point
-```
+---
 
 ## Getting Started
 
-### Prerequisites
+### 1. Install dependencies
 
-- Node.js (v16 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd novalab-oscar-mobile-pro
+npm install --legacy-peer-deps
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+### 2. Start the app
 
-3. Start the development server:
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to the local development URL (typically `http://localhost:5173`)
+This starts both servers concurrently:
+- **Express API** on `http://localhost:3001` — creates and seeds the SQLite database automatically on first run
+- **Vite dev server** on `http://localhost:5173` — waits for the API to be ready before launching
 
-### Available Scripts
+Then open **`http://localhost:5173`** in your browser.
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint for code quality checks
-- `npm run preview` - Preview production build locally
+### 3. Log in
 
-## Navigation Flow
+Use the demo credentials on the Sign In screen:
 
-1. **Splash Screen** (`/splash`) - Displays for 3 seconds on app launch
-2. **Sign In Screen** (`/signin`) - User authentication
-3. **Home Screen** (`/home`) - Main dashboard after successful sign-in
-4. Access other sections via bottom tab navigation
-
-## Design
-
-The application features a mobile-first design with:
-- Maximum width of 390px (mobile device viewport)
-- iOS-inspired bottom tab navigation
-- Blue accent color (#007AFF) for active states
-- Clean, minimalist interface focused on usability
-
-## Future Development
-
-- [ ] Implement actual authentication logic with backend integration
-- [ ] Add form validation rules for sign-in
-- [ ] Integrate with OSCAR EMR backend API
-- [ ] Implement patient data fetching and display
-- [ ] Add offline support for critical features
-- [ ] Implement push notifications
-- [ ] Add biometric authentication support
-- [ ] Create comprehensive unit and integration tests
-
-## Contributing
-
-This is a capstone project for Conestoga College. If you would like to contribute or have suggestions, please contact the team members.
-
-## License
-
-This project is developed as part of a capstone project at Conestoga College.
-
-## Acknowledgments
-
-- Inspired by OSCAR EMR (Open Source Clinical Application & Resource)
-- Special thanks to our project supervisors and mentors at Conestoga College
-- Design inspiration from modern mobile health applications
+| Field | Value |
+|---|---|
+| User ID | `CL000001` |
+| Password | `oscar123` |
 
 ---
 
-**Project Type**: Capstone Project
-**Institution**: Conestoga College
-**Program**: Winter 2026
-**Team**: Nova Lab
+## Features
+
+- **Authentication** — Sign in with User ID and password
+- **Home Dashboard** — Today's schedule, recent patients, patient search
+- **Patient List** — Searchable grid of all patients
+- **Patient Records** — Demographics, allergies, medications, conditions, vitals, clinical notes, and visit history
+- **Schedule** — Month / week / day calendar views with real appointment data
+- **Edit Appointments** — Update type, status, date, time, duration, reason; cancel appointments
+- **Clinical Notes** — Create and edit SOAP notes with assessment, plan, and action checkboxes
+- **Inbox** — View messages, mark as read individually or all at once
+- **Profile** — View clinician info, change password, trigger data sync
+- **Settings** — Toggle security, notification, and sync preferences — all persisted to the database
+
+---
+
+## Project Structure
+
+```
+├── server/                    # Express API backend
+│   ├── index.js               # Server entry point, mounts all routes
+│   ├── db.js                  # SQLite schema creation and data seeding
+│   ├── utils.js               # Shared formatting and mapping utilities
+│   ├── oscar.db               # SQLite database file (auto-created on first run)
+│   └── routes/
+│       ├── auth.js            # POST /api/auth/login
+│       ├── clinician.js       # GET /api/clinician, PUT password, POST sync
+│       ├── patients.js        # Patient list, detail, notes, vitals, history
+│       ├── appointments.js    # List, update, cancel appointments
+│       ├── notes.js           # Create, read, update, delete clinical notes
+│       ├── messages.js        # Inbox, send, mark-as-read
+│       └── settings.js        # Get and update user settings
+│
+├── src/
+│   ├── screens/               # One file per screen
+│   │   ├── SplashScreen.jsx
+│   │   ├── SignInScreen.jsx
+│   │   ├── HomeScreen.jsx
+│   │   ├── PatientsScreen.jsx
+│   │   ├── PatientRecordScreen.jsx
+│   │   ├── ScheduleScreen.jsx
+│   │   ├── EditAppointmentScreen.jsx
+│   │   ├── ClinicalNoteScreen.jsx
+│   │   ├── InboxScreen.jsx
+│   │   ├── ProfileScreen.jsx
+│   │   └── SettingsScreen.jsx
+│   ├── components/            # Reusable UI components organized by domain
+│   │   ├── appointment/
+│   │   ├── clinical_note/
+│   │   ├── common/
+│   │   ├── home/
+│   │   ├── layout/
+│   │   ├── patient/
+│   │   ├── profile/
+│   │   ├── schedule/
+│   │   └── settings/
+│   ├── styles/
+│   │   └── theme.js           # Centralized colors, fonts, spacing, shadows
+│   └── App.jsx                # Route definitions
+│
+├── vite.config.js             # Proxies /api/* requests to localhost:3001
+└── package.json
+```
+
+---
+
+## API Reference
+
+### Auth
+| Method | Path | Description |
+|---|---|---|
+| POST | `/api/auth/login` | Sign in with `{ userId, password }` |
+
+### Clinician
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/clinician` | Get current clinician profile |
+| PUT | `/api/clinician/password` | Change password |
+| POST | `/api/clinician/sync` | Trigger sync, returns timestamp |
+
+### Patients
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/patients` | List all patients |
+| GET | `/api/patients/:id` | Full patient record |
+| GET | `/api/patients/:id/notes` | Clinical notes for a patient |
+| GET | `/api/patients/:id/vitals` | Vital signs history |
+| GET | `/api/patients/:id/history` | Appointment history |
+
+### Appointments
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/appointments` | All appointments (schedule calendar) |
+| GET | `/api/appointments/today` | Today's appointments (home screen) |
+| PUT | `/api/appointments/:id` | Update appointment details |
+| PATCH | `/api/appointments/:id/cancel` | Cancel an appointment |
+
+### Clinical Notes
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/notes/:noteId` | Get a specific note |
+| POST | `/api/notes` | Create a new note |
+| PUT | `/api/notes/:noteId` | Update a note |
+| DELETE | `/api/notes/:noteId` | Delete a note |
+
+### Messages
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/messages` | Get inbox |
+| POST | `/api/messages` | Send a message |
+| PATCH | `/api/messages/:id/read` | Mark one message as read |
+| PATCH | `/api/messages/read-all` | Mark all messages as read |
+
+### Settings
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/settings` | Get all settings for current clinician |
+| PUT | `/api/settings` | Update one or more settings |
+
+---
+
+## Database
+
+The SQLite database (`server/oscar.db`) is created and seeded automatically on first run. Sample data includes:
+
+- **4 clinicians** — Dr. Lee (logged-in user), Dr. Smith, Dr. Brown, Nurse Johnson
+- **10 patients** — with allergies, emergency contacts, medical conditions, medications, and vitals
+- **Appointments** — 3 historical appointments + 3–4 appointments auto-seeded for today every time the server starts on a new date
+- **4 clinical notes** — SOAP notes linked to patients
+- **4 inbox messages** — sent to Dr. Lee
+
+To reset the database and re-seed from scratch, delete `server/oscar.db` and restart the server.
+
+---
+
+## npm Scripts
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Start both Express API and Vite dev server |
+| `npm run server` | Start Express API only |
+| `npm run client` | Start Vite only |
+| `npm run build` | Production build of the frontend |
+| `npm run lint` | Run ESLint |
+
+---
+
+## Design
+
+- Mobile-first layout, optimized for a 390px viewport
+- iOS-inspired bottom tab navigation
+- Blue accent color (`#007AFF`) for interactive elements
+- Shared design tokens defined in `src/styles/theme.js`
+
+---
+
+## Acknowledgments
+
+- Inspired by [OSCAR EMR](https://oscar-emr.com/) (Open Source Clinical Application & Resource)
+- Special thanks to our project supervisors and mentors at Conestoga College

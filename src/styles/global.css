@@ -1,0 +1,160 @@
+/* Minimal global styles and CSS variables for the app */
+:root {
+  /* OSCAR palette */
+  --oscar-blue: #0056B3;
+  --oscar-gray: #E9ECEF;
+  --oscar-white: #F8F9FA;
+  --oscar-black: #000000;
+  --oscar-red: #C82333;
+  --oscar-green: #28A745;
+  --oscar-yellow: #FFEAA7;
+  --pale-sky: #757575;
+  --shark: #212529;
+  --barley-white: #FFF3CD;
+  --yukon-gold: #856404;
+
+  /* Appointment colors */
+  --appt-new-patient: #816300;
+  --appt-follow-up: #0056B3;
+  --appt-physical: #5F0088;
+  --appt-consultation: #930076;
+  --appt-urgent: #470007;
+
+  /* Semantic aliases */
+  --color-primary: var(--oscar-blue);
+  --color-background: var(--oscar-gray);
+  --color-surface: var(--oscar-white);
+  --color-text: var(--oscar-black);
+  --color-danger: var(--oscar-red);
+
+  /* Back-compat neutral tokens (used by existing components) */
+  --color-neutral-0: var(--oscar-white);
+  --color-neutral-1: var(--oscar-gray);
+  --color-neutral-2: #E5E5EA; /* border / subtle surface */
+  --color-neutral-7: #8E8E93; /* muted text / icons */
+  --color-neutral-9: var(--shark);
+
+  /* Typography */
+  --font-family: 'Encode Sans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-xs: 12px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* Box sizing and reset (do not override layout/visuals from index.css) */
+*, *::before, *::after { box-sizing: border-box; }
+/* Note: intentionally avoid setting body background/font here — index.css defines app layout and theme. */
+
+/* Utility classes */
+.u-hidden { display: none !important; }
+.u-mt-sm { margin-top: var(--space-sm); }
+.u-mt-md { margin-top: var(--space-md); }
+.container { max-width: 990px; margin: 0 auto; padding: 0 var(--space-md); }
+
+/* Make app-level anchor and button resets consistent */
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* Layout helpers for OSCAR theme */
+.top-bar {
+  background: var(--oscar-white);
+  color: var(--color-text);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+
+.bottom-nav {
+  background: var(--oscar-white);
+  color: var(--color-text);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.app-main {
+  background: var(--oscar-gray);
+  color: var(--color-text);
+  min-height: 100%;
+}
+
+.section-container {
+  background: var(--oscar-white);
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--oscar-blue);
+  color: var(--oscar-white);
+  border: 1px solid var(--oscar-blue);
+}
+
+.btn-secondary {
+  background: var(--oscar-white);
+  color: var(--oscar-blue);
+  border: 1px solid var(--oscar-blue);
+}
+
+.btn-caution {
+  background: var(--oscar-red);
+  color: var(--oscar-white);
+  border: 1px solid var(--oscar-red);
+}
+
+.btn-cancel {
+  background: var(--oscar-white);
+  color: var(--pale-sky);
+  border: 1px solid var(--pale-sky);
+}
+
+/* Small helpers */
+.text-muted { color: var(--pale-sky); }
+.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.shadow-md { box-shadow: 0 4px 8px rgba(33,37,41,0.08); }
+
+/* Form controls */
+.form-group { margin-bottom: var(--space-md); }
+.form-label { display: block; font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid var(--color-neutral-2);
+  border-radius: 8px;
+  background-color: var(--oscar-white);
+  box-sizing: border-box;
+  outline: none;
+  /* Ensure input text color comes from theme (fixes white-on-white issue) */
+  color: var(--oscar-black);
+}
+.form-input:focus { border-color: var(--oscar-blue); box-shadow: 0 0 0 3px rgba(0,86,179,0.08); }
+.form-input::placeholder { color: var(--pale-sky); }
+
+/* Error state for inputs — apply a red border and a subtle red ring */
+.form-input--error {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(200,40,51,0.06);
+}
+
+.form-subtle { color: var(--pale-sky); font-size: var(--font-size-xs); }
+
