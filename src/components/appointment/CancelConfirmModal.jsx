@@ -30,7 +30,7 @@ export default function CancelConfirmModal({ appointment, onConfirm, onDismiss }
 
         <div style={styles.actions}>
           <button onClick={onConfirm} style={styles.yesBtn}>Yes</button>
-          <button onClick={onDismiss} style={styles.cancelBtn}>Cancel</button>
+          <button onClick={onDismiss} style={styles.cancelBtn}>Go Back</button>
         </div>
       </div>
     </Modal>
