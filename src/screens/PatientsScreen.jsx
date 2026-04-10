@@ -49,7 +49,7 @@ const PatientsScreen = () => {
       <TopHeader title="Patient List" showBack={false} />
 
       <div className="container" style={styles.content}>
-        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search patients" />
+        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search patients by name or ID" />
 
         {loading && (
           <div style={styles.loadingContainer}>
