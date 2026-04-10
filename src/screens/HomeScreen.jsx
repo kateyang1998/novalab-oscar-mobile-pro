@@ -89,6 +89,7 @@ const HomeScreen = () => {
       <SearchBar
         value={searchQuery}
         onChange={setSearchQuery}
+        placeholder="Search patients by name or ID"
         onSubmit={(q) => navigate('/patients', { state: { searchQuery: q } })}
       />
 
